@@ -17,8 +17,7 @@
             --primary-dark: #0284c7;
             --secondary: #8b5cf6;
             --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --whatsapp: #25d366;
             --bg: #f1f5f9;
             --card: #ffffff;
             --text: #0f172a;
@@ -45,7 +44,7 @@
         }
 
         .header-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -82,22 +81,40 @@
             font-weight: 400;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 0.75rem;
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
         }
 
         /* Main Layout */
         .main-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
 
-        /* Stats Cards */
+        /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -126,12 +143,8 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            background: #e0f2fe;
         }
-
-        .stat-icon.blue { background: #e0f2fe; }
-        .stat-icon.purple { background: #ede9fe; }
-        .stat-icon.green { background: #d1fae5; }
-        .stat-icon.red { background: #fee2e2; }
 
         .stat-info h3 {
             font-size: 1.75rem;
@@ -189,29 +202,6 @@
             color: var(--text-muted);
         }
 
-        .btn {
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            border: none;
-            font-size: 0.9375rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
         .btn-secondary {
             background: var(--bg);
             color: var(--text);
@@ -220,20 +210,6 @@
 
         .btn-secondary:hover {
             background: var(--border);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         /* Content Card */
@@ -274,6 +250,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 900px;
         }
 
         th {
@@ -286,21 +263,18 @@
             color: var(--text-muted);
             background: var(--bg);
             border-bottom: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         td {
             padding: 1rem 1.25rem;
             border-bottom: 1px solid var(--border);
             font-size: 0.9375rem;
+            vertical-align: middle;
         }
 
         tr:hover {
             background: #fafafa;
-        }
-
-        tr.deleting {
-            opacity: 0.5;
-            pointer-events: none;
         }
 
         tr:last-child td {
@@ -324,17 +298,13 @@
             color: white;
             font-weight: 600;
             font-size: 0.875rem;
+            flex-shrink: 0;
         }
 
         .student-details h4 {
             font-weight: 600;
             color: var(--text);
             font-size: 0.9375rem;
-        }
-
-        .student-details p {
-            color: var(--text-muted);
-            font-size: 0.875rem;
         }
 
         .index-tag {
@@ -347,113 +317,75 @@
             font-size: 0.875rem;
             font-weight: 600;
             font-family: monospace;
+            white-space: nowrap;
         }
 
-        .email-cell {
-            color: var(--text-muted);
-            font-size: 0.9375rem;
-        }
-
-        .actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
+        .gender-badge {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
             font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: capitalize;
         }
 
-        .action-btn:hover {
-            background: var(--bg);
-            color: var(--primary);
+        .gender-badge.male {
+            background: #dbeafe;
+            color: #1e40af;
         }
 
-        .action-btn.delete:hover {
-            background: #fee2e2;
-            color: var(--danger);
+        .gender-badge.female {
+            background: #fce7f3;
+            color: #be185d;
         }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
+        .gender-badge.other {
+            background: #f3f4f6;
+            color: #4b5563;
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: scale(0.9);
-            transition: all 0.3s;
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-icon {
-            width: 64px;
-            height: 64px;
-            background: #fee2e2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2rem;
-        }
-
-        .modal h3 {
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal p {
-            text-align: center;
+        .phone-cell {
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
         }
 
-        .modal-actions {
-            display: flex;
-            gap: 0.75rem;
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.875rem;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .modal-actions .btn {
-            flex: 1;
-            justify-content: center;
+        .whatsapp-link:hover {
+            background: #bbf7d0;
+            transform: translateY(-1px);
+        }
+
+        .whatsapp-link::before {
+            content: '💬';
+        }
+
+        .address-cell {
+            color: var(--text-muted);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .address-cell:hover {
+            white-space: normal;
+            overflow: visible;
         }
 
         /* States */
@@ -481,7 +413,7 @@
 
         .state-icon.error {
             background: #fee2e2;
-            color: var(--danger);
+            color: #ef4444;
         }
 
         .state-icon.empty {
@@ -505,49 +437,15 @@
             font-size: 0.9375rem;
         }
 
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            z-index: 1000;
-        }
-
-        .toast {
-            background: var(--text);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-top: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .toast.success {
-            background: var(--success);
-        }
-
-        .toast.error {
-            background: var(--danger);
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .top-bar { padding: 1rem; }
             .main-container { padding: 0 1rem; margin: 1rem auto; }
             .control-panel { flex-direction: column; align-items: stretch; }
             .search-wrapper { min-width: 100%; }
-            th, td { padding: 0.875rem; }
+            th, td { padding: 0.875rem; font-size: 0.875rem; }
             .avatar { width: 36px; height: 36px; }
-            .modal { padding: 1.5rem; }
+            .address-cell { max-width: 150px; }
         }
 
         .hidden { display: none !important; }
@@ -561,13 +459,10 @@
                 <div class="brand-icon">🎓</div>
                 <div>
                     <h1>Student Directory</h1>
-                    <span>Manage student records</span>
+                    <span>Connected to Google Sheets</span>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
-                <button class="btn btn-primary" onclick="loadData()">🔄 Refresh</button>
-            </div>
+            <button class="btn btn-primary" onclick="loadData()">🔄 Refresh</button>
         </div>
     </header>
 
@@ -576,24 +471,10 @@
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon blue">👥</div>
+                <div class="stat-icon">👥</div>
                 <div class="stat-info">
                     <h3 id="totalStudents">0</h3>
                     <p>Total Students</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon purple">🔍</div>
-                <div class="stat-info">
-                    <h3 id="filteredCount">0</h3>
-                    <p>Showing</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon red">🗑️</div>
-                <div class="stat-info">
-                    <h3 id="deletedCount">0</h3>
-                    <p>Deleted This Session</p>
                 </div>
             </div>
         </div>
@@ -605,7 +486,7 @@
                 <input 
                     type="text" 
                     id="searchInput" 
-                    placeholder="Search students by name, index, or email..."
+                    placeholder="Search students by name, index, gender, or address..."
                 >
             </div>
             <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
@@ -642,9 +523,11 @@
                     <thead>
                         <tr>
                             <th>Index Number</th>
-                            <th>Student Information</th>
-                            <th>Email Address</th>
-                            <th>Actions</th>
+                            <th>Student Name</th>
+                            <th>Gender</th>
+                            <th>WhatsApp</th>
+                            <th>Phone Number</th>
+                            <th>Address</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -653,29 +536,11 @@
         </div>
     </main>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-overlay" id="deleteModal">
-        <div class="modal">
-            <div class="modal-icon">🗑️</div>
-            <h3>Delete Student Record?</h3>
-            <p>Are you sure you want to delete <strong id="deleteStudentName">this student</strong>? This action cannot be undone.</p>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeDeleteModal()" id="cancelBtn">Cancel</button>
-                <button class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNuYiFIZoR7wMFH01Wno3xYEVKBja4KHL8dqevtGmVE3913y5wEjfraOs4y1-_TD3d/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfPm6yfmFrNQkSZYYdaQr_maRejrrlDXmbX7YJ_dtV0DteJC_dD4cHBVMUQFI56Tiq/exec';
         
         let allStudents = [];
         let filteredStudents = [];
-        let studentToDelete = null;
-        let deletedCount = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
             if (APPS_SCRIPT_URL.includes('YOUR_DEPLOYMENT_ID')) {
@@ -720,9 +585,11 @@
             
             tbody.innerHTML = filteredStudents.map(student => {
                 const initials = (student.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const gender = (student.gender || '').toLowerCase();
+                const whatsappNum = cleanPhoneNumber(student.whatsapp_number || student.whatsapp || '');
                 
                 return `
-                    <tr data-row-id="${student.id}" data-row-index="${student.rowIndex}">
+                    <tr>
                         <td>
                             <span class="index-tag">${escapeHtml(student.index_number || student.index || 'N/A')}</span>
                         </td>
@@ -731,23 +598,43 @@
                                 <div class="avatar">${initials}</div>
                                 <div class="student-details">
                                     <h4>${escapeHtml(student.name || 'Unknown')}</h4>
-                                    <p>Row ${student.rowIndex}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="email-cell">${escapeHtml(student.email || 'No email')}</td>
                         <td>
-                            <div class="actions">
-                                <button class="action-btn" onclick="copyEmail('${escapeHtml(student.email || '')}')" title="Copy Email">📋</button>
-                                <button class="action-btn" onclick="sendEmail('${escapeHtml(student.email || '')}')" title="Send Email">✉️</button>
-                                <button class="action-btn delete" onclick="openDeleteModal(${student.rowIndex}, '${escapeHtml(student.name || 'Unknown')}')" title="Delete">🗑️</button>
-                            </div>
+                            <span class="gender-badge ${gender}">${escapeHtml(student.gender || 'N/A')}</span>
+                        </td>
+                        <td>
+                            ${whatsappNum ? `
+                                <a href="https://wa.me/${whatsappNum}" target="_blank" class="whatsapp-link" title="Chat on WhatsApp">
+                                    ${escapeHtml(student.whatsapp_number || student.whatsapp || '')}
+                                </a>
+                            ` : '<span style="color: var(--text-muted);">-</span>'}
+                        </td>
+                        <td class="phone-cell">${escapeHtml(student.phone_number || student.phone || 'N/A')}</td>
+                        <td class="address-cell" title="${escapeHtml(student.address || '')}">
+                            ${escapeHtml(student.address || 'N/A')}
                         </td>
                     </tr>
                 `;
             }).join('');
             
             showTable();
+        }
+
+        function cleanPhoneNumber(number) {
+            if (!number) return '';
+            // Remove all non-numeric characters except + at start
+            let cleaned = number.toString().replace(/[^\d+]/g, '');
+            // Remove + if present and ensure it starts with country code
+            if (cleaned.startsWith('+')) {
+                cleaned = cleaned.substring(1);
+            }
+            // If starts with 0, assume Sri Lanka and replace with 94
+            if (cleaned.startsWith('0')) {
+                cleaned = '94' + cleaned.substring(1);
+            }
+            return cleaned;
         }
 
         function setupSearch() {
@@ -760,7 +647,13 @@
                     filteredStudents = [...allStudents];
                 } else {
                     filteredStudents = allStudents.filter(student => {
-                        const text = `${student.index_number || ''} ${student.index || ''} ${student.name || ''} ${student.email || ''}`.toLowerCase();
+                        const text = `
+                            ${student.index_number || ''} 
+                            ${student.index || ''} 
+                            ${student.name || ''} 
+                            ${student.gender || ''} 
+                            ${student.address || ''}
+                        `.toLowerCase();
                         return text.includes(query);
                     });
                 }
@@ -777,130 +670,12 @@
             updateStats();
         }
 
-        // Delete Functions
-        function openDeleteModal(rowIndex, studentName) {
-            studentToDelete = rowIndex;
-            document.getElementById('deleteStudentName').textContent = studentName;
-            document.getElementById('deleteModal').classList.add('active');
-            document.getElementById('confirmDeleteBtn').disabled = false;
-            document.getElementById('confirmDeleteBtn').textContent = 'Delete';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('active');
-            studentToDelete = null;
-        }
-
-        // Change the fetch in confirmDelete() from POST to GET:
-async function confirmDelete() {
-    if (!studentToDelete) return;
-    
-    document.getElementById('confirmDeleteBtn').disabled = true;
-    document.getElementById('cancelBtn').disabled = true;
-    document.getElementById('confirmDeleteBtn').textContent = 'Deleting...';
-    
-    const row = document.querySelector(`tr[data-row-index="${studentToDelete}"]`);
-    if (row) row.classList.add('deleting');
-    
-    try {
-        // Use GET instead of POST - no CORS preflight!
-        const response = await fetch(`${APPS_SCRIPT_URL}?action=delete&rowIndex=${studentToDelete}`);
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.error);
-        }
-        
-        deletedCount++;
-        document.getElementById('deletedCount').textContent = deletedCount;
-        
-        closeDeleteModal();
-        showToast('Student deleted successfully', 'success');
-        
-        // Refresh data
-        setTimeout(() => {
-            loadData();
-        }, 500);
-        
-    } catch (error) {
-        if (row) row.classList.remove('deleting');
-        showToast('Failed to delete: ' + error.message, 'error');
-        document.getElementById('confirmDeleteBtn').disabled = false;
-        document.getElementById('cancelBtn').disabled = false;
-        document.getElementById('confirmDeleteBtn').textContent = 'Delete';
-    }
-}
-
-        // Close modal on overlay click
-        document.getElementById('deleteModal').addEventListener('click', (e) => {
-            if (e.target.id === 'deleteModal') closeDeleteModal();
-        });
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeDeleteModal();
-        });
-
         function updateStats() {
             const total = allStudents.length;
             const showing = filteredStudents.length;
             
             document.getElementById('totalStudents').textContent = total;
-            document.getElementById('filteredCount').textContent = showing;
             document.getElementById('recordBadge').textContent = `${showing} records`;
-        }
-
-        function copyEmail(email) {
-            if (!email) return;
-            navigator.clipboard.writeText(email).then(() => {
-                showToast('Email copied to clipboard', 'success');
-            });
-        }
-
-        function sendEmail(email) {
-            if (!email) return;
-            window.open(`mailto:${email}`);
-        }
-
-        function exportData() {
-            if (allStudents.length === 0) {
-                showToast('No data to export');
-                return;
-            }
-            
-            const csv = [
-                ['Index Number', 'Name', 'Email'],
-                ...filteredStudents.map(s => [
-                    s.index_number || s.index || '',
-                    s.name || '',
-                    s.email || ''
-                ])
-            ].map(row => row.join(',')).join('\n');
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `students_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            showToast('Data exported successfully', 'success');
-        }
-
-        function showToast(message, type = '') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = type === 'success' ? '✓ ' + message : type === 'error' ? '✕ ' + message : message;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
         }
 
         function showLoading() {
