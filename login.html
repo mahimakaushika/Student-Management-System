@@ -3,477 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Portal - Secure Login & Register</title>
+    <title>Student Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary: #0ea5e9;
-            --primary-dark: #0284c7;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
+            --primary: #0ea5e9; --primary-dark: #0284c7; --secondary: #8b5cf6;
+            --success: #10b981; --danger: #ef4444; --bg: #f1f5f9;
+            --card: #ffffff; --text: #0f172a; --text-muted: #64748b; --border: #e2e8f0;
         }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 2rem;
         }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: white;
-        }
-
+        .container { width: 100%; max-width: 500px; }
+        .logo { text-align: center; margin-bottom: 2rem; color: white; }
         .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2.5rem;
+            width: 80px; height: 80px; background: white; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1rem; font-size: 2.5rem;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-
-        .logo h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .logo p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
         .card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
+            background: var(--card); border-radius: 16px; padding: 2rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 0.75rem;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .tab:hover:not(.active) {
-            background: var(--bg);
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+        .tab { flex: 1; padding: 0.75rem; border: none; background: transparent; color: var(--text-muted); font-weight: 600; cursor: pointer; border-radius: 8px; }
+        .tab.active { background: var(--primary); color: white; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
         input, select {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.2s;
-            background: white;
+            width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--border);
+            border-radius: 10px; font-size: 1rem; font-family: inherit;
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        input.error {
-            border-color: var(--danger);
-            background: #fef2f2;
-        }
-
-        input.success {
-            border-color: var(--success);
-            background: #f0fdf4;
-        }
-
-        input:disabled {
-            background: var(--bg);
-            cursor: not-allowed;
-        }
-
-        .validation-msg {
-            font-size: 0.8rem;
-            margin-top: 0.375rem;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .validation-msg.error {
-            color: var(--danger);
-        }
-
-        .validation-msg.success {
-            color: var(--success);
-        }
-
-        .validation-msg.info {
-            color: var(--primary);
-        }
-
+        input:focus { outline: none; border-color: var(--primary); }
+        input.error { border-color: var(--danger); background: #fef2f2; }
+        input.success { border-color: var(--success); background: #f0fdf4; }
+        input:disabled { background: var(--bg); cursor: not-allowed; }
+        .validation-msg { font-size: 0.8rem; margin-top: 0.375rem; }
+        .validation-msg.error { color: var(--danger); }
+        .validation-msg.success { color: var(--success); }
         .btn {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
+            width: 100%; padding: 1rem; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover:not(:disabled) {
-            background: #059669;
-        }
-
-        .btn-secondary {
-            background: var(--bg);
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: var(--border);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 2px solid var(--border); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            border-radius: 50%;
+            width: 20px; height: 20px; border: 2px solid transparent;
+            border-top-color: currentColor; border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { to { transform: rotate(360deg); } }
         .alert {
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            display: none;
+            padding: 1rem; border-radius: 10px; margin-bottom: 1rem;
+            display: none; align-items: center; gap: 0.75rem;
         }
-
-        .alert.show {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            color: var(--danger);
-            border: 1px solid #fecaca;
-        }
-
-        .alert-success {
-            background: #f0fdf4;
-            color: var(--success);
-            border: 1px solid #bbf7d0;
-        }
-
-        .alert-info {
-            background: #e0f2fe;
-            color: var(--primary);
-            border: 1px solid #bae6fd;
-        }
-
-        .otp-section {
-            display: none;
-            background: var(--bg);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-        }
-
-        .otp-section.show {
-            display: block;
-        }
-
-        .otp-inputs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
+        .alert.show { display: flex; }
+        .alert-error { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+        .alert-success { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
+        .otp-section { background: var(--bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
+        .otp-inputs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
         .otp-input {
-            flex: 1;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            padding: 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            background: white;
+            flex: 1; text-align: center; font-size: 1.5rem; font-weight: 700;
+            padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; background: white;
         }
-
-        .otp-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #f0f9ff;
-        }
-
-        .otp-timer {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .profile-container {
-            display: none;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .profile-container.show {
-            display: block;
-        }
-
-        .profile-header {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .profile-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .profile-info p {
-            color: var(--text-muted);
-        }
-
-        .profile-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .profile-card h3 {
-            font-size: 1.125rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.375rem;
-        }
-
-        .info-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .edit-form {
-            display: none;
-        }
-
-        .edit-mode .info-value {
-            display: none;
-        }
-
-        .edit-mode .edit-form {
-            display: block;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: white;
-            color: var(--danger);
-            border: none;
-            padding: 0.75rem 1.25rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
+        .otp-input:focus { border-color: var(--primary); background: #f0f9ff; outline: none; }
+        .otp-timer { text-align: center; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem; }
+        .step-indicator { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
         .step {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: var(--text-muted);
+            width: 32px; height: 32px; border-radius: 50%; background: var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.875rem; color: var(--text-muted);
         }
-
-        .step.active {
-            background: var(--primary);
-            color: white;
+        .step.active { background: var(--primary); color: white; }
+        .step.completed { background: var(--success); color: white; }
+        .profile-container { display: none; max-width: 900px; margin: 0 auto; }
+        .profile-container.show { display: block; }
+        .profile-header { background: var(--card); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
+        .profile-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;
         }
-
-        .step.completed {
-            background: var(--success);
-            color: white;
-        }
-
-        @media (max-width: 640px) {
-            body { padding: 1rem; }
-            .card { padding: 1.5rem; }
-            .otp-inputs { gap: 0.375rem; }
-            .otp-input { font-size: 1.25rem; padding: 0.5rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .info-item { display: flex; flex-direction: column; gap: 0.375rem; }
+        .info-label { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; }
+        .info-value { font-size: 1rem; font-weight: 600; color: var(--text); }
+        .edit-form { display: none; }
+        .edit-mode .info-value { display: none; }
+        .edit-mode .edit-form { display: block; }
+        .btn-group { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn-group .btn { flex: 1; }
+        .logout-btn {
+            position: fixed; top: 1.5rem; right: 1.5rem; background: white;
+            color: var(--danger); border: none; padding: 0.75rem 1.25rem;
+            border-radius: 10px; font-weight: 600; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
-    <!-- Login/Register Container -->
     <div class="container" id="authContainer">
         <div class="logo">
             <div class="logo-icon">🎓</div>
@@ -487,178 +127,144 @@
                 <button class="tab" onclick="showTab('register')">Register</button>
             </div>
 
-            <!-- Alert Messages -->
             <div id="alertBox" class="alert"></div>
 
-            <!-- Login Form -->
+            <!-- Login -->
             <div id="loginSection" class="form-section active">
-                <form id="loginForm" onsubmit="handleLogin(event)">
+                <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label>Username / Email / Index Number</label>
-                        <input type="text" id="loginId" required 
-                               placeholder="Enter username, email, or index number">
+                        <label>Username / Email / Index</label>
+                        <input type="text" id="loginId" required placeholder="Enter credentials">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" id="loginPassword" required 
-                               placeholder="Enter your password">
+                        <input type="password" id="loginPassword" required placeholder="Enter password">
                     </div>
-                    <button type="submit" class="btn btn-primary" id="loginBtn">
-                        Sign In
-                    </button>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
                 </form>
             </div>
 
-            <!-- Register Form - Step 1: Basic Info -->
+            <!-- Register -->
             <div id="registerSection" class="form-section">
-                <div class="step-indicator" id="stepIndicator">
+                <div class="step-indicator">
                     <div class="step active" id="step1">1</div>
                     <div class="step" id="step2">2</div>
                     <div class="step" id="step3">3</div>
                 </div>
 
-                <!-- Step 1: Basic Information -->
+                <!-- Step 1 -->
                 <div id="regStep1">
-                    <form id="registerForm1" onsubmit="goToStep2(event)">
+                    <form onsubmit="goToStep2(event)">
                         <div class="form-group">
                             <label>Index Number</label>
-                            <input type="text" id="regIndex" required 
-                                   placeholder="NAW/IT/2025/F/0002"
-                                   onblur="validateIndex()">
+                            <input type="text" id="regIndex" required placeholder="NAW/IT/2025/F/0002" onblur="validateIndex()">
                             <div id="indexValidation" class="validation-msg"></div>
                         </div>
-
                         <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="regEmail" required 
-                                   placeholder="your.email@example.com"
-                                   onblur="validateEmail()">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" required placeholder="email@example.com" onblur="validateEmail()">
                             <div id="emailValidation" class="validation-msg"></div>
                         </div>
-
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" id="regUsername" required 
-                                   placeholder="Choose a unique username"
-                                   onblur="validateUsername()"
-                                   disabled>
+                            <input type="text" id="regUsername" required placeholder="Choose username" onblur="validateUsername()" disabled>
                             <div id="usernameValidation" class="validation-msg"></div>
                         </div>
-
-                        <button type="submit" class="btn btn-primary" id="step1Btn" disabled>
-                            Continue →
-                        </button>
+                        <button type="submit" class="btn btn-primary" id="step1Btn" disabled>Continue →</button>
                     </form>
                 </div>
 
-                <!-- Step 2: Password -->
+                <!-- Step 2 -->
                 <div id="regStep2" style="display: none;">
-                    <form id="registerForm2" onsubmit="goToStep3(event)">
+                    <form onsubmit="goToStep3(event)">
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" id="regPassword" required 
-                                   placeholder="At least 6 characters"
-                                   oninput="validatePassword()">
+                            <input type="password" id="regPassword" required placeholder="Min 6 characters" oninput="checkPasswords()">
                             <div id="passwordValidation" class="validation-msg"></div>
                         </div>
-
                         <div class="form-group">
                             <label>Confirm Password</label>
-                            <input type="password" id="regConfirmPassword" required 
-                                   placeholder="Re-enter password"
-                                   oninput="validateConfirmPassword()">
+                            <input type="password" id="regConfirmPassword" required placeholder="Re-enter password" oninput="checkPasswords()">
                             <div id="confirmValidation" class="validation-msg"></div>
                         </div>
-
                         <div class="btn-group">
-                            <button type="button" class="btn btn-secondary" onclick="backToStep1()">
-                                ← Back
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="step2Btn" disabled>
-                                Continue →
-                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="backToStep1()">← Back</button>
+                            <button type="submit" class="btn btn-primary" id="step2Btn" disabled>Continue →</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Step 3: Email Verification -->
+                <!-- Step 3 - OTP -->
                 <div id="regStep3" style="display: none;">
-                    <div class="otp-section show">
+                    <div class="otp-section">
                         <h4 style="margin-bottom: 1rem; text-align: center;">📧 Email Verification</h4>
                         <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
-                            We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
+                            Code sent to <strong id="otpEmailDisplay"></strong>
                         </p>
                         
-                        <!-- Hidden field to store complete OTP -->
-                        <input type="hidden" id="otpHiddenValue" value="">
-                        
+                        <!-- OTP Inputs with INLINE handlers for maximum reliability -->
                         <div class="otp-inputs">
-                            <input type="text" class="otp-input" maxlength="1" data-index="0" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="1" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="2" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="3" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="4" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="5" placeholder="•">
+                            <input type="text" id="otp1" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKey(event, 1)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
+                            <input type="text" id="otp2" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKey(event, 2)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
+                            <input type="text" id="otp3" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKey(event, 3)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
+                            <input type="text" id="otp4" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKey(event, 4)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
+                            <input type="text" id="otp5" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKey(event, 5)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
+                            <input type="text" id="otp6" class="otp-input" maxlength="1" 
+                                oninput="handleOtpInput(this, 6)" onkeydown="handleOtpKey(event, 6)" 
+                                onpaste="handleOtpPaste(event)" style="text-transform: uppercase;">
                         </div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
-                        
-                        <button type="button" class="btn btn-secondary" onclick="resendOtp()" id="resendBtn" style="margin-bottom: 0.75rem;">
-                            Resend Code
-                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resendOtp()" id="resendBtn" style="margin-bottom: 0.75rem;">Resend Code</button>
                     </div>
 
                     <div class="btn-group">
-                        <button type="button" class="btn btn-secondary" onclick="backToStep2()">
-                            ← Back
-                        </button>
-                        <button type="button" class="btn btn-success" onclick="verifyAndRegister()" id="verifyBtn">
-                            Verify & Create Account
-                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="backToStep2()">← Back</button>
+                        <button type="button" class="btn btn-success" onclick="verifyAndRegister()" id="verifyBtn">Verify & Create Account</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Profile Page -->
+    <!-- Profile -->
     <div class="profile-container" id="profileContainer">
         <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-
         <div class="profile-header">
             <div class="profile-avatar" id="profileAvatar">?</div>
             <div class="profile-info">
-                <h2 id="profileName">Student Name</h2>
+                <h2 id="profileName">Student</h2>
                 <p id="profileIndex">Index: -</p>
                 <p id="profileUsername" style="color: var(--primary); font-weight: 600;">@username</p>
             </div>
         </div>
-
         <div class="profile-card view-mode" id="profileCard">
             <h3>📋 Personal Information</h3>
-            
-            <div class="info-grid" id="infoGrid">
+            <div class="info-grid">
                 <div class="info-item">
                     <span class="info-label">Full Name</span>
                     <span class="info-value" id="viewName">-</span>
-                    <div class="edit-form">
-                        <input type="text" id="editName">
-                    </div>
+                    <div class="edit-form"><input type="text" id="editName"></div>
                 </div>
-
                 <div class="info-item">
-                    <span class="info-label">Index Number</span>
+                    <span class="info-label">Index</span>
                     <span class="info-value" id="viewIndex">-</span>
                 </div>
-
                 <div class="info-item">
                     <span class="info-label">Email</span>
                     <span class="info-value" id="viewEmail">-</span>
-                    <div class="edit-form">
-                        <input type="email" id="editEmail">
-                    </div>
+                    <div class="edit-form"><input type="email" id="editEmail"></div>
                 </div>
-
                 <div class="info-item">
                     <span class="info-label">Gender</span>
                     <span class="info-value" id="viewGender">-</span>
@@ -666,49 +272,37 @@
                         <select id="editGender">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
-                            <option value="Other">Other</option>
                         </select>
                     </div>
                 </div>
-
                 <div class="info-item">
-                    <span class="info-label">WhatsApp Number</span>
+                    <span class="info-label">WhatsApp</span>
                     <span class="info-value" id="viewWhatsapp">-</span>
-                    <div class="edit-form">
-                        <input type="text" id="editWhatsapp">
-                    </div>
+                    <div class="edit-form"><input type="text" id="editWhatsapp"></div>
                 </div>
-
                 <div class="info-item">
-                    <span class="info-label">Phone Number</span>
+                    <span class="info-label">Phone</span>
                     <span class="info-value" id="viewPhone">-</span>
-                    <div class="edit-form">
-                        <input type="text" id="editPhone">
-                    </div>
+                    <div class="edit-form"><input type="text" id="editPhone"></div>
                 </div>
-
                 <div class="info-item" style="grid-column: 1 / -1;">
                     <span class="info-label">Address</span>
                     <span class="info-value" id="viewAddress">-</span>
-                    <div class="edit-form">
-                        <input type="text" id="editAddress" style="width: 100%;">
-                    </div>
+                    <div class="edit-form"><input type="text" id="editAddress" style="width: 100%;"></div>
                 </div>
             </div>
-
             <div class="btn-group" id="actionButtons">
-                <button class="btn btn-secondary" onclick="toggleEdit()">✏️ Edit Profile</button>
+                <button class="btn btn-secondary" onclick="toggleEdit()">✏️ Edit</button>
             </div>
-
             <div class="btn-group" id="saveButtons" style="display: none;">
                 <button class="btn btn-secondary" onclick="toggleEdit()">❌ Cancel</button>
-                <button class="btn btn-success" onclick="saveProfile()">💾 Save Changes</button>
+                <button class="btn btn-success" onclick="saveProfile()">💾 Save</button>
             </div>
         </div>
     </div>
 
     <script>
-        // REPLACE WITH YOUR DEPLOYED SCRIPT URL
+        // REPLACE THIS URL WITH YOUR DEPLOYED SCRIPT URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6_0IPfjOsqVeBiderB45IwVCrY5oJno7jXQgH1xUFLLjinL4u-XFOdP156nkljoTA/exec';
         
         let currentStudent = null;
@@ -717,8 +311,10 @@
         let isIndexValid = false;
         let isEmailValid = false;
         let isUsernameAvailable = false;
+        
+        // Global OTP storage - updated immediately on every keystroke
+        window.currentOtp = ['', '', '', '', '', ''];
 
-        // Tab switching
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
@@ -733,7 +329,6 @@
             }
         }
 
-        // Show alert
         function showAlert(message, type) {
             const alert = document.getElementById('alertBox');
             alert.className = `alert alert-${type} show`;
@@ -741,7 +336,69 @@
             setTimeout(() => alert.classList.remove('show'), 5000);
         }
 
-        // ==================== VALIDATION FUNCTIONS ====================
+        // ==================== OTP HANDLERS (INLINE) ====================
+        
+        function handleOtpInput(input, boxNum) {
+            // Keep only numbers
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            // Store in global array
+            window.currentOtp[boxNum - 1] = input.value;
+            console.log('OTP updated:', window.currentOtp.join(''));
+            
+            // Auto-focus next box if value entered
+            if (input.value && boxNum < 6) {
+                document.getElementById('otp' + (boxNum + 1)).focus();
+            }
+        }
+        
+        function handleOtpKey(event, boxNum) {
+            // Backspace on empty box = go to previous
+            if (event.key === 'Backspace' && !event.target.value && boxNum > 1) {
+                document.getElementById('otp' + (boxNum - 1)).focus();
+            }
+        }
+        
+        function handleOtpPaste(event) {
+            event.preventDefault();
+            const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+            const numbers = pasteData.replace(/[^0-9]/g, '').split('').slice(0, 6);
+            
+            // Fill all boxes
+            for (let i = 0; i < 6; i++) {
+                const box = document.getElementById('otp' + (i + 1));
+                if (numbers[i]) {
+                    box.value = numbers[i];
+                    window.currentOtp[i] = numbers[i];
+                } else {
+                    box.value = '';
+                    window.currentOtp[i] = '';
+                }
+            }
+            
+            console.log('Pasted OTP:', window.currentOtp.join(''));
+            
+            // Focus next empty or last
+            if (numbers.length < 6) {
+                document.getElementById('otp' + (numbers.length + 1)).focus();
+            } else {
+                document.getElementById('otp6').focus();
+            }
+        }
+        
+        function getOtpValue() {
+            // Read directly from inputs as backup
+            let otp = '';
+            for (let i = 1; i <= 6; i++) {
+                otp += document.getElementById('otp' + i).value || '';
+            }
+            // Also try global array
+            const globalOtp = window.currentOtp.join('');
+            console.log('Input OTP:', otp, 'Global OTP:', globalOtp);
+            return otp || globalOtp;
+        }
+
+        // ==================== VALIDATION ====================
 
         async function validateIndex() {
             const input = document.getElementById('regIndex');
@@ -750,7 +407,6 @@
             
             if (!indexNumber) {
                 validation.innerHTML = '';
-                input.className = '';
                 isIndexValid = false;
                 updateStep1Button();
                 return;
@@ -758,14 +414,14 @@
 
             const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
             if (!pattern.test(indexNumber)) {
-                validation.innerHTML = '<span class="error">❌ Invalid format. Use: NAW/IT/2025/F/0002</span>';
-                input.className = 'error';
+                validation.innerHTML = '<span style="color: var(--danger)">❌ Format: NAW/IT/2025/F/0002</span>';
+                input.style.borderColor = 'var(--danger)';
                 isIndexValid = false;
                 updateStep1Button();
                 return;
             }
 
-            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+            validation.innerHTML = '<span style="color: var(--primary)">⏳ Checking...</span>';
             
             try {
                 const encodedIndex = encodeURIComponent(indexNumber);
@@ -775,22 +431,22 @@
                 if (!result.success) throw new Error(result.error);
 
                 if (!result.exists) {
-                    validation.innerHTML = '<span class="error">❌ Index number not found</span>';
-                    input.className = 'error';
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Not found</span>';
+                    input.style.borderColor = 'var(--danger)';
                     isIndexValid = false;
                 } else if (result.hasAccount) {
-                    validation.innerHTML = '<span class="error">❌ Already registered. Please login.</span>';
-                    input.className = 'error';
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Already registered</span>';
+                    input.style.borderColor = 'var(--danger)';
                     isIndexValid = false;
                     setTimeout(() => showTab('login'), 2000);
                 } else {
-                    validation.innerHTML = '<span class="success">✓ Valid index number</span>';
-                    input.className = 'success';
+                    validation.innerHTML = '<span style="color: var(--success)">✓ Valid</span>';
+                    input.style.borderColor = 'var(--success)';
                     isIndexValid = true;
                     document.getElementById('regEmail').disabled = false;
                 }
             } catch (error) {
-                validation.innerHTML = '<span class="error">❌ Error checking index</span>';
+                validation.innerHTML = '<span style="color: var(--danger)">❌ Error</span>';
                 isIndexValid = false;
             }
             
@@ -809,7 +465,7 @@
                 return;
             }
 
-            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+            validation.innerHTML = '<span style="color: var(--primary)">⏳ Checking...</span>';
             
             try {
                 const response = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
@@ -819,25 +475,24 @@
 
                 if (!result.available) {
                     if (result.hasAccount) {
-                        validation.innerHTML = '<span class="error">❌ Email already registered. Please login.</span>';
-                        input.className = 'error';
+                        validation.innerHTML = '<span style="color: var(--danger)">❌ Already registered</span>';
+                        input.style.borderColor = 'var(--danger)';
                         isEmailValid = false;
                         setTimeout(() => showTab('login'), 2000);
                     } else {
-                        // Email exists but no account - ALLOW REGISTRATION
-                        validation.innerHTML = '<span class="success">✓ Email verified</span>';
-                        input.className = 'success';
+                        validation.innerHTML = '<span style="color: var(--success)">✓ Verified</span>';
+                        input.style.borderColor = 'var(--success)';
                         isEmailValid = true;
                         document.getElementById('regUsername').disabled = false;
                     }
                 } else {
-                    validation.innerHTML = '<span class="success">✓ Email available</span>';
-                    input.className = 'success';
+                    validation.innerHTML = '<span style="color: var(--success)">✓ Available</span>';
+                    input.style.borderColor = 'var(--success)';
                     isEmailValid = true;
                     document.getElementById('regUsername').disabled = false;
                 }
             } catch (error) {
-                validation.innerHTML = '<span class="error">❌ Error checking email</span>';
+                validation.innerHTML = '<span style="color: var(--danger)">❌ Error</span>';
                 isEmailValid = false;
             }
             
@@ -856,7 +511,7 @@
                 return;
             }
 
-            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+            validation.innerHTML = '<span style="color: var(--primary)">⏳ Checking...</span>';
             
             try {
                 const response = await fetch(`${APPS_SCRIPT_URL}?action=checkUsername&username=${username}`);
@@ -865,74 +520,59 @@
                 if (!result.success) throw new Error(result.error);
 
                 if (result.available) {
-                    validation.innerHTML = '<span class="success">✓ Username available</span>';
-                    input.className = 'success';
+                    validation.innerHTML = '<span style="color: var(--success)">✓ Available</span>';
+                    input.style.borderColor = 'var(--success)';
                     isUsernameAvailable = true;
                 } else {
-                    validation.innerHTML = '<span class="error">❌ Username taken</span>';
-                    input.className = 'error';
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Taken</span>';
+                    input.style.borderColor = 'var(--danger)';
                     isUsernameAvailable = false;
                 }
             } catch (error) {
-                validation.innerHTML = '<span class="error">❌ Error checking username</span>';
+                validation.innerHTML = '<span style="color: var(--danger)">❌ Error</span>';
                 isUsernameAvailable = false;
             }
             
             updateStep1Button();
         }
 
-        function validatePassword() {
-            const password = document.getElementById('regPassword').value;
-            const validation = document.getElementById('passwordValidation');
-            
-            if (password.length < 6) {
-                validation.innerHTML = '<span class="error">❌ At least 6 characters</span>';
-                updateStep2Button();
-                return false;
-            } else {
-                validation.innerHTML = '<span class="success">✓ Valid password</span>';
-                updateStep2Button();
-                return true;
-            }
-        }
-
-        function validateConfirmPassword() {
-            const password = document.getElementById('regPassword').value;
+        function checkPasswords() {
+            const pass = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirmPassword').value;
-            const validation = document.getElementById('confirmValidation');
+            const passVal = document.getElementById('passwordValidation');
+            const confVal = document.getElementById('confirmValidation');
+            const btn = document.getElementById('step2Btn');
             
-            if (confirm !== password) {
-                validation.innerHTML = '<span class="error">❌ Passwords do not match</span>';
-                updateStep2Button();
-                return false;
-            } else if (confirm === '') {
-                validation.innerHTML = '';
-                updateStep2Button();
-                return false;
+            let valid = true;
+            
+            if (pass.length < 6) {
+                passVal.innerHTML = '<span style="color: var(--danger)">❌ Min 6 chars</span>';
+                valid = false;
             } else {
-                validation.innerHTML = '<span class="success">✓ Passwords match</span>';
-                updateStep2Button();
-                return true;
+                passVal.innerHTML = '<span style="color: var(--success)">✓ OK</span>';
             }
+            
+            if (confirm !== pass) {
+                confVal.innerHTML = '<span style="color: var(--danger)">❌ No match</span>';
+                valid = false;
+            } else if (confirm === '') {
+                confVal.innerHTML = '';
+                valid = false;
+            } else {
+                confVal.innerHTML = '<span style="color: var(--success)">✓ Match</span>';
+            }
+            
+            btn.disabled = !valid;
         }
 
         function updateStep1Button() {
-            const btn = document.getElementById('step1Btn');
-            btn.disabled = !(isIndexValid && isEmailValid && isUsernameAvailable);
+            document.getElementById('step1Btn').disabled = !(isIndexValid && isEmailValid && isUsernameAvailable);
         }
 
-        function updateStep2Button() {
-            const btn = document.getElementById('step2Btn');
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirmPassword').value;
-            btn.disabled = !(password.length >= 6 && password === confirm);
-        }
-
-        // ==================== REGISTRATION STEPS ====================
+        // ==================== NAVIGATION ====================
 
         function goToStep2(e) {
             e.preventDefault();
-            
             regData.indexNumber = document.getElementById('regIndex').value.trim().toUpperCase();
             regData.email = document.getElementById('regEmail').value.trim();
             regData.username = document.getElementById('regUsername').value.trim();
@@ -954,7 +594,6 @@
 
         async function goToStep3(e) {
             if (e) e.preventDefault();
-            
             regData.password = document.getElementById('regPassword').value;
             
             const btn = document.getElementById('step2Btn');
@@ -980,14 +619,21 @@
                     document.getElementById('step2').classList.remove('active');
                     document.getElementById('step2').classList.add('completed');
                     document.getElementById('step3').classList.add('active');
-                    startOtpTimer();
-                    setupOtpInputs();
-                    showAlert('OTP sent to your email!', 'success');
+                    
+                    // Reset OTP
+                    window.currentOtp = ['', '', '', '', '', ''];
+                    for (let i = 1; i <= 6; i++) {
+                        document.getElementById('otp' + i).value = '';
+                    }
+                    document.getElementById('otp1').focus();
+                    
+                    startTimer();
+                    showAlert('OTP sent!', 'success');
                 } else {
                     throw new Error(result.error);
                 }
             } catch (error) {
-                showAlert('Failed to send OTP: ' + error.message, 'error');
+                showAlert('Failed: ' + error.message, 'error');
             }
             
             btn.disabled = false;
@@ -1003,83 +649,23 @@
             clearInterval(otpTimerInterval);
         }
 
-        // ==================== OTP HANDLING ====================
-
-        function setupOtpInputs() {
-            const inputs = document.querySelectorAll('.otp-input');
-            const hiddenField = document.getElementById('otpHiddenValue');
-            
-            inputs.forEach((input, index) => {
-                // Handle input
-                input.addEventListener('input', function(e) {
-                    // Remove non-numeric
-                    this.value = this.value.replace(/[^0-9]/g, '');
-                    
-                    // Update hidden field
-                    let otp = '';
-                    inputs.forEach(inp => otp += inp.value);
-                    hiddenField.value = otp;
-                    
-                    // Auto-focus next
-                    if (this.value && index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    }
-                });
-                
-                // Handle backspace
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Backspace' && !this.value && index > 0) {
-                        inputs[index - 1].focus();
-                    }
-                });
-                
-                // Handle paste
-                input.addEventListener('paste', function(e) {
-                    e.preventDefault();
-                    const paste = (e.clipboardData || window.clipboardData).getData('text');
-                    const numbers = paste.replace(/[^0-9]/g, '').slice(0, 6).split('');
-                    
-                    numbers.forEach((num, i) => {
-                        if (inputs[i]) inputs[i].value = num;
-                    });
-                    
-                    // Update hidden field
-                    let otp = '';
-                    inputs.forEach(inp => otp += inp.value);
-                    hiddenField.value = otp;
-                    
-                    // Focus next empty or last
-                    if (numbers.length < 6) {
-                        inputs[numbers.length].focus();
-                    } else {
-                        inputs[5].focus();
-                    }
-                });
-            });
-        }
-
-        function startOtpTimer() {
-            let minutes = 10;
-            let seconds = 0;
-            
-            if (otpTimerInterval) clearInterval(otpTimerInterval);
-            
-            const display = document.getElementById('otpTimer');
+        function startTimer() {
+            let min = 10, sec = 0;
+            clearInterval(otpTimerInterval);
             
             otpTimerInterval = setInterval(() => {
-                if (seconds === 0) {
-                    if (minutes === 0) {
+                if (sec === 0) {
+                    if (min === 0) {
                         clearInterval(otpTimerInterval);
-                        display.textContent = 'Code expired. Please resend.';
+                        document.getElementById('otpTimer').textContent = 'Expired - Resend';
                         return;
                     }
-                    minutes--;
-                    seconds = 59;
+                    min--;
+                    sec = 59;
                 } else {
-                    seconds--;
+                    sec--;
                 }
-                
-                display.textContent = `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('otpTimer').textContent = `Code expires in: ${min}:${sec.toString().padStart(2, '0')}`;
             }, 1000);
         }
 
@@ -1101,35 +687,50 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    startOtpTimer();
+                    // Clear OTP
+                    window.currentOtp = ['', '', '', '', '', ''];
+                    for (let i = 1; i <= 6; i++) {
+                        document.getElementById('otp' + i).value = '';
+                    }
+                    document.getElementById('otp1').focus();
+                    
+                    startTimer();
                     showAlert('New OTP sent!', 'success');
-                    // Clear inputs
-                    document.querySelectorAll('.otp-input').forEach(i => i.value = '');
-                    document.getElementById('otpHiddenValue').value = '';
-                    document.querySelectorAll('.otp-input')[0].focus();
                 }
             } catch (error) {
-                showAlert('Failed to resend OTP', 'error');
+                showAlert('Failed to resend', 'error');
             }
             
             btn.disabled = false;
             btn.textContent = 'Resend Code';
         }
 
+        // ==================== VERIFY & REGISTER ====================
+
         async function verifyAndRegister() {
-            // Read OTP from hidden field (100% reliable)
-            const otp = document.getElementById('otpHiddenValue').value;
+            // Get OTP using multiple methods to ensure we capture it
+            let otp = '';
             
-            console.log('OTP from hidden field:', otp);
+            // Method 1: Read from global array
+            otp = window.currentOtp.join('');
             
-            if (!otp || otp.length !== 6) {
-                showAlert(`⚠️ Enter all 6 digits (currently ${otp ? otp.length : 0}/6)`, 'error');
+            // Method 2: If empty, read directly from inputs
+            if (!otp) {
+                for (let i = 1; i <= 6; i++) {
+                    otp += document.getElementById('otp' + i).value || '';
+                }
+            }
+            
+            console.log('Final OTP:', otp, 'Length:', otp.length);
+            
+            if (otp.length !== 6) {
+                showAlert(`⚠️ Enter all 6 digits (have ${otp.length}/6)`, 'error');
                 
-                // Find first empty and focus
-                const inputs = document.querySelectorAll('.otp-input');
-                for (let i = 0; i < inputs.length; i++) {
-                    if (!inputs[i].value) {
-                        inputs[i].focus();
+                // Focus first empty
+                for (let i = 1; i <= 6; i++) {
+                    const box = document.getElementById('otp' + i);
+                    if (!box.value) {
+                        box.focus();
                         break;
                     }
                 }
@@ -1142,7 +743,7 @@
             
             try {
                 // Verify OTP
-                const verifyResponse = await fetch(APPS_SCRIPT_URL, {
+                const vRes = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'verifyOtp',
@@ -1151,14 +752,11 @@
                     })
                 });
                 
-                const verifyResult = await verifyResponse.json();
-                
-                if (!verifyResult.success) {
-                    throw new Error(verifyResult.error);
-                }
+                const vResult = await vRes.json();
+                if (!vResult.success) throw new Error(vResult.error);
                 
                 // Register
-                const regResponse = await fetch(APPS_SCRIPT_URL, {
+                const rRes = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'register',
@@ -1169,24 +767,24 @@
                     })
                 });
                 
-                const regResult = await regResponse.json();
+                const rResult = await rRes.json();
+                if (!rResult.success) throw new Error(rResult.error);
                 
-                if (regResult.success) {
-                    showAlert('✅ Account created! Please login.', 'success');
-                    clearInterval(otpTimerInterval);
-                    setTimeout(() => {
-                        showTab('login');
-                        resetRegistration();
-                    }, 1500);
-                } else {
-                    throw new Error(regResult.error);
-                }
+                showAlert('✅ Success! Please login.', 'success');
+                clearInterval(otpTimerInterval);
+                setTimeout(() => {
+                    showTab('login');
+                    resetRegistration();
+                }, 1500);
+                
             } catch (error) {
                 showAlert('❌ ' + error.message, 'error');
-                // Clear OTP for retry
-                document.querySelectorAll('.otp-input').forEach(i => i.value = '');
-                document.getElementById('otpHiddenValue').value = '';
-                document.querySelector('.otp-input').focus();
+                // Clear for retry
+                window.currentOtp = ['', '', '', '', '', ''];
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById('otp' + i).value = '';
+                }
+                document.getElementById('otp1').focus();
             }
             
             btn.disabled = false;
@@ -1194,12 +792,19 @@
         }
 
         function resetRegistration() {
-            document.getElementById('registerForm1').reset();
-            document.getElementById('registerForm2').reset();
-            document.querySelectorAll('.otp-input').forEach(i => i.value = '');
-            document.getElementById('otpHiddenValue').value = '';
+            document.getElementById('regIndex').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirmPassword').value = '';
+            
+            window.currentOtp = ['', '', '', '', '', ''];
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById('otp' + i).value = '';
+            }
+            
             document.querySelectorAll('.validation-msg').forEach(v => v.innerHTML = '');
-            document.querySelectorAll('input').forEach(i => i.className = '');
+            document.querySelectorAll('input').forEach(i => i.style.borderColor = '');
             
             document.getElementById('regStep1').style.display = 'block';
             document.getElementById('regStep2').style.display = 'none';
@@ -1221,16 +826,15 @@
 
         async function handleLogin(e) {
             e.preventDefault();
-            
             const btn = document.getElementById('loginBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Signing in...';
             
-            const loginId = document.getElementById('loginId').value;
-            const password = document.getElementById('loginPassword').value;
-            
             try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=login&loginId=${loginId}&password=${password}`);
+                const id = document.getElementById('loginId').value;
+                const pass = document.getElementById('loginPassword').value;
+                
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=login&loginId=${id}&password=${pass}`);
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1239,38 +843,35 @@
                     showAlert(result.error, 'error');
                 }
             } catch (error) {
-                showAlert('Login failed. Please try again.', 'error');
+                showAlert('Login failed', 'error');
             }
             
             btn.disabled = false;
             btn.innerHTML = 'Sign In';
         }
 
-        async function loadProfile(indexNumber) {
+        async function loadProfile(indexNum) {
             try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&indexNumber=${indexNumber}`);
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&indexNumber=${indexNum}`);
                 const result = await response.json();
                 
                 if (!result.success) throw new Error(result.error);
                 
                 currentStudent = result.student;
                 
-                // Populate profile
                 document.getElementById('profileName').textContent = currentStudent.name;
                 document.getElementById('profileIndex').textContent = `Index: ${currentStudent.indexNumber}`;
                 document.getElementById('profileUsername').textContent = `@${currentStudent.username}`;
                 document.getElementById('profileAvatar').textContent = currentStudent.name.charAt(0).toUpperCase();
                 
-                // View mode values
                 document.getElementById('viewName').textContent = currentStudent.name;
                 document.getElementById('viewIndex').textContent = currentStudent.indexNumber;
-                document.getElementById('viewEmail').textContent = currentStudent.email || 'N/A';
-                document.getElementById('viewGender').textContent = currentStudent.gender || 'N/A';
-                document.getElementById('viewWhatsapp').textContent = currentStudent.whatsapp || 'N/A';
-                document.getElementById('viewPhone').textContent = currentStudent.phone || 'N/A';
-                document.getElementById('viewAddress').textContent = currentStudent.address || 'N/A';
+                document.getElementById('viewEmail').textContent = currentStudent.email || '-';
+                document.getElementById('viewGender').textContent = currentStudent.gender || '-';
+                document.getElementById('viewWhatsapp').textContent = currentStudent.whatsapp || '-';
+                document.getElementById('viewPhone').textContent = currentStudent.phone || '-';
+                document.getElementById('viewAddress').textContent = currentStudent.address || '-';
                 
-                // Edit mode values
                 document.getElementById('editName').value = currentStudent.name || '';
                 document.getElementById('editEmail').value = currentStudent.email || '';
                 document.getElementById('editGender').value = currentStudent.gender || 'Male';
@@ -1278,10 +879,8 @@
                 document.getElementById('editPhone').value = currentStudent.phone || '';
                 document.getElementById('editAddress').value = currentStudent.address || '';
                 
-                // Show profile
                 document.getElementById('authContainer').style.display = 'none';
                 document.getElementById('profileContainer').classList.add('show');
-                
             } catch (error) {
                 showAlert('Failed to load profile', 'error');
             }
@@ -1289,10 +888,9 @@
 
         function toggleEdit() {
             const card = document.getElementById('profileCard');
-            const isEditMode = card.classList.contains('edit-mode');
+            const isEdit = card.classList.contains('edit-mode');
             
-            if (isEditMode) {
-                // Reset values
+            if (isEdit) {
                 document.getElementById('editName').value = currentStudent.name || '';
                 document.getElementById('editEmail').value = currentStudent.email || '';
                 document.getElementById('editGender').value = currentStudent.gender || 'Male';
@@ -1303,9 +901,8 @@
             
             card.classList.toggle('edit-mode');
             card.classList.toggle('view-mode');
-            
-            document.getElementById('actionButtons').style.display = isEditMode ? 'flex' : 'none';
-            document.getElementById('saveButtons').style.display = isEditMode ? 'none' : 'flex';
+            document.getElementById('actionButtons').style.display = isEdit ? 'flex' : 'none';
+            document.getElementById('saveButtons').style.display = isEdit ? 'none' : 'flex';
         }
 
         async function saveProfile() {
@@ -1313,65 +910,54 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Saving...';
             
-            const data = {
-                action: 'updateProfile',
-                indexNumber: currentStudent.indexNumber,
-                name: document.getElementById('editName').value,
-                gender: document.getElementById('editGender').value,
-                whatsapp: document.getElementById('editWhatsapp').value,
-                phone: document.getElementById('editPhone').value,
-                email: document.getElementById('editEmail').value,
-                address: document.getElementById('editAddress').value
-            };
-            
             try {
+                const data = {
+                    action: 'updateProfile',
+                    indexNumber: currentStudent.indexNumber,
+                    name: document.getElementById('editName').value,
+                    gender: document.getElementById('editGender').value,
+                    whatsapp: document.getElementById('editWhatsapp').value,
+                    phone: document.getElementById('editPhone').value,
+                    email: document.getElementById('editEmail').value,
+                    address: document.getElementById('editAddress').value
+                };
+                
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(data)
                 });
                 
                 const result = await response.json();
+                if (!result.success) throw new Error(result.error);
                 
-                if (result.success) {
-                    currentStudent = {...currentStudent, ...data};
-                    
-                    document.getElementById('viewName').textContent = data.name;
-                    document.getElementById('viewEmail').textContent = data.email;
-                    document.getElementById('viewGender').textContent = data.gender;
-                    document.getElementById('viewWhatsapp').textContent = data.whatsapp || 'N/A';
-                    document.getElementById('viewPhone').textContent = data.phone || 'N/A';
-                    document.getElementById('viewAddress').textContent = data.address || 'N/A';
-                    
-                    document.getElementById('profileName').textContent = data.name;
-                    document.getElementById('profileAvatar').textContent = data.name.charAt(0).toUpperCase();
-                    
-                    toggleEdit();
-                    alert('Profile updated successfully!');
-                } else {
-                    alert('Failed to update: ' + result.error);
-                }
+                currentStudent = {...currentStudent, ...data};
+                document.getElementById('viewName').textContent = data.name;
+                document.getElementById('viewEmail').textContent = data.email;
+                document.getElementById('viewGender').textContent = data.gender;
+                document.getElementById('viewWhatsapp').textContent = data.whatsapp || '-';
+                document.getElementById('viewPhone').textContent = data.phone || '-';
+                document.getElementById('viewAddress').textContent = data.address || '-';
+                document.getElementById('profileName').textContent = data.name;
+                document.getElementById('profileAvatar').textContent = data.name.charAt(0).toUpperCase();
+                
+                toggleEdit();
+                showAlert('Profile updated!', 'success');
             } catch (error) {
-                alert('Failed to save changes');
+                showAlert('Failed to save', 'error');
             }
             
             btn.disabled = false;
-            btn.innerHTML = '💾 Save Changes';
+            btn.innerHTML = '💾 Save';
         }
 
         function logout() {
             currentStudent = null;
             document.getElementById('authContainer').style.display = 'block';
             document.getElementById('profileContainer').classList.remove('show');
-            document.getElementById('loginForm').reset();
+            document.getElementById('loginId').value = '';
+            document.getElementById('loginPassword').value = '';
             showTab('login');
         }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            if (APPS_SCRIPT_URL.includes('YOUR_DEPLOYMENT_ID')) {
-                showAlert('⚠️ Please update APPS_SCRIPT_URL in the code', 'error');
-            }
-        });
     </script>
 </body>
 </html>
