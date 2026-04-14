@@ -582,14 +582,15 @@
                             We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
                         </p>
                         
-                       <div class="otp-inputs">
-                            <input type="text" class="otp-input" maxlength="1" data-index="0" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="1" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="2" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="3" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="4" placeholder="•">
-                            <input type="text" class="otp-input" maxlength="1" data-index="5" placeholder="•">
-                        </div>
+                       <!-- Replace your current OTP inputs with this -->
+<div class="otp-inputs">
+    <input type="text" class="otp-input" maxlength="1" data-index="0">
+    <input type="text" class="otp-input" maxlength="1" data-index="1">
+    <input type="text" class="otp-input" maxlength="1" data-index="2">
+    <input type="text" class="otp-input" maxlength="1" data-index="3">
+    <input type="text" class="otp-input" maxlength="1" data-index="4">
+    <input type="text" class="otp-input" maxlength="1" data-index="5">
+</div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
                         
@@ -946,47 +947,53 @@ async function validateEmail() {
         }
 
         async function goToStep3(e) {
-            e.preventDefault();
+    if (e) e.preventDefault();
+    
+    regData.password = document.getElementById('regPassword').value;
+    
+    const btn = document.getElementById('step2Btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Sending...';
+    
+    try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'resendOtp',
+                email: regData.email,
+                name: regData.username
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            document.getElementById('otpEmailDisplay').textContent = regData.email;
+            document.getElementById('regStep2').style.display = 'none';
+            document.getElementById('regStep3').style.display = 'block';
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
             
-            regData.password = document.getElementById('regPassword').value;
-            
-            // Send OTP
-            const btn = document.getElementById('step2Btn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> Sending OTP...';
-            
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'resendOtp',
-                        email: regData.email,
-                        name: regData.username
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    document.getElementById('otpEmailDisplay').textContent = regData.email;
-                    document.getElementById('regStep2').style.display = 'none';
-                    document.getElementById('regStep3').style.display = 'block';
-                    document.getElementById('step2').classList.remove('active');
-                    document.getElementById('step2').classList.add('completed');
-                    document.getElementById('step3').classList.add('active');
-                    startOtpTimer();
-                    showAlert('OTP sent to your email!', 'success');
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                showAlert('Failed to send OTP: ' + error.message, 'error');
+            // Start timer - ensure function exists
+            if (typeof startOtpTimer === 'function') {
+                startOtpTimer();
+            } else {
+                console.error('startOtpTimer not defined');
+                document.getElementById('otpTimer').textContent = 'Code expires in: 10:00';
             }
             
-            btn.disabled = false;
-            btn.innerHTML = 'Continue →';
+            showAlert('OTP sent!', 'success');
+        } else {
+            throw new Error(result.error);
         }
-
+    } catch (error) {
+        showAlert('Failed: ' + error.message, 'error');
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = 'Continue →';
+}
         function backToStep2() {
             document.getElementById('regStep3').style.display = 'none';
             document.getElementById('regStep2').style.display = 'block';
@@ -1002,6 +1009,34 @@ async function validateEmail() {
 document.addEventListener('DOMContentLoaded', function() {
     setupOtpInputs();
 });
+        function startOtpTimer() {
+    let minutes = 10;
+    let seconds = 0;
+    
+    // Clear any existing timer
+    if (window.otpTimerInterval) {
+        clearInterval(window.otpTimerInterval);
+    }
+    
+    const timerDisplay = document.getElementById('otpTimer');
+    if (!timerDisplay) return;
+    
+    window.otpTimerInterval = setInterval(() => {
+        if (seconds === 0) {
+            if (minutes === 0) {
+                clearInterval(window.otpTimerInterval);
+                timerDisplay.textContent = 'Code expired. Please resend.';
+                return;
+            }
+            minutes--;
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+        
+        timerDisplay.textContent = `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
 
 function setupOtpInputs() {
     const inputs = document.querySelectorAll('.otp-input');
@@ -1128,21 +1163,21 @@ function clearOtpInputs() {
             btn.textContent = 'Resend Code';
         }
 async function verifyAndRegister() {
-    // Read OTP values directly from inputs
+    // Get values fresh from DOM
     const inputs = document.querySelectorAll('.otp-input');
-    let otp = '';
+    let otpCode = '';
     
-    inputs.forEach((input, index) => {
-        otp += input.value || '';
-        console.log(`Box ${index}: "${input.value}"`); // Debug
+    inputs.forEach((input, idx) => {
+        const val = input.value.trim();
+        otpCode += val;
+        console.log(`Input ${idx}: value="${val}", length=${val.length}`);
     });
     
-    console.log('Total OTP:', otp, 'Length:', otp.length); // Debug
+    console.log('Combined OTP:', otpCode, 'Length:', otpCode.length);
     
-    if (otp.length !== 6) {
-        showAlert(`⚠️ Please enter all 6 digits (currently ${otp.length}/6)`, 'error');
-        
-        // Find first empty box and focus it
+    if (otpCode.length !== 6 || !/^\d{6}$/.test(otpCode)) {
+        showAlert(`⚠️ Enter all 6 digits (have ${otpCode.length})`, 'error');
+        // Focus first empty
         for (let i = 0; i < inputs.length; i++) {
             if (!inputs[i].value) {
                 inputs[i].focus();
@@ -1157,17 +1192,19 @@ async function verifyAndRegister() {
     btn.innerHTML = '<span class="spinner"></span> Verifying...';
     
     try {
-        // Verify OTP
+        console.log('Sending OTP:', otpCode, 'Email:', regData.email);
+        
         const verifyResponse = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify({
                 action: 'verifyOtp',
                 email: regData.email,
-                otp: otp
+                otp: otpCode
             })
         });
         
-        const verifyResult = await response.json();
+        const verifyResult = await verifyResponse.json();
+        console.log('Verify result:', verifyResult);
         
         if (!verifyResult.success) {
             throw new Error(verifyResult.error);
@@ -1188,18 +1225,19 @@ async function verifyAndRegister() {
         const regResult = await regResponse.json();
         
         if (regResult.success) {
-            showAlert('✅ Account created! Please login.', 'success');
-            clearInterval(otpTimerInterval);
+            showAlert('✅ Success! Please login.', 'success');
+            clearInterval(window.otpTimerInterval);
             setTimeout(() => {
                 showTab('login');
                 resetRegistration();
-            }, 2000);
+            }, 1500);
         } else {
             throw new Error(regResult.error);
         }
     } catch (error) {
+        console.error('Error:', error);
         showAlert('❌ ' + error.message, 'error');
-        // Clear inputs on error
+        // Clear for retry
         inputs.forEach(i => i.value = '');
         inputs[0].focus();
     }
@@ -1383,6 +1421,45 @@ async function verifyAndRegister() {
         // Event listeners for step 2
         document.getElementById('regPassword').addEventListener('input', updateStep2Button);
         document.getElementById('regConfirmPassword').addEventListener('input', updateStep2Button);
+
+        // Initialize OTP behavior
+document.addEventListener('DOMContentLoaded', function() {
+    const otpInputs = document.querySelectorAll('.otp-input');
+    
+    otpInputs.forEach((input, index) => {
+        // Auto-focus next on input
+        input.addEventListener('input', function(e) {
+            const val = this.value.replace(/[^0-9]/g, '');
+            this.value = val;
+            
+            if (val && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+        
+        // Handle backspace
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+        
+        // Handle paste
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            const numbers = pasted.replace(/[^0-9]/g, '').slice(0, 6).split('');
+            
+            numbers.forEach((num, i) => {
+                if (otpInputs[i]) otpInputs[i].value = num;
+            });
+            
+            if (numbers.length < 6) {
+                otpInputs[numbers.length].focus();
+            }
+        });
+    });
+});
     </script>
 </body>
 </html>
