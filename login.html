@@ -1163,36 +1163,42 @@ function clearOtpInputs() {
             btn.textContent = 'Resend Code';
         }
 async function verifyAndRegister() {
-    // Get values fresh from DOM
-    const inputs = document.querySelectorAll('.otp-input');
-    let otpCode = '';
+    // CRITICAL: Query inputs LIVE from the DOM, not cached references
+    const otpContainer = document.getElementById('regStep3');
+    const inputs = otpContainer.querySelectorAll('.otp-input');
     
-    inputs.forEach((input, idx) => {
-        const val = input.value.trim();
+    let otpCode = '';
+    inputs.forEach((input, index) => {
+        // Force string conversion and trim
+        const val = String(input.value || '').trim();
         otpCode += val;
-        console.log(`Input ${idx}: value="${val}", length=${val.length}`);
+        console.log(`Box ${index}: "${val}" (length: ${val.length})`);
     });
     
-    console.log('Combined OTP:', otpCode, 'Length:', otpCode.length);
+    console.log('Final OTP string:', otpCode, 'Total length:', otpCode.length);
     
-    if (otpCode.length !== 6 || !/^\d{6}$/.test(otpCode)) {
-        showAlert(`⚠️ Enter all 6 digits (have ${otpCode.length})`, 'error');
-        // Focus first empty
-        for (let i = 0; i < inputs.length; i++) {
-            if (!inputs[i].value) {
-                inputs[i].focus();
-                break;
+    // Validation with detailed logging
+    if (!otpCode || otpCode.length !== 6) {
+        console.error('Validation failed. Expected 6, got:', otpCode.length);
+        showAlert(`⚠️ Enter all 6 digits (currently ${otpCode.length}/6)`, 'error');
+        
+        // Focus first empty box
+        inputs.forEach((input, idx) => {
+            if (!input.value && otpCode.length === idx) {
+                input.focus();
             }
-        }
+        });
         return;
     }
     
     const btn = document.getElementById('verifyBtn');
+    const originalText = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Verifying...';
     
     try {
-        console.log('Sending OTP:', otpCode, 'Email:', regData.email);
+        // Step 1: Verify OTP
+        console.log('Sending verify request:', {email: regData.email, otp: otpCode});
         
         const verifyResponse = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
@@ -1204,13 +1210,13 @@ async function verifyAndRegister() {
         });
         
         const verifyResult = await verifyResponse.json();
-        console.log('Verify result:', verifyResult);
+        console.log('Verify response:', verifyResult);
         
         if (!verifyResult.success) {
             throw new Error(verifyResult.error);
         }
         
-        // Register
+        // Step 2: Register
         const regResponse = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify({
@@ -1223,10 +1229,11 @@ async function verifyAndRegister() {
         });
         
         const regResult = await regResponse.json();
+        console.log('Register response:', regResult);
         
         if (regResult.success) {
-            showAlert('✅ Success! Please login.', 'success');
-            clearInterval(window.otpTimerInterval);
+            showAlert('✅ Account created successfully!', 'success');
+            if (window.otpTimerInterval) clearInterval(window.otpTimerInterval);
             setTimeout(() => {
                 showTab('login');
                 resetRegistration();
@@ -1234,16 +1241,17 @@ async function verifyAndRegister() {
         } else {
             throw new Error(regResult.error);
         }
+        
     } catch (error) {
         console.error('Error:', error);
         showAlert('❌ ' + error.message, 'error');
-        // Clear for retry
+        // Clear inputs for retry
         inputs.forEach(i => i.value = '');
         inputs[0].focus();
     }
     
     btn.disabled = false;
-    btn.innerHTML = 'Verify & Create Account';
+    btn.innerHTML = originalText;
 }
 
         function resetRegistration() {
