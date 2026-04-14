@@ -275,7 +275,6 @@
             border: 1px solid #bae6fd;
         }
 
-        /* OTP Section */
         .otp-section {
             display: none;
             background: var(--bg);
@@ -300,6 +299,15 @@
             font-size: 1.5rem;
             font-weight: 700;
             padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #f0f9ff;
         }
 
         .otp-timer {
@@ -309,7 +317,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Profile Page Styles */
         .profile-container {
             display: none;
             max-width: 900px;
@@ -574,24 +581,25 @@
                     </form>
                 </div>
 
-<div id="regStep3" style="display: none;">
-    <div class="otp-section show">
-        <h4 style="margin-bottom: 1rem; text-align: center;">📧 Email Verification</h4>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
-            We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
-        </p>
-        
-        <!-- ADD THIS HIDDEN FIELD -->
-        <input type="hidden" id="otpHiddenValue" value="">
-        
-        <div class="otp-inputs">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
-        </div>
+                <!-- Step 3: Email Verification -->
+                <div id="regStep3" style="display: none;">
+                    <div class="otp-section show">
+                        <h4 style="margin-bottom: 1rem; text-align: center;">📧 Email Verification</h4>
+                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+                            We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
+                        </p>
+                        
+                        <!-- Hidden field to store complete OTP -->
+                        <input type="hidden" id="otpHiddenValue" value="">
+                        
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5" placeholder="•">
+                        </div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
                         
@@ -612,8 +620,6 @@
             </div>
         </div>
     </div>
-</div>
-</div>
 
     <!-- Profile Page -->
     <div class="profile-container" id="profileContainer">
@@ -702,6 +708,7 @@
     </div>
 
     <script>
+        // REPLACE WITH YOUR DEPLOYED SCRIPT URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6_0IPfjOsqVeBiderB45IwVCrY5oJno7jXQgH1xUFLLjinL4u-XFOdP156nkljoTA/exec';
         
         let currentStudent = null;
@@ -730,120 +737,112 @@
         function showAlert(message, type) {
             const alert = document.getElementById('alertBox');
             alert.className = `alert alert-${type} show`;
-            alert.innerHTML = type === 'error' ? `⚠️ ${message}` : type === 'success' ? `✓ ${message}` : `ℹ️ ${message}`;
+            alert.innerHTML = type === 'error' ? `⚠️ ${message}` : type === 'success' ? `✅ ${message}` : `ℹ️ ${message}`;
             setTimeout(() => alert.classList.remove('show'), 5000);
         }
 
         // ==================== VALIDATION FUNCTIONS ====================
 
         async function validateIndex() {
-    const input = document.getElementById('regIndex');
-    const validation = document.getElementById('indexValidation');
-    const indexNumber = input.value.trim().toUpperCase();
-    
-    if (!indexNumber) {
-        validation.innerHTML = '';
-        isIndexValid = false;
-        updateStep1Button();
-        return;
-    }
-
-    // Basic format check on client side too
-    const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
-    if (!pattern.test(indexNumber)) {
-        validation.innerHTML = '<span class="error">❌ Format: NAW/IT/2025/F/0024</span>';
-        isIndexValid = false;
-        updateStep1Button();
-        return;
-    }
-
-    validation.innerHTML = '<span class="info">⏳ Checking...</span>';
-    
-    try {
-        const encodedIndex = encodeURIComponent(indexNumber);
-        const response = await fetch(`${APPS_SCRIPT_URL}?action=checkIndex&indexNumber=${encodedIndex}`);
-        const result = await response.json();
-        
-        console.log('Full server response:', result); // Check browser console (F12)
-        
-        if (!result.success) {
-            validation.innerHTML = `<span class="error">❌ ${result.error}</span>`;
-            isIndexValid = false;
-        } else if (!result.exists) {
-            // Show debug info in console or on screen temporarily
-            let msg = '❌ Not found';
-            if (result.debug) {
-                console.log('Sheet data:', result.debug);
-                msg += ` (Checked ${result.debug.totalRowsChecked} rows)`;
+            const input = document.getElementById('regIndex');
+            const validation = document.getElementById('indexValidation');
+            const indexNumber = input.value.trim().toUpperCase();
+            
+            if (!indexNumber) {
+                validation.innerHTML = '';
+                input.className = '';
+                isIndexValid = false;
+                updateStep1Button();
+                return;
             }
-            validation.innerHTML = `<span class="error">${msg}</span>`;
-            isIndexValid = false;
-        } else if (result.hasAccount) {
-            validation.innerHTML = '<span class="error">❌ Already registered. Please login.</span>';
-            isIndexValid = false;
-        } else {
-            validation.innerHTML = '<span class="success">✓ Valid index number</span>';
-            isIndexValid = true;
-            document.getElementById('regEmail').disabled = false;
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        validation.innerHTML = '<span class="error">❌ Network error</span>';
-        isIndexValid = false;
-    }
-    
-    updateStep1Button();
-}
 
-async function validateEmail() {
-    const input = document.getElementById('regEmail');
-    const validation = document.getElementById('emailValidation');
-    const email = input.value.trim();
-    
-    if (!email || !email.includes('@')) {
-        validation.innerHTML = '';
-        input.className = '';
-        isEmailValid = false;
-        updateStep1Button();
-        return;
-    }
-
-    validation.innerHTML = '<span class="info">⏳ Checking...</span>';
-    
-    try {
-        const response = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
-        const result = await response.json();
-        
-        if (!result.success) throw new Error(result.error);
-
-        if (!result.available) {
-            if (result.hasAccount) {
-                // Email already has an account - show error
-                validation.innerHTML = '<span class="error">❌ Email already registered. Please login.</span>';
+            const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
+            if (!pattern.test(indexNumber)) {
+                validation.innerHTML = '<span class="error">❌ Invalid format. Use: NAW/IT/2025/F/0002</span>';
                 input.className = 'error';
-                isEmailValid = false;
-                setTimeout(() => showTab('login'), 2000);
-            } else {
-                // Email found in sheet but no account yet - ALLOW REGISTRATION
-                validation.innerHTML = '<span class="success">✓ Email verified</span>';
-                input.className = 'success';
-                isEmailValid = true;
-                document.getElementById('regUsername').disabled = false;
+                isIndexValid = false;
+                updateStep1Button();
+                return;
             }
-        } else {
-            // Email not found in sheet - new email, allow registration
-            validation.innerHTML = '<span class="success">✓ Email available</span>';
-            input.className = 'success';
-            isEmailValid = true;
-            document.getElementById('regUsername').disabled = false;
+
+            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+            
+            try {
+                const encodedIndex = encodeURIComponent(indexNumber);
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkIndex&indexNumber=${encodedIndex}`);
+                const result = await response.json();
+                
+                if (!result.success) throw new Error(result.error);
+
+                if (!result.exists) {
+                    validation.innerHTML = '<span class="error">❌ Index number not found</span>';
+                    input.className = 'error';
+                    isIndexValid = false;
+                } else if (result.hasAccount) {
+                    validation.innerHTML = '<span class="error">❌ Already registered. Please login.</span>';
+                    input.className = 'error';
+                    isIndexValid = false;
+                    setTimeout(() => showTab('login'), 2000);
+                } else {
+                    validation.innerHTML = '<span class="success">✓ Valid index number</span>';
+                    input.className = 'success';
+                    isIndexValid = true;
+                    document.getElementById('regEmail').disabled = false;
+                }
+            } catch (error) {
+                validation.innerHTML = '<span class="error">❌ Error checking index</span>';
+                isIndexValid = false;
+            }
+            
+            updateStep1Button();
         }
-    } catch (error) {
-        validation.innerHTML = '<span class="error">❌ Error checking email</span>';
-        isEmailValid = false;
-    }
-    
-    updateStep1Button();
-}
+
+        async function validateEmail() {
+            const input = document.getElementById('regEmail');
+            const validation = document.getElementById('emailValidation');
+            const email = input.value.trim();
+            
+            if (!email || !email.includes('@')) {
+                validation.innerHTML = '';
+                isEmailValid = false;
+                updateStep1Button();
+                return;
+            }
+
+            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+            
+            try {
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
+                const result = await response.json();
+                
+                if (!result.success) throw new Error(result.error);
+
+                if (!result.available) {
+                    if (result.hasAccount) {
+                        validation.innerHTML = '<span class="error">❌ Email already registered. Please login.</span>';
+                        input.className = 'error';
+                        isEmailValid = false;
+                        setTimeout(() => showTab('login'), 2000);
+                    } else {
+                        // Email exists but no account - ALLOW REGISTRATION
+                        validation.innerHTML = '<span class="success">✓ Email verified</span>';
+                        input.className = 'success';
+                        isEmailValid = true;
+                        document.getElementById('regUsername').disabled = false;
+                    }
+                } else {
+                    validation.innerHTML = '<span class="success">✓ Email available</span>';
+                    input.className = 'success';
+                    isEmailValid = true;
+                    document.getElementById('regUsername').disabled = false;
+                }
+            } catch (error) {
+                validation.innerHTML = '<span class="error">❌ Error checking email</span>';
+                isEmailValid = false;
+            }
+            
+            updateStep1Button();
+        }
 
         async function validateUsername() {
             const input = document.getElementById('regUsername');
@@ -852,7 +851,6 @@ async function validateEmail() {
             
             if (!username) {
                 validation.innerHTML = '';
-                input.className = '';
                 isUsernameAvailable = false;
                 updateStep1Button();
                 return;
@@ -871,7 +869,7 @@ async function validateEmail() {
                     input.className = 'success';
                     isUsernameAvailable = true;
                 } else {
-                    validation.innerHTML = '<span class="error">❌ Username already taken</span>';
+                    validation.innerHTML = '<span class="error">❌ Username taken</span>';
                     input.className = 'error';
                     isUsernameAvailable = false;
                 }
@@ -888,10 +886,12 @@ async function validateEmail() {
             const validation = document.getElementById('passwordValidation');
             
             if (password.length < 6) {
-                validation.innerHTML = '<span class="error">❌ At least 6 characters required</span>';
+                validation.innerHTML = '<span class="error">❌ At least 6 characters</span>';
+                updateStep2Button();
                 return false;
             } else {
                 validation.innerHTML = '<span class="success">✓ Valid password</span>';
+                updateStep2Button();
                 return true;
             }
         }
@@ -903,12 +903,15 @@ async function validateEmail() {
             
             if (confirm !== password) {
                 validation.innerHTML = '<span class="error">❌ Passwords do not match</span>';
+                updateStep2Button();
                 return false;
             } else if (confirm === '') {
                 validation.innerHTML = '';
+                updateStep2Button();
                 return false;
             } else {
                 validation.innerHTML = '<span class="success">✓ Passwords match</span>';
+                updateStep2Button();
                 return true;
             }
         }
@@ -950,53 +953,47 @@ async function validateEmail() {
         }
 
         async function goToStep3(e) {
-    if (e) e.preventDefault();
-    
-    regData.password = document.getElementById('regPassword').value;
-    
-    const btn = document.getElementById('step2Btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Sending...';
-    
-    try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'resendOtp',
-                email: regData.email,
-                name: regData.username
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            document.getElementById('otpEmailDisplay').textContent = regData.email;
-            document.getElementById('regStep2').style.display = 'none';
-            document.getElementById('regStep3').style.display = 'block';
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step2').classList.add('completed');
-            document.getElementById('step3').classList.add('active');
+            if (e) e.preventDefault();
             
-            // Start timer - ensure function exists
-            if (typeof startOtpTimer === 'function') {
-                startOtpTimer();
-            } else {
-                console.error('startOtpTimer not defined');
-                document.getElementById('otpTimer').textContent = 'Code expires in: 10:00';
+            regData.password = document.getElementById('regPassword').value;
+            
+            const btn = document.getElementById('step2Btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Sending...';
+            
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'resendOtp',
+                        email: regData.email,
+                        name: regData.username
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('otpEmailDisplay').textContent = regData.email;
+                    document.getElementById('regStep2').style.display = 'none';
+                    document.getElementById('regStep3').style.display = 'block';
+                    document.getElementById('step2').classList.remove('active');
+                    document.getElementById('step2').classList.add('completed');
+                    document.getElementById('step3').classList.add('active');
+                    startOtpTimer();
+                    setupOtpInputs();
+                    showAlert('OTP sent to your email!', 'success');
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                showAlert('Failed to send OTP: ' + error.message, 'error');
             }
             
-            showAlert('OTP sent!', 'success');
-        } else {
-            throw new Error(result.error);
+            btn.disabled = false;
+            btn.innerHTML = 'Continue →';
         }
-    } catch (error) {
-        showAlert('Failed: ' + error.message, 'error');
-    }
-    
-    btn.disabled = false;
-    btn.innerHTML = 'Continue →';
-}
+
         function backToStep2() {
             document.getElementById('regStep3').style.display = 'none';
             document.getElementById('regStep2').style.display = 'block';
@@ -1008,132 +1005,84 @@ async function validateEmail() {
 
         // ==================== OTP HANDLING ====================
 
-        // Setup OTP inputs when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setupOtpInputs();
-});
+        function setupOtpInputs() {
+            const inputs = document.querySelectorAll('.otp-input');
+            const hiddenField = document.getElementById('otpHiddenValue');
+            
+            inputs.forEach((input, index) => {
+                // Handle input
+                input.addEventListener('input', function(e) {
+                    // Remove non-numeric
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    // Update hidden field
+                    let otp = '';
+                    inputs.forEach(inp => otp += inp.value);
+                    hiddenField.value = otp;
+                    
+                    // Auto-focus next
+                    if (this.value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                
+                // Handle paste
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbers = paste.replace(/[^0-9]/g, '').slice(0, 6).split('');
+                    
+                    numbers.forEach((num, i) => {
+                        if (inputs[i]) inputs[i].value = num;
+                    });
+                    
+                    // Update hidden field
+                    let otp = '';
+                    inputs.forEach(inp => otp += inp.value);
+                    hiddenField.value = otp;
+                    
+                    // Focus next empty or last
+                    if (numbers.length < 6) {
+                        inputs[numbers.length].focus();
+                    } else {
+                        inputs[5].focus();
+                    }
+                });
+            });
+        }
+
         function startOtpTimer() {
-    let minutes = 10;
-    let seconds = 0;
-    
-    // Clear any existing timer
-    if (window.otpTimerInterval) {
-        clearInterval(window.otpTimerInterval);
-    }
-    
-    const timerDisplay = document.getElementById('otpTimer');
-    if (!timerDisplay) return;
-    
-    window.otpTimerInterval = setInterval(() => {
-        if (seconds === 0) {
-            if (minutes === 0) {
-                clearInterval(window.otpTimerInterval);
-                timerDisplay.textContent = 'Code expired. Please resend.';
-                return;
-            }
-            minutes--;
-            seconds = 59;
-        } else {
-            seconds--;
-        }
-        
-        timerDisplay.textContent = `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }, 1000);
-}
-
-function setupOtpInputs() {
-    const inputs = document.querySelectorAll('.otp-input');
-    
-    inputs.forEach((input, index) => {
-        // Handle input (typing)
-        input.addEventListener('input', function(e) {
-            const val = this.value;
+            let minutes = 10;
+            let seconds = 0;
             
-            // Remove non-numeric
-            this.value = val.replace(/[^0-9]/g, '');
+            if (otpTimerInterval) clearInterval(otpTimerInterval);
             
-            // If value entered, move to next
-            if (this.value && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
+            const display = document.getElementById('otpTimer');
             
-            // If user pasted multiple digits, distribute them
-            if (val.length > 1) {
-                distributeOtpValue(val, index);
-            }
-        });
-        
-        // Handle keyboard navigation
-        input.addEventListener('keydown', function(e) {
-            // Backspace on empty field = go back
-            if (e.key === 'Backspace' && !this.value && index > 0) {
-                inputs[index - 1].focus();
-                inputs[index - 1].select();
-            }
-            
-            // Left arrow = go back
-            if (e.key === 'ArrowLeft' && index > 0) {
-                e.preventDefault();
-                inputs[index - 1].focus();
-            }
-            
-            // Right arrow = go forward
-            if (e.key === 'ArrowRight' && index < inputs.length - 1) {
-                e.preventDefault();
-                inputs[index + 1].focus();
-            }
-        });
-        
-        // Handle paste event
-        input.addEventListener('paste', function(e) {
-            e.preventDefault();
-            const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            const numbers = pasteData.replace(/[^0-9]/g, '').slice(0, 6);
-            
-            if (numbers) {
-                distributeOtpValue(numbers, 0);
-                // Focus the next empty input or last one
-                const filledCount = numbers.length;
-                if (filledCount < 6) {
-                    inputs[filledCount].focus();
+            otpTimerInterval = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(otpTimerInterval);
+                        display.textContent = 'Code expired. Please resend.';
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
                 } else {
-                    inputs[5].focus();
+                    seconds--;
                 }
-            }
-        });
-        
-        // Focus handling - select all on focus
-        input.addEventListener('focus', function() {
-            this.select();
-        });
-    });
-}
-
-// Distribute a string of numbers across OTP inputs
-function distributeOtpValue(value, startIndex) {
-    const inputs = document.querySelectorAll('.otp-input');
-    const numbers = value.replace(/[^0-9]/g, '').split('');
-    
-    numbers.forEach((num, i) => {
-        const targetIndex = startIndex + i;
-        if (targetIndex < inputs.length) {
-            inputs[targetIndex].value = num;
+                
+                display.textContent = `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
         }
-    });
-}
 
-// Get complete OTP
-function getOtpValue() {
-    const inputs = document.querySelectorAll('.otp-input');
-    return Array.from(inputs).map(i => i.value).join('');
-}
-
-// Clear OTP inputs
-function clearOtpInputs() {
-    const inputs = document.querySelectorAll('.otp-input');
-    inputs.forEach(i => i.value = '');
-    inputs[0].focus();
-}
         async function resendOtp() {
             const btn = document.getElementById('resendBtn');
             btn.disabled = true;
@@ -1156,6 +1105,7 @@ function clearOtpInputs() {
                     showAlert('New OTP sent!', 'success');
                     // Clear inputs
                     document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+                    document.getElementById('otpHiddenValue').value = '';
                     document.querySelectorAll('.otp-input')[0].focus();
                 }
             } catch (error) {
@@ -1165,110 +1115,89 @@ function clearOtpInputs() {
             btn.disabled = false;
             btn.textContent = 'Resend Code';
         }
-async function verifyAndRegister() {
-    // CRITICAL: Query inputs LIVE from the DOM, not cached references
-    const otpCode = document.getElementById('otpHiddenValue').value;
-    console.log('Reading from hidden field:', otpCode);
-    
-    if (otpCode.length !== 6) {
-        showAlert(`⚠️ Enter all 6 digits (${otpCode.length}/6)`, 'error');
-        return;
-    }
-    const otpContainer = document.getElementById('regStep3');
-    const inputs = otpContainer.querySelectorAll('.otp-input');
-    
-    let otpCode = '';
-    inputs.forEach((input, index) => {
-        // Force string conversion and trim
-        const val = String(input.value || '').trim();
-        otpCode += val;
-        console.log(`Box ${index}: "${val}" (length: ${val.length})`);
-    });
-    
-    console.log('Final OTP string:', otpCode, 'Total length:', otpCode.length);
-    
-    // Validation with detailed logging
-    if (!otpCode || otpCode.length !== 6) {
-        console.error('Validation failed. Expected 6, got:', otpCode.length);
-        showAlert(`⚠️ Enter all 6 digits (currently ${otpCode.length}/6)`, 'error');
-        
-        // Focus first empty box
-        inputs.forEach((input, idx) => {
-            if (!input.value && otpCode.length === idx) {
-                input.focus();
+
+        async function verifyAndRegister() {
+            // Read OTP from hidden field (100% reliable)
+            const otp = document.getElementById('otpHiddenValue').value;
+            
+            console.log('OTP from hidden field:', otp);
+            
+            if (!otp || otp.length !== 6) {
+                showAlert(`⚠️ Enter all 6 digits (currently ${otp ? otp.length : 0}/6)`, 'error');
+                
+                // Find first empty and focus
+                const inputs = document.querySelectorAll('.otp-input');
+                for (let i = 0; i < inputs.length; i++) {
+                    if (!inputs[i].value) {
+                        inputs[i].focus();
+                        break;
+                    }
+                }
+                return;
             }
-        });
-        return;
-    }
-    
-    const btn = document.getElementById('verifyBtn');
-    const originalText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Verifying...';
-    
-    try {
-        // Step 1: Verify OTP
-        console.log('Sending verify request:', {email: regData.email, otp: otpCode});
-        
-        const verifyResponse = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'verifyOtp',
-                email: regData.email,
-                otp: otpCode
-            })
-        });
-        
-        const verifyResult = await verifyResponse.json();
-        console.log('Verify response:', verifyResult);
-        
-        if (!verifyResult.success) {
-            throw new Error(verifyResult.error);
-        }
-        
-        // Step 2: Register
-        const regResponse = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'register',
-                indexNumber: regData.indexNumber,
-                username: regData.username,
-                password: regData.password,
-                email: regData.email
-            })
-        });
-        
-        const regResult = await regResponse.json();
-        console.log('Register response:', regResult);
-        
-        if (regResult.success) {
-            showAlert('✅ Account created successfully!', 'success');
-            if (window.otpTimerInterval) clearInterval(window.otpTimerInterval);
-            setTimeout(() => {
-                showTab('login');
-                resetRegistration();
-            }, 1500);
-        } else {
-            throw new Error(regResult.error);
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('❌ ' + error.message, 'error');
-        // Clear inputs for retry
-        inputs.forEach(i => i.value = '');
-        inputs[0].focus();
-    }
-    
-    btn.disabled = false;
-    btn.innerHTML = originalText;
-}
+            
+            const btn = document.getElementById('verifyBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Verifying...';
+            
+            try {
+                // Verify OTP
+                const verifyResponse = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'verifyOtp',
+                        email: regData.email,
+                        otp: otp
+                    })
+                });
+                
+                const verifyResult = await verifyResponse.json();
+                
+                if (!verifyResult.success) {
+                    throw new Error(verifyResult.error);
+                }
+                
+                // Register
+                const regResponse = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'register',
+                        indexNumber: regData.indexNumber,
+                        username: regData.username,
+                        password: regData.password,
+                        email: regData.email
+                    })
+                });
+                
+                const regResult = await regResponse.json();
+                
+                if (regResult.success) {
+                    showAlert('✅ Account created! Please login.', 'success');
+                    clearInterval(otpTimerInterval);
+                    setTimeout(() => {
+                        showTab('login');
+                        resetRegistration();
+                    }, 1500);
+                } else {
+                    throw new Error(regResult.error);
+                }
+            } catch (error) {
+                showAlert('❌ ' + error.message, 'error');
+                // Clear OTP for retry
+                document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+                document.getElementById('otpHiddenValue').value = '';
+                document.querySelector('.otp-input').focus();
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = 'Verify & Create Account';
         }
 
         function resetRegistration() {
             document.getElementById('registerForm1').reset();
             document.getElementById('registerForm2').reset();
             document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+            document.getElementById('otpHiddenValue').value = '';
             document.querySelectorAll('.validation-msg').forEach(v => v.innerHTML = '');
             document.querySelectorAll('input').forEach(i => i.className = '');
             
@@ -1363,7 +1292,7 @@ async function verifyAndRegister() {
             const isEditMode = card.classList.contains('edit-mode');
             
             if (isEditMode) {
-                // Cancel edit - reset values
+                // Reset values
                 document.getElementById('editName').value = currentStudent.name || '';
                 document.getElementById('editEmail').value = currentStudent.email || '';
                 document.getElementById('editGender').value = currentStudent.gender || 'Male';
@@ -1437,63 +1366,12 @@ async function verifyAndRegister() {
             showTab('login');
         }
 
-        // Event listeners for step 2
-        document.getElementById('regPassword').addEventListener('input', updateStep2Button);
-        document.getElementById('regConfirmPassword').addEventListener('input', updateStep2Button);
-
-        // Initialize OTP behavior
-document.addEventListener('DOMContentLoaded', function() {
-    const otpInputs = document.querySelectorAll('.otp-input');
-    
-    otpInputs.forEach((input, index) => {
-        // Auto-focus next on input
-        input.addEventListener('input', function(e) {
-            const val = this.value.replace(/[^0-9]/g, '');
-            this.value = val;
-            
-            if (val && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (APPS_SCRIPT_URL.includes('YOUR_DEPLOYMENT_ID')) {
+                showAlert('⚠️ Please update APPS_SCRIPT_URL in the code', 'error');
             }
         });
-        
-        // Handle backspace
-        input.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && !this.value && index > 0) {
-                otpInputs[index - 1].focus();
-            }
-        });
-        
-        // Handle paste
-        input.addEventListener('paste', function(e) {
-            e.preventDefault();
-            const pasted = (e.clipboardData || window.clipboardData).getData('text');
-            const numbers = pasted.replace(/[^0-9]/g, '').slice(0, 6).split('');
-            
-            numbers.forEach((num, i) => {
-                if (otpInputs[i]) otpInputs[i].value = num;
-            });
-            
-            if (numbers.length < 6) {
-                otpInputs[numbers.length].focus();
-            }
-        });
-    });
-});
-        function updateOtpHidden(input) {
-    // Keep only numbers
-    input.value = input.value.replace(/[^0-9]/g, '');
-    
-    // Update hidden field with combined value
-    const inputs = document.querySelectorAll('.otp-input');
-    let combined = '';
-    inputs.forEach(inp => combined += inp.value);
-    document.getElementById('otpHiddenValue').value = combined;
-    
-    // Auto-focus next
-    if (input.value && input.nextElementSibling && input.nextElementSibling.classList.contains('otp-input')) {
-        input.nextElementSibling.focus();
-    }
-}
     </script>
 </body>
 </html>
