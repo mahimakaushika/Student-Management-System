@@ -733,57 +733,60 @@
         // ==================== VALIDATION FUNCTIONS ====================
 
         async function validateIndex() {
-            const input = document.getElementById('regIndex');
-            const validation = document.getElementById('indexValidation');
-            const indexNumber = input.value.trim().toUpperCase();
-            
-            if (!indexNumber) {
-                validation.innerHTML = '';
-                input.className = '';
-                isIndexValid = false;
-                updateStep1Button();
-                return;
-            }
+    const input = document.getElementById('regIndex');
+    const validation = document.getElementById('indexValidation');
+    const indexNumber = input.value.trim().toUpperCase();
+    
+    if (!indexNumber) {
+        validation.innerHTML = '';
+        input.className = '';
+        isIndexValid = false;
+        updateStep1Button();
+        return;
+    }
 
-            const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
-            if (!pattern.test(indexNumber)) {
-                validation.innerHTML = '<span class="error">❌ Invalid format. Use: NAW/IT/2025/F/0002</span>';
-                input.className = 'error';
-                isIndexValid = false;
-                updateStep1Button();
-                return;
-            }
+    const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
+    if (!pattern.test(indexNumber)) {
+        validation.innerHTML = '<span class="error">❌ Invalid format. Use: NAW/IT/2025/F/0024</span>';
+        input.className = 'error';
+        isIndexValid = false;
+        updateStep1Button();
+        return;
+    }
 
-            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
-            
-            try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkIndex&indexNumber=${indexNumber}`);
-                const result = await response.json();
-                
-                if (!result.success) throw new Error(result.error);
+    validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+    
+    try {
+        // IMPORTANT: Use encodeURIComponent to handle slashes in URL
+        const encodedIndex = encodeURIComponent(indexNumber);
+        const response = await fetch(`${APPS_SCRIPT_URL}?action=checkIndex&indexNumber=${encodedIndex}`);
+        const result = await response.json();
+        
+        if (!result.success) throw new Error(result.error);
 
-                if (!result.exists) {
-                    validation.innerHTML = '<span class="error">❌ Index number not found in system</span>';
-                    input.className = 'error';
-                    isIndexValid = false;
-                } else if (result.hasAccount) {
-                    validation.innerHTML = '<span class="error">❌ Already have an account. Please login.</span>';
-                    input.className = 'error';
-                    isIndexValid = false;
-                    setTimeout(() => showTab('login'), 2000);
-                } else {
-                    validation.innerHTML = '<span class="success">✓ Valid index number</span>';
-                    input.className = 'success';
-                    isIndexValid = true;
-                    document.getElementById('regEmail').disabled = false;
-                }
-            } catch (error) {
-                validation.innerHTML = '<span class="error">❌ Error checking index</span>';
-                isIndexValid = false;
-            }
-            
-            updateStep1Button();
+        if (!result.exists) {
+            validation.innerHTML = '<span class="error">❌ Index number not found in system</span>';
+            input.className = 'error';
+            isIndexValid = false;
+        } else if (result.hasAccount) {
+            validation.innerHTML = '<span class="error">❌ Already have an account. Please login.</span>';
+            input.className = 'error';
+            isIndexValid = false;
+            setTimeout(() => showTab('login'), 2000);
+        } else {
+            validation.innerHTML = '<span class="success">✓ Valid index number</span>';
+            input.className = 'success';
+            isIndexValid = true;
+            document.getElementById('regEmail').disabled = false;
         }
+    } catch (error) {
+        validation.innerHTML = '<span class="error">❌ Error checking index</span>';
+        console.error('Validation error:', error);
+        isIndexValid = false;
+    }
+    
+    updateStep1Button();
+}
 
 async function validateEmail() {
     const input = document.getElementById('regEmail');
