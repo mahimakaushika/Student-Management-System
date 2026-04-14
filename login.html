@@ -582,13 +582,13 @@
                             We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
                         </p>
                         
-                        <div class="otp-inputs">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 0)" onkeydown="moveOtpBack(event, 0)">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 1)" onkeydown="moveOtpBack(event, 1)">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 2)" onkeydown="moveOtpBack(event, 2)">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 3)" onkeydown="moveOtpBack(event, 3)">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 4)" onkeydown="moveOtpBack(event, 4)">
-                            <input type="text" class="otp-input" maxlength="1" oninput="moveOtp(this, 5)" onkeydown="moveOtpBack(event, 5)">
+                       <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4" placeholder="•">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5" placeholder="•">
                         </div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
@@ -998,43 +998,104 @@ async function validateEmail() {
 
         // ==================== OTP HANDLING ====================
 
-        function moveOtp(input, index) {
-            input.value = input.value.replace(/[^0-9]/g, '');
-            if (input.value && index < 5) {
-                document.querySelectorAll('.otp-input')[index + 1].focus();
-            }
-        }
+        // Setup OTP inputs when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupOtpInputs();
+});
 
-        function moveOtpBack(e, index) {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                document.querySelectorAll('.otp-input')[index - 1].focus();
+function setupOtpInputs() {
+    const inputs = document.querySelectorAll('.otp-input');
+    
+    inputs.forEach((input, index) => {
+        // Handle input (typing)
+        input.addEventListener('input', function(e) {
+            const val = this.value;
+            
+            // Remove non-numeric
+            this.value = val.replace(/[^0-9]/g, '');
+            
+            // If value entered, move to next
+            if (this.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
             }
-        }
-
-        function startOtpTimer() {
-            let minutes = 10;
-            let seconds = 0;
             
-            clearInterval(otpTimerInterval);
+            // If user pasted multiple digits, distribute them
+            if (val.length > 1) {
+                distributeOtpValue(val, index);
+            }
+        });
+        
+        // Handle keyboard navigation
+        input.addEventListener('keydown', function(e) {
+            // Backspace on empty field = go back
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                inputs[index - 1].focus();
+                inputs[index - 1].select();
+            }
             
-            otpTimerInterval = setInterval(() => {
-                if (seconds === 0) {
-                    if (minutes === 0) {
-                        clearInterval(otpTimerInterval);
-                        document.getElementById('otpTimer').textContent = 'Code expired. Please resend.';
-                        return;
-                    }
-                    minutes--;
-                    seconds = 59;
+            // Left arrow = go back
+            if (e.key === 'ArrowLeft' && index > 0) {
+                e.preventDefault();
+                inputs[index - 1].focus();
+            }
+            
+            // Right arrow = go forward
+            if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+                e.preventDefault();
+                inputs[index + 1].focus();
+            }
+        });
+        
+        // Handle paste event
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+            const numbers = pasteData.replace(/[^0-9]/g, '').slice(0, 6);
+            
+            if (numbers) {
+                distributeOtpValue(numbers, 0);
+                // Focus the next empty input or last one
+                const filledCount = numbers.length;
+                if (filledCount < 6) {
+                    inputs[filledCount].focus();
                 } else {
-                    seconds--;
+                    inputs[5].focus();
                 }
-                
-                document.getElementById('otpTimer').textContent = 
-                    `Code expires in: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
-        }
+            }
+        });
+        
+        // Focus handling - select all on focus
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+    });
+}
 
+// Distribute a string of numbers across OTP inputs
+function distributeOtpValue(value, startIndex) {
+    const inputs = document.querySelectorAll('.otp-input');
+    const numbers = value.replace(/[^0-9]/g, '').split('');
+    
+    numbers.forEach((num, i) => {
+        const targetIndex = startIndex + i;
+        if (targetIndex < inputs.length) {
+            inputs[targetIndex].value = num;
+        }
+    });
+}
+
+// Get complete OTP
+function getOtpValue() {
+    const inputs = document.querySelectorAll('.otp-input');
+    return Array.from(inputs).map(i => i.value).join('');
+}
+
+// Clear OTP inputs
+function clearOtpInputs() {
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach(i => i.value = '');
+    inputs[0].focus();
+}
         async function resendOtp() {
             const btn = document.getElementById('resendBtn');
             btn.disabled = true;
@@ -1066,68 +1127,78 @@ async function validateEmail() {
             btn.disabled = false;
             btn.textContent = 'Resend Code';
         }
-
-        async function verifyAndRegister() {
-            const otpInputs = document.querySelectorAll('.otp-input');
-            const otp = Array.from(otpInputs).map(i => i.value).join('');
-            
-            if (otp.length !== 6) {
-                showAlert('Please enter complete OTP', 'error');
-                return;
+async function verifyAndRegister() {
+    const otp = getOtpValue(); // Use the new getter function
+    
+    console.log('OTP entered:', otp, 'Length:', otp.length); // Debug
+    
+    if (otp.length !== 6) {
+        showAlert(`Please enter complete OTP (currently ${otp.length}/6 digits)`, 'error');
+        // Focus the first empty input
+        const inputs = document.querySelectorAll('.otp-input');
+        for (let i = 0; i < inputs.length; i++) {
+            if (!inputs[i].value) {
+                inputs[i].focus();
+                break;
             }
-            
-            const btn = document.getElementById('verifyBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> Verifying...';
-            
-            try {
-                // Verify OTP
-                const verifyResponse = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'verifyOtp',
-                        email: regData.email,
-                        otp: otp
-                    })
-                });
-                
-                const verifyResult = await verifyResponse.json();
-                
-                if (!verifyResult.success) {
-                    throw new Error(verifyResult.error);
-                }
-                
-                // Register
-                const regResponse = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'register',
-                        indexNumber: regData.indexNumber,
-                        username: regData.username,
-                        password: regData.password,
-                        email: regData.email
-                    })
-                });
-                
-                const regResult = await regResponse.json();
-                
-                if (regResult.success) {
-                    showAlert('Account created successfully! Please login.', 'success');
-                    clearInterval(otpTimerInterval);
-                    setTimeout(() => {
-                        showTab('login');
-                        resetRegistration();
-                    }, 1500);
-                } else {
-                    throw new Error(regResult.error);
-                }
-            } catch (error) {
-                showAlert(error.message, 'error');
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = 'Verify & Create Account';
         }
+        return;
+    }
+    
+    const btn = document.getElementById('verifyBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Verifying...';
+    
+    try {
+        // Verify OTP
+        const verifyResponse = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'verifyOtp',
+                email: regData.email,
+                otp: otp
+            })
+        });
+        
+        const verifyResult = await verifyResponse.json();
+        
+        if (!verifyResult.success) {
+            throw new Error(verifyResult.error);
+        }
+        
+        // Register
+        const regResponse = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'register',
+                indexNumber: regData.indexNumber,
+                username: regData.username,
+                password: regData.password,
+                email: regData.email
+            })
+        });
+        
+        const regResult = await regResponse.json();
+        
+        if (regResult.success) {
+            showAlert('Account created successfully! Please login.', 'success');
+            clearInterval(otpTimerInterval);
+            setTimeout(() => {
+                showTab('login');
+                resetRegistration();
+            }, 1500);
+        } else {
+            throw new Error(regResult.error);
+        }
+    } catch (error) {
+        showAlert(error.message, 'error');
+        // Clear OTP on error so they can retype
+        clearOtpInputs();
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = 'Verify & Create Account';
+}
 
         function resetRegistration() {
             document.getElementById('registerForm1').reset();
