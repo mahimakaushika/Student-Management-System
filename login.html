@@ -574,23 +574,24 @@
                     </form>
                 </div>
 
-                <!-- Step 3: Email Verification -->
-                <div id="regStep3" style="display: none;">
-                    <div class="otp-section show">
-                        <h4 style="margin-bottom: 1rem; text-align: center;">📧 Email Verification</h4>
-                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
-                            We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
-                        </p>
-                        
-                       <!-- Replace your current OTP inputs with this -->
-<div class="otp-inputs">
-    <input type="text" class="otp-input" maxlength="1" data-index="0">
-    <input type="text" class="otp-input" maxlength="1" data-index="1">
-    <input type="text" class="otp-input" maxlength="1" data-index="2">
-    <input type="text" class="otp-input" maxlength="1" data-index="3">
-    <input type="text" class="otp-input" maxlength="1" data-index="4">
-    <input type="text" class="otp-input" maxlength="1" data-index="5">
-</div>
+<div id="regStep3" style="display: none;">
+    <div class="otp-section show">
+        <h4 style="margin-bottom: 1rem; text-align: center;">📧 Email Verification</h4>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+            We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong>
+        </p>
+        
+        <!-- ADD THIS HIDDEN FIELD -->
+        <input type="hidden" id="otpHiddenValue" value="">
+        
+        <div class="otp-inputs">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+            <input type="text" class="otp-input" maxlength="1" oninput="updateOtpHidden(this)">
+        </div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
                         
@@ -1164,6 +1165,13 @@ function clearOtpInputs() {
         }
 async function verifyAndRegister() {
     // CRITICAL: Query inputs LIVE from the DOM, not cached references
+    const otpCode = document.getElementById('otpHiddenValue').value;
+    console.log('Reading from hidden field:', otpCode);
+    
+    if (otpCode.length !== 6) {
+        showAlert(`⚠️ Enter all 6 digits (${otpCode.length}/6)`, 'error');
+        return;
+    }
     const otpContainer = document.getElementById('regStep3');
     const inputs = otpContainer.querySelectorAll('.otp-input');
     
@@ -1468,6 +1476,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+        function updateOtpHidden(input) {
+    // Keep only numbers
+    input.value = input.value.replace(/[^0-9]/g, '');
+    
+    // Update hidden field with combined value
+    const inputs = document.querySelectorAll('.otp-input');
+    let combined = '';
+    inputs.forEach(inp => combined += inp.value);
+    document.getElementById('otpHiddenValue').value = combined;
+    
+    // Auto-focus next
+    if (input.value && input.nextElementSibling && input.nextElementSibling.classList.contains('otp-input')) {
+        input.nextElementSibling.focus();
+    }
+}
     </script>
 </body>
 </html>
