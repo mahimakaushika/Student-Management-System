@@ -739,16 +739,15 @@
     
     if (!indexNumber) {
         validation.innerHTML = '';
-        input.className = '';
         isIndexValid = false;
         updateStep1Button();
         return;
     }
 
+    // Basic format check on client side too
     const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
     if (!pattern.test(indexNumber)) {
-        validation.innerHTML = '<span class="error">❌ Invalid format. Use: NAW/IT/2025/F/0024</span>';
-        input.className = 'error';
+        validation.innerHTML = '<span class="error">❌ Format: NAW/IT/2025/F/0024</span>';
         isIndexValid = false;
         updateStep1Button();
         return;
@@ -757,31 +756,35 @@
     validation.innerHTML = '<span class="info">⏳ Checking...</span>';
     
     try {
-        // IMPORTANT: Use encodeURIComponent to handle slashes in URL
         const encodedIndex = encodeURIComponent(indexNumber);
         const response = await fetch(`${APPS_SCRIPT_URL}?action=checkIndex&indexNumber=${encodedIndex}`);
         const result = await response.json();
         
-        if (!result.success) throw new Error(result.error);
-
-        if (!result.exists) {
-            validation.innerHTML = '<span class="error">❌ Index number not found in system</span>';
-            input.className = 'error';
+        console.log('Full server response:', result); // Check browser console (F12)
+        
+        if (!result.success) {
+            validation.innerHTML = `<span class="error">❌ ${result.error}</span>`;
+            isIndexValid = false;
+        } else if (!result.exists) {
+            // Show debug info in console or on screen temporarily
+            let msg = '❌ Not found';
+            if (result.debug) {
+                console.log('Sheet data:', result.debug);
+                msg += ` (Checked ${result.debug.totalRowsChecked} rows)`;
+            }
+            validation.innerHTML = `<span class="error">${msg}</span>`;
             isIndexValid = false;
         } else if (result.hasAccount) {
-            validation.innerHTML = '<span class="error">❌ Already have an account. Please login.</span>';
-            input.className = 'error';
+            validation.innerHTML = '<span class="error">❌ Already registered. Please login.</span>';
             isIndexValid = false;
-            setTimeout(() => showTab('login'), 2000);
         } else {
             validation.innerHTML = '<span class="success">✓ Valid index number</span>';
-            input.className = 'success';
             isIndexValid = true;
             document.getElementById('regEmail').disabled = false;
         }
     } catch (error) {
-        validation.innerHTML = '<span class="error">❌ Error checking index</span>';
-        console.error('Validation error:', error);
+        console.error('Fetch error:', error);
+        validation.innerHTML = '<span class="error">❌ Network error</span>';
         isIndexValid = false;
     }
     
