@@ -785,51 +785,55 @@
             updateStep1Button();
         }
 
-        async function validateEmail() {
-            const input = document.getElementById('regEmail');
-            const validation = document.getElementById('emailValidation');
-            const email = input.value.trim();
-            
-            if (!email || !email.includes('@')) {
-                validation.innerHTML = '';
-                input.className = '';
-                isEmailValid = false;
-                updateStep1Button();
-                return;
-            }
+async function validateEmail() {
+    const input = document.getElementById('regEmail');
+    const validation = document.getElementById('emailValidation');
+    const email = input.value.trim();
+    
+    if (!email || !email.includes('@')) {
+        validation.innerHTML = '';
+        input.className = '';
+        isEmailValid = false;
+        updateStep1Button();
+        return;
+    }
 
-            validation.innerHTML = '<span class="info">⏳ Checking...</span>';
-            
-            try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
-                const result = await response.json();
-                
-                if (!result.success) throw new Error(result.error);
+    validation.innerHTML = '<span class="info">⏳ Checking...</span>';
+    
+    try {
+        const response = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
+        const result = await response.json();
+        
+        if (!result.success) throw new Error(result.error);
 
-                if (!result.available) {
-                    if (result.hasAccount) {
-                        validation.innerHTML = '<span class="error">❌ Email already registered. Please login.</span>';
-                        input.className = 'error';
-                        isEmailValid = false;
-                        setTimeout(() => showTab('login'), 2000);
-                    } else {
-                        validation.innerHTML = '<span class="error">❌ Email found but not registered</span>';
-                        input.className = 'error';
-                        isEmailValid = false;
-                    }
-                } else {
-                    validation.innerHTML = '<span class="success">✓ Email available</span>';
-                    input.className = 'success';
-                    isEmailValid = true;
-                    document.getElementById('regUsername').disabled = false;
-                }
-            } catch (error) {
-                validation.innerHTML = '<span class="error">❌ Error checking email</span>';
+        if (!result.available) {
+            if (result.hasAccount) {
+                // Email already has an account - show error
+                validation.innerHTML = '<span class="error">❌ Email already registered. Please login.</span>';
+                input.className = 'error';
                 isEmailValid = false;
+                setTimeout(() => showTab('login'), 2000);
+            } else {
+                // Email found in sheet but no account yet - ALLOW REGISTRATION
+                validation.innerHTML = '<span class="success">✓ Email verified</span>';
+                input.className = 'success';
+                isEmailValid = true;
+                document.getElementById('regUsername').disabled = false;
             }
-            
-            updateStep1Button();
+        } else {
+            // Email not found in sheet - new email, allow registration
+            validation.innerHTML = '<span class="success">✓ Email available</span>';
+            input.className = 'success';
+            isEmailValid = true;
+            document.getElementById('regUsername').disabled = false;
         }
+    } catch (error) {
+        validation.innerHTML = '<span class="error">❌ Error checking email</span>';
+        isEmailValid = false;
+    }
+    
+    updateStep1Button();
+}
 
         async function validateUsername() {
             const input = document.getElementById('regUsername');
