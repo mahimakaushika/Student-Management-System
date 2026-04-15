@@ -176,7 +176,7 @@
         .logout-btn { position: fixed; top: 1.5rem; right: 1.5rem; background: white; color: var(--danger); border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s ease; z-index: 100; }
         .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2); }
         
-        /* PASSWORD TOGGLE BUTTON STYLES */
+        /* PASSWORD TOGGLE BUTTON STYLES - FIXED */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -184,6 +184,19 @@
         }
         .password-wrapper input {
             padding-right: 3rem;
+            /* Hide browser default password toggle (Edge, IE) */
+            -ms-reveal: none;
+            -ms-clear: none;
+        }
+        /* Hide browser default password toggle for Webkit browsers */
+        .password-wrapper input::-webkit-credentials-auto-fill-button,
+        .password-wrapper input::-webkit-contacts-auto-fill-button,
+        .password-wrapper input::-webkit-textfield-decoration-container {
+            visibility: hidden;
+            display: none !important;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
         }
         .password-toggle {
             position: absolute;
@@ -198,11 +211,11 @@
             align-items: center;
             justify-content: center;
             color: var(--text-muted);
-            font-size: 1.25rem;
             transition: all 0.2s ease;
             border-radius: 8px;
             width: 36px;
             height: 36px;
+            z-index: 2;
         }
         .password-toggle:hover {
             background: #f1f5f9;
@@ -210,6 +223,15 @@
         }
         .password-toggle:active {
             transform: translateY(-50%) scale(0.95);
+        }
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
         
         @media (max-width: 640px) {
@@ -227,7 +249,11 @@
                 right: 8px;
                 width: 32px;
                 height: 32px;
-                font-size: 1.1rem;
+                padding: 0.25rem;
+            }
+            .password-toggle svg {
+                width: 18px;
+                height: 18px;
             }
             .password-wrapper input {
                 padding-right: 2.5rem;
@@ -259,8 +285,11 @@
                         <label>Password</label>
                         <div class="password-wrapper">
                             <input type="password" id="loginPassword" required placeholder="Enter your password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)" title="Show/Hide Password">
-                                👁️
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)" title="Show Password">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -339,8 +368,11 @@
                         <label>New Password</label>
                         <div class="password-wrapper">
                             <input type="password" id="newPassword" required placeholder="At least 6 characters" oninput="checkNewPasswords()">
-                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" title="Show/Hide Password">
-                                👁️
+                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" title="Show Password">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
                             </button>
                         </div>
                         <div id="newPasswordValidation" class="validation-msg"></div>
@@ -349,8 +381,11 @@
                         <label>Confirm New Password</label>
                         <div class="password-wrapper">
                             <input type="password" id="confirmNewPassword" required placeholder="Re-enter password" oninput="checkNewPasswords()">
-                            <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword', this)" title="Show/Hide Password">
-                                👁️
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword', this)" title="Show Password">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
                             </button>
                         </div>
                         <div id="confirmNewPasswordValidation" class="validation-msg"></div>
@@ -411,8 +446,11 @@
                             <label>Password</label>
                             <div class="password-wrapper">
                                 <input type="password" id="regPassword" required placeholder="At least 6 characters" oninput="checkPasswords()">
-                                <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)" title="Show/Hide Password">
-                                    👁️
+                                <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)" title="Show Password">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
                                 </button>
                             </div>
                             <div id="passwordValidation" class="validation-msg"></div>
@@ -421,8 +459,11 @@
                             <label>Confirm Password</label>
                             <div class="password-wrapper">
                                 <input type="password" id="regConfirmPassword" required placeholder="Re-enter password" oninput="checkPasswords()">
-                                <button type="button" class="password-toggle" onclick="togglePassword('regConfirmPassword', this)" title="Show/Hide Password">
-                                    👁️
+                                <button type="button" class="password-toggle" onclick="togglePassword('regConfirmPassword', this)" title="Show Password">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
                                 </button>
                             </div>
                             <div id="confirmValidation" class="validation-msg"></div>
@@ -611,15 +652,19 @@
         }
 
         // ==================== PASSWORD TOGGLE FUNCTION ====================
+        // SVG Icons
+        const eyeIcon = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        const eyeOffIcon = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+        
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
                 input.type = 'text';
-                btn.innerHTML = '🙈';
+                btn.innerHTML = eyeOffIcon;
                 btn.title = 'Hide Password';
             } else {
                 input.type = 'password';
-                btn.innerHTML = '👁️';
+                btn.innerHTML = eyeIcon;
                 btn.title = 'Show Password';
             }
         }
@@ -640,7 +685,10 @@
             document.getElementById('loginPassword').value = '';
             // Reset password visibility
             document.getElementById('loginPassword').type = 'password';
-            document.querySelector('#loginPassword + .password-toggle').innerHTML = '👁️';
+            const loginToggle = document.querySelector('#loginPassword + .password-toggle');
+            if (loginToggle) {
+                loginToggle.innerHTML = eyeIcon;
+            }
         }
 
         function backToForgotEmail() {
@@ -1349,7 +1397,9 @@
             // Reset password visibility toggles
             document.getElementById('regPassword').type = 'password';
             document.getElementById('regConfirmPassword').type = 'password';
-            document.querySelectorAll('#regStep2 .password-toggle').forEach(btn => btn.innerHTML = '👁️');
+            document.querySelectorAll('#regStep2 .password-toggle').forEach(btn => {
+                btn.innerHTML = eyeIcon;
+            });
             
             window.currentOtp = ['', '', '', '', '', ''];
             for (let i = 1; i <= 6; i++) {
@@ -1513,7 +1563,10 @@
             document.getElementById('loginPassword').value = '';
             // Reset login password visibility
             document.getElementById('loginPassword').type = 'password';
-            document.querySelector('#loginPassword + .password-toggle').innerHTML = '👁️';
+            const loginToggle = document.querySelector('#loginPassword + .password-toggle');
+            if (loginToggle) {
+                loginToggle.innerHTML = eyeIcon;
+            }
             showTab('login');
         }
     </script>
