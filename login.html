@@ -122,15 +122,15 @@
             width: 50px; height: 60px; text-align: center; font-size: 1.5rem; font-weight: 700; 
             border: 2px solid #e2e8f0; border-radius: 12px; background: white; color: #2563eb; 
             transition: all 0.3s ease; 
-            padding: 0; /* REMOVED PADDING TO FIX VISIBILITY */
+            padding: 0;
             margin: 0;
-            line-height: 60px; /* MATCHES HEIGHT FOR VERTICAL CENTERING */
+            line-height: 60px;
             display: inline-block;
             vertical-align: middle;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            -webkit-text-fill-color: #2563eb; /* iOS SAFARI FIX */
+            -webkit-text-fill-color: #2563eb;
         }
         .otp-input:focus { 
             border-color: var(--primary); 
@@ -145,7 +145,6 @@
             color: #2563eb;
             -webkit-text-fill-color: #2563eb;
         }
-        /* Prevent autofill from hiding text */
         .otp-input:-webkit-autofill,
         .otp-input:-webkit-autofill:hover, 
         .otp-input:-webkit-autofill:focus {
@@ -177,6 +176,42 @@
         .logout-btn { position: fixed; top: 1.5rem; right: 1.5rem; background: white; color: var(--danger); border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s ease; z-index: 100; }
         .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2); }
         
+        /* PASSWORD TOGGLE BUTTON STYLES */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            padding-right: 3rem;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+        }
+        .password-toggle:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .password-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
         @media (max-width: 640px) {
             body { padding: 1rem; } 
             .card { padding: 1.5rem; }
@@ -184,10 +219,19 @@
                 width: 42px; 
                 height: 50px; 
                 font-size: 1.25rem; 
-                line-height: 50px; /* MATCHES HEIGHT */
+                line-height: 50px;
                 padding: 0;
             }
             .profile-header { flex-direction: column; text-align: center; }
+            .password-toggle {
+                right: 8px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+            .password-wrapper input {
+                padding-right: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -213,7 +257,12 @@
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)" title="Show/Hide Password">
+                                👁️
+                            </button>
+                        </div>
                     </div>
                     <div class="forgot-password">
                         <a onclick="showForgotPassword()">Forgot Password?</a>
@@ -288,12 +337,22 @@
                 <form onsubmit="resetPassword(event)">
                     <div class="form-group">
                         <label>New Password</label>
-                        <input type="password" id="newPassword" required placeholder="At least 6 characters" oninput="checkNewPasswords()">
+                        <div class="password-wrapper">
+                            <input type="password" id="newPassword" required placeholder="At least 6 characters" oninput="checkNewPasswords()">
+                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" title="Show/Hide Password">
+                                👁️
+                            </button>
+                        </div>
                         <div id="newPasswordValidation" class="validation-msg"></div>
                     </div>
                     <div class="form-group">
                         <label>Confirm New Password</label>
-                        <input type="password" id="confirmNewPassword" required placeholder="Re-enter password" oninput="checkNewPasswords()">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmNewPassword" required placeholder="Re-enter password" oninput="checkNewPasswords()">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword', this)" title="Show/Hide Password">
+                                👁️
+                            </button>
+                        </div>
                         <div id="confirmNewPasswordValidation" class="validation-msg"></div>
                     </div>
                     <button type="submit" class="btn btn-success" id="resetPasswordBtn" disabled>
@@ -341,12 +400,22 @@
                     <form onsubmit="goToStep3(event)">
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" id="regPassword" required placeholder="At least 6 characters" oninput="checkPasswords()">
+                            <div class="password-wrapper">
+                                <input type="password" id="regPassword" required placeholder="At least 6 characters" oninput="checkPasswords()">
+                                <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)" title="Show/Hide Password">
+                                    👁️
+                                </button>
+                            </div>
                             <div id="passwordValidation" class="validation-msg"></div>
                         </div>
                         <div class="form-group">
                             <label>Confirm Password</label>
-                            <input type="password" id="regConfirmPassword" required placeholder="Re-enter password" oninput="checkPasswords()">
+                            <div class="password-wrapper">
+                                <input type="password" id="regConfirmPassword" required placeholder="Re-enter password" oninput="checkPasswords()">
+                                <button type="button" class="password-toggle" onclick="togglePassword('regConfirmPassword', this)" title="Show/Hide Password">
+                                    👁️
+                                </button>
+                            </div>
                             <div id="confirmValidation" class="validation-msg"></div>
                         </div>
                         <div class="btn-group">
@@ -490,6 +559,20 @@
             setTimeout(() => alert.classList.remove('show'), 5000);
         }
 
+        // ==================== PASSWORD TOGGLE FUNCTION ====================
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '🙈';
+                btn.title = 'Hide Password';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '👁️';
+                btn.title = 'Show Password';
+            }
+        }
+
         // ==================== FORGOT PASSWORD FUNCTIONS ====================
 
         function showForgotPassword() {
@@ -504,6 +587,9 @@
             showTab('login');
             document.getElementById('loginId').value = '';
             document.getElementById('loginPassword').value = '';
+            // Reset password visibility
+            document.getElementById('loginPassword').type = 'password';
+            document.querySelector('#loginPassword + .password-toggle').innerHTML = '👁️';
         }
 
         function backToForgotEmail() {
@@ -1195,6 +1281,11 @@
             document.getElementById('regPassword').value = '';
             document.getElementById('regConfirmPassword').value = '';
             
+            // Reset password visibility toggles
+            document.getElementById('regPassword').type = 'password';
+            document.getElementById('regConfirmPassword').type = 'password';
+            document.querySelectorAll('#regStep2 .password-toggle').forEach(btn => btn.innerHTML = '👁️');
+            
             window.currentOtp = ['', '', '', '', '', ''];
             for (let i = 1; i <= 6; i++) {
                 document.getElementById('otp' + i).value = '';
@@ -1355,6 +1446,9 @@
             document.getElementById('profileContainer').classList.remove('show');
             document.getElementById('loginId').value = '';
             document.getElementById('loginPassword').value = '';
+            // Reset login password visibility
+            document.getElementById('loginPassword').type = 'password';
+            document.querySelector('#loginPassword + .password-toggle').innerHTML = '👁️';
             showTab('login');
         }
     </script>
