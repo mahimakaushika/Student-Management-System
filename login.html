@@ -374,8 +374,17 @@
                     <form onsubmit="goToStep2(event)">
                         <div class="form-group">
                             <label>Index Number</label>
-                            <input type="text" id="regIndex" required placeholder="NAW/IT/2025/F/0002" onblur="validateIndex()">
-                            <div id="indexValidation" class="validation-msg"></div>
+                            <input type="text" 
+                                   id="regIndex" 
+                                   required 
+                                   placeholder="NAW/IT/2025/F/0024" 
+                                   maxlength="18"
+                                   oninput="handleIndexInput(this)"
+                                   onblur="validateIndex()"
+                                   style="text-transform: uppercase;">
+                            <div id="indexValidation" class="validation-msg" style="font-size: 0.75rem; color: var(--text-muted);">
+                                Format: NAW/IT/2025/F/0024 (Max 4 digits at end)
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Email Address</label>
@@ -557,6 +566,48 @@
             alert.className = `alert alert-${type} show`;
             alert.innerHTML = type === 'error' ? `⚠️ ${message}` : type === 'success' ? `✅ ${message}` : `ℹ️ ${message}`;
             setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+
+        // ==================== INDEX NUMBER INPUT HANDLER ====================
+        function handleIndexInput(input) {
+            let value = input.value.toUpperCase();
+            const maxLength = 18; // NAW/IT/2025/F/0024 = 18 characters
+            
+            // Truncate if exceeds max length
+            if (value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            }
+            
+            // Split by slash to check parts
+            const parts = value.split('/');
+            
+            // If we have all 5 parts (NAW, IT, 2025, F/M, XXXX)
+            if (parts.length >= 5) {
+                // Get the last part (should be digits only, max 4)
+                let lastPart = parts[4].replace(/\D/g, ''); // Remove non-digits
+                
+                // Limit last part to 4 digits
+                if (lastPart.length > 4) {
+                    lastPart = lastPart.substring(0, 4);
+                }
+                
+                parts[4] = lastPart;
+                value = parts.join('/');
+            }
+            
+            // Auto-correct common mistakes
+            // Ensure part 4 (gender) is only M or F
+            if (parts.length >= 4) {
+                if (parts[3] !== 'M' && parts[3] !== 'F' && parts[3].length > 0) {
+                    parts[3] = parts[3].charAt(0); // Take first character
+                    if (parts[3] !== 'M' && parts[3] !== 'F') {
+                        parts[3] = ''; // Clear if not M or F
+                    }
+                    value = parts.join('/');
+                }
+            }
+            
+            input.value = value;
         }
 
         // ==================== PASSWORD TOGGLE FUNCTION ====================
@@ -907,17 +958,31 @@
             const validation = document.getElementById('indexValidation');
             const indexNumber = input.value.trim().toUpperCase();
             
+            // Reset validation message style
+            validation.style.color = '';
+            
             if (!indexNumber) {
-                validation.innerHTML = '';
+                validation.innerHTML = '<span style="color: var(--text-muted)">Format: NAW/IT/2025/F/0024 (Max 4 digits at end)</span>';
                 input.className = '';
                 isIndexValid = false;
                 updateStep1Button();
                 return;
             }
 
+            // Strict pattern validation: NAW/IT/2025/[MF]/ exactly 4 digits
             const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
+            
             if (!pattern.test(indexNumber)) {
-                validation.innerHTML = '<span style="color: var(--danger)">❌ Invalid format</span>';
+                // Check specific error
+                if (indexNumber.length < 18) {
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Incomplete (need 4 digits at end)</span>';
+                } else if (!/\/\d{4}$/.test(indexNumber)) {
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Last 4 must be digits only</span>';
+                } else if (!/\/[MF]\//.test(indexNumber)) {
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Gender must be M or F</span>';
+                } else {
+                    validation.innerHTML = '<span style="color: var(--danger)">❌ Invalid format</span>';
+                }
                 input.classList.add('error');
                 isIndexValid = false;
                 updateStep1Button();
