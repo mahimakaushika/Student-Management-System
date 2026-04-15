@@ -114,11 +114,46 @@
         .step { width: 40px; height: 40px; border-radius: 50%; background: white; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; color: var(--text-muted); position: relative; z-index: 1; transition: all 0.4s ease; }
         .step.active { background: var(--primary-gradient); color: white; border-color: transparent; transform: scale(1.1); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
         .step.completed { background: var(--success); color: white; border-color: transparent; }
+        
+        /* FIXED OTP STYLES */
         .otp-section { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 2rem; border-radius: 16px; margin-bottom: 1.5rem; border: 1px solid #e2e8f0; }
         .otp-inputs { display: flex; gap: 0.75rem; margin: 1.5rem 0; justify-content: center; }
-        .otp-input { width: 50px; height: 60px; text-align: center; font-size: 1.5rem; font-weight: 700; border: 2px solid #e2e8f0; border-radius: 12px; background: white; color: var(--primary); transition: all 0.3s ease; }
-        .otp-input:focus { border-color: var(--primary); transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); outline: none; }
-        .otp-input.filled { background: #eff6ff; border-color: var(--primary-light); }
+        .otp-input {
+            width: 50px; height: 60px; text-align: center; font-size: 1.5rem; font-weight: 700; 
+            border: 2px solid #e2e8f0; border-radius: 12px; background: white; color: #2563eb; 
+            transition: all 0.3s ease; 
+            padding: 0; /* REMOVED PADDING TO FIX VISIBILITY */
+            margin: 0;
+            line-height: 60px; /* MATCHES HEIGHT FOR VERTICAL CENTERING */
+            display: inline-block;
+            vertical-align: middle;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            -webkit-text-fill-color: #2563eb; /* iOS SAFARI FIX */
+        }
+        .otp-input:focus { 
+            border-color: var(--primary); 
+            transform: translateY(-2px) scale(1.05); 
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2); 
+            outline: none; 
+            background: #eff6ff;
+        }
+        .otp-input.filled { 
+            background: #eff6ff; 
+            border-color: var(--primary-light); 
+            color: #2563eb;
+            -webkit-text-fill-color: #2563eb;
+        }
+        /* Prevent autofill from hiding text */
+        .otp-input:-webkit-autofill,
+        .otp-input:-webkit-autofill:hover, 
+        .otp-input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #2563eb;
+            -webkit-box-shadow: 0 0 0px 1000px #eff6ff inset;
+            box-shadow: 0 0 0px 1000px #eff6ff inset;
+        }
+        
         .otp-timer { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; font-weight: 500; }
         .forgot-password { text-align: right; margin-top: -1rem; margin-bottom: 1.5rem; }
         .forgot-password a { color: var(--primary); text-decoration: none; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: color 0.2s; }
@@ -141,9 +176,17 @@
         .btn-group .btn { flex: 1; }
         .logout-btn { position: fixed; top: 1.5rem; right: 1.5rem; background: white; color: var(--danger); border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s ease; z-index: 100; }
         .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2); }
+        
         @media (max-width: 640px) {
-            body { padding: 1rem; } .card { padding: 1.5rem; }
-            .otp-input { width: 45px; height: 55px; font-size: 1.25rem; }
+            body { padding: 1rem; } 
+            .card { padding: 1.5rem; }
+            .otp-input { 
+                width: 42px; 
+                height: 50px; 
+                font-size: 1.25rem; 
+                line-height: 50px; /* MATCHES HEIGHT */
+                padding: 0;
+            }
             .profile-header { flex-direction: column; text-align: center; }
         }
     </style>
@@ -217,12 +260,12 @@
                 
                 <div class="otp-section">
                     <div class="otp-inputs">
-                        <input type="text" id="fotp1" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 1)" onkeydown="handleForgotOtpKey(event, 1)">
-                        <input type="text" id="fotp2" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 2)" onkeydown="handleForgotOtpKey(event, 2)">
-                        <input type="text" id="fotp3" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 3)" onkeydown="handleForgotOtpKey(event, 3)">
-                        <input type="text" id="fotp4" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 4)" onkeydown="handleForgotOtpKey(event, 4)">
-                        <input type="text" id="fotp5" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 5)" onkeydown="handleForgotOtpKey(event, 5)">
-                        <input type="text" id="fotp6" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 6)" onkeydown="handleForgotOtpKey(event, 6)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp1" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 1)" onkeydown="handleForgotOtpKey(event, 1)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp2" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 2)" onkeydown="handleForgotOtpKey(event, 2)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp3" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 3)" onkeydown="handleForgotOtpKey(event, 3)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp4" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 4)" onkeydown="handleForgotOtpKey(event, 4)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp5" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 5)" onkeydown="handleForgotOtpKey(event, 5)">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="fotp6" class="otp-input" maxlength="1" oninput="handleForgotOtpInput(this, 6)" onkeydown="handleForgotOtpKey(event, 6)">
                     </div>
                     <div class="otp-timer" id="forgotOtpTimer">Code expires in: 10:00</div>
                     <button type="button" class="btn btn-secondary" onclick="resendForgotOtp()" id="resendForgotBtn" style="margin-bottom: 1rem;">Resend Code</button>
@@ -322,12 +365,12 @@
                         </p>
                         
                         <div class="otp-inputs">
-                            <input type="text" id="otp1" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKey(event, 1)">
-                            <input type="text" id="otp2" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKey(event, 2)">
-                            <input type="text" id="otp3" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKey(event, 3)">
-                            <input type="text" id="otp4" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKey(event, 4)">
-                            <input type="text" id="otp5" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKey(event, 5)">
-                            <input type="text" id="otp6" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 6)" onkeydown="handleOtpKey(event, 6)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp1" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpKey(event, 1)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp2" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpKey(event, 2)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp3" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpKey(event, 3)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp4" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpKey(event, 4)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp5" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpKey(event, 5)">
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="otp6" class="otp-input" maxlength="1" oninput="handleOtpInput(this, 6)" onkeydown="handleOtpKey(event, 6)">
                         </div>
                         
                         <div class="otp-timer" id="otpTimer">Code expires in: 10:00</div>
