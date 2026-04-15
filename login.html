@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATI Nawalapitiya</title>
+    <title>ATI Nawalapitiya - Student Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -115,7 +115,6 @@
         .step.active { background: var(--primary-gradient); color: white; border-color: transparent; transform: scale(1.1); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
         .step.completed { background: var(--success); color: white; border-color: transparent; }
         
-        /* FIXED OTP STYLES */
         .otp-section { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 2rem; border-radius: 16px; margin-bottom: 1.5rem; border: 1px solid #e2e8f0; }
         .otp-inputs { display: flex; gap: 0.75rem; margin: 1.5rem 0; justify-content: center; }
         .otp-input {
@@ -176,7 +175,6 @@
         .logout-btn { position: fixed; top: 1.5rem; right: 1.5rem; background: white; color: var(--danger); border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s ease; z-index: 100; }
         .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2); }
         
-        /* PASSWORD TOGGLE BUTTON STYLES - FIXED */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -184,11 +182,9 @@
         }
         .password-wrapper input {
             padding-right: 3rem;
-            /* Hide browser default password toggle (Edge, IE) */
             -ms-reveal: none;
             -ms-clear: none;
         }
-        /* Hide browser default password toggle for Webkit browsers */
         .password-wrapper input::-webkit-credentials-auto-fill-button,
         .password-wrapper input::-webkit-contacts-auto-fill-button,
         .password-wrapper input::-webkit-textfield-decoration-container {
@@ -571,7 +567,7 @@
     </div>
 
     <script>
-        // REPLACE WITH YOUR DEPLOYED SCRIPT URL
+        // ⚠️ IMPORTANT: Replace with your deployed Apps Script URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwO7G3Mg5cEyME0iPr87o7faRocRUDqUGf0d2srrpQZyb1Jh6DubrWCx1hA8Zrh7omW/exec';
         
         let currentStudent = null;
@@ -585,6 +581,10 @@
         
         window.currentOtp = ['', '', '', '', '', ''];
         window.forgotOtp = ['', '', '', '', '', ''];
+
+        // SVG Icons
+        const eyeIcon = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        const eyeOffIcon = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
         function showTab(tab) {
             hideAllSections();
@@ -609,53 +609,6 @@
             setTimeout(() => alert.classList.remove('show'), 5000);
         }
 
-        // ==================== INDEX NUMBER INPUT HANDLER ====================
-        function handleIndexInput(input) {
-            let value = input.value.toUpperCase();
-            const maxLength = 18; // NAW/IT/2025/F/0024 = 18 characters
-            
-            // Truncate if exceeds max length
-            if (value.length > maxLength) {
-                value = value.substring(0, maxLength);
-            }
-            
-            // Split by slash to check parts
-            const parts = value.split('/');
-            
-            // If we have all 5 parts (NAW, IT, 2025, F/M, XXXX)
-            if (parts.length >= 5) {
-                // Get the last part (should be digits only, max 4)
-                let lastPart = parts[4].replace(/\D/g, ''); // Remove non-digits
-                
-                // Limit last part to 4 digits
-                if (lastPart.length > 4) {
-                    lastPart = lastPart.substring(0, 4);
-                }
-                
-                parts[4] = lastPart;
-                value = parts.join('/');
-            }
-            
-            // Auto-correct common mistakes
-            // Ensure part 4 (gender) is only M or F
-            if (parts.length >= 4) {
-                if (parts[3] !== 'M' && parts[3] !== 'F' && parts[3].length > 0) {
-                    parts[3] = parts[3].charAt(0); // Take first character
-                    if (parts[3] !== 'M' && parts[3] !== 'F') {
-                        parts[3] = ''; // Clear if not M or F
-                    }
-                    value = parts.join('/');
-                }
-            }
-            
-            input.value = value;
-        }
-
-        // ==================== PASSWORD TOGGLE FUNCTION ====================
-        // SVG Icons
-        const eyeIcon = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-        const eyeOffIcon = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
-        
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
@@ -669,8 +622,40 @@
             }
         }
 
-        // ==================== FORGOT PASSWORD FUNCTIONS ====================
+        // ==================== INDEX NUMBER HANDLER ====================
+        function handleIndexInput(input) {
+            let value = input.value.toUpperCase();
+            const maxLength = 18;
+            
+            if (value.length > maxLength) {
+                value = value.substring(0, maxLength);
+            }
+            
+            const parts = value.split('/');
+            
+            if (parts.length >= 5) {
+                let lastPart = parts[4].replace(/\D/g, '');
+                if (lastPart.length > 4) {
+                    lastPart = lastPart.substring(0, 4);
+                }
+                parts[4] = lastPart;
+                value = parts.join('/');
+            }
+            
+            if (parts.length >= 4) {
+                if (parts[3] !== 'M' && parts[3] !== 'F' && parts[3].length > 0) {
+                    parts[3] = parts[3].charAt(0);
+                    if (parts[3] !== 'M' && parts[3] !== 'F') {
+                        parts[3] = '';
+                    }
+                    value = parts.join('/');
+                }
+            }
+            
+            input.value = value;
+        }
 
+        // ==================== FORGOT PASSWORD ====================
         function showForgotPassword() {
             hideAllSections();
             document.getElementById('forgotPasswordSection').classList.add('active');
@@ -683,12 +668,9 @@
             showTab('login');
             document.getElementById('loginId').value = '';
             document.getElementById('loginPassword').value = '';
-            // Reset password visibility
             document.getElementById('loginPassword').type = 'password';
             const loginToggle = document.querySelector('#loginPassword + .password-toggle');
-            if (loginToggle) {
-                loginToggle.innerHTML = eyeIcon;
-            }
+            if (loginToggle) loginToggle.innerHTML = eyeIcon;
         }
 
         function backToForgotEmail() {
@@ -717,7 +699,6 @@
             btn.innerHTML = '<span class="spinner"></span> Sending...';
             
             try {
-                // First check if email exists and has an account
                 const checkRes = await fetch(`${APPS_SCRIPT_URL}?action=checkEmail&email=${email}`);
                 const checkResult = await checkRes.json();
                 
@@ -737,7 +718,6 @@
                     return;
                 }
 
-                // Send OTP
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -755,7 +735,6 @@
                     document.getElementById('forgotOtpSection').classList.add('active');
                     document.getElementById('forgotOtpEmailDisplay').textContent = email;
                     
-                    // Reset OTP inputs
                     window.forgotOtp = ['', '', '', '', '', ''];
                     for (let i = 1; i <= 6; i++) {
                         document.getElementById('fotp' + i).value = '';
@@ -982,8 +961,7 @@
             btn.innerHTML = 'Reset Password';
         }
 
-        // ==================== REGISTRATION FUNCTIONS ====================
-        
+        // ==================== REGISTRATION ====================
         function handleOtpInput(input, boxNum) {
             input.value = input.value.replace(/[^0-9]/g, '');
             window.currentOtp[boxNum - 1] = input.value;
@@ -1006,7 +984,6 @@
             const validation = document.getElementById('indexValidation');
             const indexNumber = input.value.trim().toUpperCase();
             
-            // Reset validation message style
             validation.style.color = '';
             
             if (!indexNumber) {
@@ -1017,11 +994,9 @@
                 return;
             }
 
-            // Strict pattern validation: NAW/IT/2025/[MF]/ exactly 4 digits
             const pattern = /^NAW\/IT\/2025\/[MF]\/\d{4}$/;
             
             if (!pattern.test(indexNumber)) {
-                // Check specific error
                 if (indexNumber.length < 18) {
                     validation.innerHTML = '<span style="color: var(--danger)">❌ Incomplete (need 4 digits at end)</span>';
                 } else if (!/\/\d{4}$/.test(indexNumber)) {
@@ -1394,7 +1369,6 @@
             document.getElementById('regPassword').value = '';
             document.getElementById('regConfirmPassword').value = '';
             
-            // Reset password visibility toggles
             document.getElementById('regPassword').type = 'password';
             document.getElementById('regConfirmPassword').type = 'password';
             document.querySelectorAll('#regStep2 .password-toggle').forEach(btn => {
@@ -1430,7 +1404,6 @@
         }
 
         // ==================== LOGIN & PROFILE ====================
-
         async function handleLogin(e) {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -1561,12 +1534,9 @@
             document.getElementById('profileContainer').classList.remove('show');
             document.getElementById('loginId').value = '';
             document.getElementById('loginPassword').value = '';
-            // Reset login password visibility
             document.getElementById('loginPassword').type = 'password';
             const loginToggle = document.querySelector('#loginPassword + .password-toggle');
-            if (loginToggle) {
-                loginToggle.innerHTML = eyeIcon;
-            }
+            if (loginToggle) loginToggle.innerHTML = eyeIcon;
             showTab('login');
         }
     </script>
