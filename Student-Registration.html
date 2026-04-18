@@ -1,1 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #6366f1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 0 2rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 2rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* Form Styling */
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        
+        .btn:hover { opacity: 0.9; }
+
+        /* Results Table View */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge-info { background: #e0f2fe; color: #0369a1; }
+
+        .hidden { display: none; }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .nav-tabs { flex-direction: column; gap: 0; padding: 0 1rem; }
+            .tab { border-radius: 8px; border-bottom: none; margin-bottom: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="brand-icon">S</div>
+            <div>
+                <h1 style="font-size: 1.2rem;">StudentMS</h1>
+                <p style="font-size: 0.7rem; color: var(--text-muted);">Admin Dashboard</p>
+            </div>
+        </div>
+        <div id="status-indicator">
+            <span class="badge badge-info">System Online</span>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <div class="tab active" onclick="switchTab('register')">New Registration</div>
+        <div class="tab" onclick="switchTab('directory')">Student Directory</div>
+    </div>
+
+    <main class="container">
+        <!-- Registration Form -->
+        <div id="register-view">
+            <form id="studentForm">
+                <!-- Basic Info -->
+                <div class="form-section">
+                    <h2 class="section-title">👤 Basic Information</h2>
+                    <div class="grid">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Full Name</label>
+                            <input type="text" name="full_name" placeholder="Enter Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Name with Initials</label>
+                            <input type="text" name="name_initials" placeholder="E.g. A.B.C. Perera" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Index Number (Student ID)</label>
+                            <input type="text" name="index_no" placeholder="STU/2024/001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>NIC Number</label>
+                            <input type="text" name="nic" placeholder="National ID Card No">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Current Address</label>
+                            <textarea name="address" placeholder="Residential Address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number 1 (Primary)</label>
+                            <input type="tel" name="phone1" placeholder="07x xxxxxxx" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number 2 (Alternative)</label>
+                            <input type="tel" name="phone2" placeholder="07x xxxxxxx">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guardian Info -->
+                <div class="form-section">
+                    <h2 class="section-title">👪 Guardian Details</h2>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>Guardian Name</label>
+                            <input type="text" name="guardian_name" placeholder="Full Name of Guardian">
+                        </div>
+                        <div class="form-group">
+                            <label>Guardian Phone Number</label>
+                            <input type="tel" name="guardian_phone" placeholder="07x xxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Guardian Type</label>
+                            <select name="guardian_type">
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Other">Other / Relative</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Info -->
+                <div class="form-section">
+                    <h2 class="section-title">🎓 Academic Background</h2>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>School Last Attended</label>
+                            <input type="text" name="school" placeholder="School Name">
+                        </div>
+                        <div class="form-group">
+                            <label>O/L Index Number</label>
+                            <input type="text" name="ol_index" placeholder="O/L Index">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>O/L Results</label>
+                            <input type="text" name="ol_results" placeholder="E.g. 9A, 8A 1B">
+                        </div>
+                        <div class="form-group">
+                            <label>A/L Index Number</label>
+                            <input type="text" name="al_index" placeholder="A/L Index">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>A/L Results</label>
+                            <input type="text" name="al_results" placeholder="E.g. 3A, 2A 1B">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="reset" class="btn" style="background: #e2e8f0;">Clear Form</button>
+                    <button type="submit" class="btn btn-primary">✅ Register Student</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Directory View -->
+        <div id="directory-view" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.25rem;">Student Records</h2>
+                <input type="text" id="searchBar" placeholder="Search by name or index..." style="width: 300px;">
+            </div>
+            
+            <div class="table-container">
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>NIC</th>
+                            <th>A/L Status</th>
+                            <th>Guardian</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Use your Apps Script URL here
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp4klTuw5kTJ3EXFLDtHUSWfYDN5MbQc2t1E-7cCdHNEqzErNaxS2u4MhTbbfH9D65/exec';
+
+        // Tab Switching Logic
+        function switchTab(view) {
+            const tabs = document.querySelectorAll('.tab');
+            const registerView = document.getElementById('register-view');
+            const directoryView = document.getElementById('directory-view');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            if (view === 'register') {
+                tabs[0].classList.add('active');
+                registerView.classList.remove('hidden');
+                directoryView.classList.add('hidden');
+            } else {
+                tabs[1].classList.add('active');
+                registerView.classList.add('hidden');
+                directoryView.classList.remove('hidden');
+                loadDirectory(); // Refresh data when opening directory
+            }
+        }
+
+        // Form Submission
+        document.getElementById('studentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            btn.disabled = true;
+            btn.innerHTML = '⌛ Saving...';
+
+            try {
+                // Here we send data to Google Sheets
+                // Note: Apps Script must be set to receive POST requests
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // standard for Apps Script simple posts
+                    body: JSON.stringify(data)
+                });
+
+                // Since no-cors doesn't give response body, we assume success
+                showNotification('Student registered successfully!', 'success');
+                e.target.reset();
+            } catch (error) {
+                console.error(error);
+                showNotification('Error saving data', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '✅ Register Student';
+            }
+        });
+
+        // Search Functionality
+        document.getElementById('searchBar').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+
+        // Mock function to load directory
+        // In your real version, you'd fetch from Apps Script
+        async function loadDirectory() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Fetching data from Google Sheets...</td></tr>';
+            
+            try {
+                const res = await fetch(APPS_SCRIPT_URL + '?action=getData');
+                const result = await res.json();
+                
+                if(result.success && result.data) {
+                    tbody.innerHTML = result.data.map(item => `
+                        <tr>
+                            <td><span class="badge badge-info">${item.index_no}</span></td>
+                            <td><strong>${item.name_initials}</strong></td>
+                            <td>${item.phone1}</td>
+                            <td>${item.nic || 'N/A'}</td>
+                            <td>${item.al_results || 'Pending'}</td>
+                            <td>${item.guardian_name} (${item.guardian_type})</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>';
+                }
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load data.</td></tr>';
+            }
+        }
+
+        function showNotification(msg, type) {
+            // Simple overlay notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px; 
+                padding: 1rem 2rem; border-radius: 8px; color: white;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1000;
+            `;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
