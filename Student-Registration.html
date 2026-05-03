@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLIATE Nawalapitiya - Student Management System</title>
+    <title>Student Registration - ATI Nawalapitiya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -17,28 +17,15 @@
             backdrop-filter: blur(20px); 
             border-bottom: 1px solid #e2e8f0;
         }
-        .tab-active { 
-            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25);
-        }
-        .card-animate { animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .loader { border-top-color: #2563eb; animation: spinner 1s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Custom Input Styling to match Portal */
         .portal-input {
             background: #ffffff;
             border: 2px solid #cbd5e1;
             border-radius: 16px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            color: #0f172a;
         }
         .portal-input:hover {
             border-color: #94a3b8;
@@ -50,8 +37,12 @@
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), 0 10px 30px rgba(37, 99, 235, 0.1);
             transform: translateY(-2px);
         }
-        
-        /* Gradient Button */
+        .portal-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+            border-radius: 32px;
+        }
         .btn-primary-gradient {
             background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -61,378 +52,545 @@
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
-        .btn-primary-gradient:active {
-            transform: translateY(-1px) scale(0.98);
+        .btn-primary-gradient:active { transform: translateY(-1px) scale(0.98); }
+        .section-icon {
+            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            color: white;
         }
+        .loader { border-top-color: #2563eb; animation: spinner 1s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Card styling */
-        .portal-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-            border-radius: 32px;
+        /* Modal */
+        .modal-backdrop {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
         }
-        
-        /* Table row hover */
-        .table-row-hover:hover {
-            background: #f8fafc;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        .index-display {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid #2563eb;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
         }
+        .error-shake { animation: shake 0.4s ease-in-out; border-color: #dc2626 !important; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        select.portal-input { appearance: auto; padding-right: 2rem; }
     </style>
 </head>
 <body>
 
-    <header class="glass-header sticky top-0 z-50">
+    <!-- Header -->
+    <header class="glass-header sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30" style="background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);">S</div>
                     <div>
-                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">StudentMS</h1>
-                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">Google Cloud Storage</p>
+                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Student Registration</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">ATI Nawalapitiya</p>
                     </div>
                 </div>
-                <div id="connection-indicator" class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
-                    <span class="w-2 h-2 rounded-full bg-[#94a3b8]" id="status-dot"></span>
-                    <span id="status-text">Ready</span>
+                <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
+                    <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
+                    <span>Open</span>
                 </div>
             </div>
-        </div>
-        
-        <div class="max-w-6xl mx-auto px-4 pb-2">
-            <nav class="flex gap-2 p-2 bg-[#f1f5f9] rounded-[20px] border border-[#e2e8f0] mb-4">
-                <button onclick="switchTab('register')" id="btn-register" class="tab-active flex-1 py-3 px-4 text-sm font-semibold transition-all whitespace-nowrap rounded-[16px]">
-                    Registration
-                </button>
-                <button onclick="switchTab('directory')" id="btn-directory" class="flex-1 py-3 px-4 text-sm font-semibold text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#e2e8f0] transition-all whitespace-nowrap rounded-[16px]">
-                    Student Records
-                </button>
-                <button onclick="switchTab('stats')" id="btn-stats" class="flex-1 py-3 px-4 text-sm font-semibold text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#e2e8f0] transition-all whitespace-nowrap rounded-[16px]">
-                    Analytics
-                </button>
-            </nav>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-8">
-        
-        <!-- VIEW: REGISTRATION -->
-        <div id="view-register" class="card-animate space-y-8">
-            <form id="mainForm">
-                <!-- Personal Info -->
-                <div class="portal-card p-6 md:p-8 mb-6">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-[#eff6ff] text-[#2563eb] p-2 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                        </span>
-                        <h2 class="text-xl font-bold text-[#0f172a]">Personal Information</h2>
+    <main class="max-w-6xl mx-auto p-4 md:p-8 pb-24">
+        <form id="regForm" class="space-y-6">
+
+            <!-- PERSONAL INFO -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Personal Information</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="lg:col-span-2">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" required placeholder="Doe John Smith" class="portal-input placeholder-[#94a3b8]">
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        <div class="lg:col-span-2">
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">Full Name</label>
-                            <input type="text" name="full_name" placeholder="John Doe" required class="w-full p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">NIC Number</label>
-                            <input type="text" name="nic" placeholder="200XXXXXXXXX" maxlength="12" required class="w-full p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">Email Address</label>
-                            <input type="email" name="email" placeholder="johndoe@example.com" required class="w-full p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">Index No</label>
-                            <input type="text" name="index_no" placeholder="NAW/IT/2025/F/0001" required class="w-full p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">Contact No</label>
-                            <input type="tel" name="phone1" placeholder="07XXXXXXXX" maxlength="10" required class="w-full p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#475569] uppercase mb-2 tracking-wider">Gender</label>
-                            <select name="gender" class="w-full p-3 portal-input text-[#0f172a] bg-white">
-                                <option>Male</option>
-                                <option>Female</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label>Name with Initials</label>
+                        <input type="text" name="name_with_initials" required placeholder="Smith D.J." class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>NIC Number</label>
+                        <input type="text" name="nic" id="nic" required placeholder="200012345678 or 901234567V" maxlength="12" class="portal-input placeholder-[#94a3b8]">
+                        <p class="text-[10px] text-[#94a3b8] mt-1">12 digits OR 9 digits + V/X</p>
+                    </div>
+                    <div>
+                        <label>Email Address</label>
+                        <input type="email" name="email" id="email" required placeholder="johndoe@gmail.com" class="portal-input placeholder-[#94a3b8]">
+                        <p class="text-[10px] text-[#94a3b8] mt-1">Must be @gmail.com</p>
+                    </div>
+                    <div>
+                        <label>Contact Number</label>
+                        <input type="tel" name="contact" id="contact" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>Gender</label>
+                        <select name="gender" required class="portal-input bg-white">
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" required class="portal-input">
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label>School</label>
+                        <input type="text" name="school" required placeholder="Central College" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>WhatsApp Number</label>
+                        <input type="tel" name="whatsapp" id="whatsapp" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div class="lg:col-span-3">
+                        <label>Address</label>
+                        <textarea name="address" required rows="2" placeholder="No. 123, Main Street, Nawalapitiya" class="portal-input placeholder-[#94a3b8] resize-none"></textarea>
                     </div>
                 </div>
+            </div>
 
-                <!-- Guardian Details -->
-                <div class="portal-card p-6 md:p-8 mb-6">
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="bg-[#eef2ff] text-[#6366f1] p-2 rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        </span>
-                        <h2 class="text-xl font-bold text-[#0f172a]">Guardian Details</h2>
+            <!-- GUARDIAN -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Guardian Details</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label>Guardian Name</label>
+                        <input type="text" name="guardian_name" required placeholder="Guardian Name" class="portal-input placeholder-[#94a3b8]">
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <input type="text" name="guardian_name" required placeholder="Guardian Name" class="p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        <input type="tel" name="guardian_phone" required placeholder="07XXXXXXXX" maxlength="10" class="p-3 portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                        <select name="guardian_type" class="p-3 portal-input text-[#0f172a] bg-white">
-                            <option>Father</option>
+                    <div>
+                        <label>Guardian Type</label>
+                        <select name="guardian_type" required class="portal-input bg-white">
+                            <option value="">Select</option>
                             <option>Mother</option>
-                            <option>Other</option>
+                            <option>Father</option>
+                            <option>Guardian</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Guardian's Phone</label>
+                        <input type="tel" name="guardian_phone" id="guardian_phone" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                </div>
+            </div>
+
+            <!-- O/L RESULTS -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">G.C.E. O/L Examination</h2>
+                </div>
+                <div class="mb-4">
+                    <label>O/L Index Number</label>
+                    <input type="text" name="ol_index" placeholder="12345678" class="portal-input placeholder-[#94a3b8] md:w-1/2">
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Science</label><select name="ol_science" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Maths</label><select name="ol_maths" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>History</label><select name="ol_history" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>English</label><select name="ol_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div>
+                        <label>Religion</label>
+                        <select name="ol_religion" class="portal-input bg-white mb-2">
+                            <option value="">Select</option>
+                            <option>Buddhism</option>
+                            <option>Hinduism</option>
+                            <option>Islam</option>
+                            <option>Christianity</option>
+                        </select>
+                        <select name="ol_religion_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-[#e2e8f0]">
+                    <div>
+                        <label>Option 1</label>
+                        <select name="ol_opt1" class="portal-input bg-white mb-2">
+                            <option value="">Select Subject</option>
+                            <option>Geography</option>
+                            <option>Civic Education</option>
+                            <option>Business & Accounting Studies</option>
+                            <option>Entrepreneurship Studies</option>
+                            <option>Second Language</option>
+                        </select>
+                        <select name="ol_opt1_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                    </div>
+                    <div>
+                        <label>Option 2</label>
+                        <select name="ol_opt2" class="portal-input bg-white mb-2">
+                            <option value="">Select Subject</option>
+                            <option>Information & Communication Technology (ICT)</option>
+                            <option>Agriculture & Food Technology</option>
+                            <option>Health & Physical Education</option>
+                            <option>Home Economics</option>
+                        </select>
+                        <select name="ol_opt2_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                    </div>
+                    <div>
+                        <label>Option 3</label>
+                        <select name="ol_opt3" class="portal-input bg-white mb-2">
+                            <option value="">Select Subject</option>
+                            <option>Art</option>
+                            <option>Music</option>
+                            <option>Dancing</option>
+                            <option>Drama & Theatre</option>
+                            <option>Design & Construction Technology</option>
+                            <option>Design & Mechanical Technology</option>
+                            <option>Design & Electrical Technology</option>
+                            <option>Appreciation of Sinhala Literary Texts (Rasaswadaya)</option>
+                        </select>
+                        <select name="ol_opt3_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- A/L RESULTS -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">G.C.E. A/L Examination</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+                    <div>
+                        <label>A/L Index Number</label>
+                        <input type="text" name="al_index" placeholder="12345678" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>Stream</label>
+                        <select name="al_stream" id="al_stream" onchange="updateALSubjects()" class="portal-input bg-white">
+                            <option value="">Select Stream</option>
+                            <option value="maths">Combined Maths</option>
+                            <option value="biology">Biology</option>
+                            <option value="commerce">Commerce</option>
+                            <option value="arts">Arts</option>
+                            <option value="technology">Technology</option>
                         </select>
                     </div>
                 </div>
-
-                <!-- O/L & A/L Sections -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                    <div class="portal-card p-6 md:p-8">
-                        <h2 class="font-bold mb-4 flex items-center gap-2 text-[#059669]">
-                            <span class="w-2 h-6 bg-[#059669] rounded-full"></span> O/L Results
-                        </h2>
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <input type="text" name="ol_index" placeholder="Index No" class="p-2 text-xs portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                            <input type="number" name="ol_year" placeholder="Year" class="p-2 text-xs portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                            <select name="ol_medium" class="p-2 text-xs portal-input text-[#0f172a] bg-white col-span-2">
-                                <option>English</option><option>Sinhala</option><option>Tamil</option>
-                            </select>
-                        </div>
-                        <div id="ol-results-grid" class="grid grid-cols-3 gap-2"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label>Subject 1</label>
+                        <select name="al_sub1" id="al_sub1" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
+                        <select name="al_sub1_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
-
-                    <div class="portal-card p-6 md:p-8">
-                        <h2 class="font-bold mb-4 flex items-center gap-2 text-[#6366f1]">
-                            <span class="w-2 h-6 bg-[#6366f1] rounded-full"></span> A/L Results
-                        </h2>
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <input type="text" name="al_index" placeholder="Index No" class="p-2 text-xs portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                            <input type="number" name="al_year" placeholder="Year" class="p-2 text-xs portal-input text-[#0f172a] placeholder-[#94a3b8]">
-                            <select id="al-stream-selector" name="al_stream" onchange="generateALInputs()" class="p-2 text-xs portal-input text-[#0f172a] bg-white">
-                                <option value="maths">Combined Maths</option>
-                                <option value="bio">Biology</option>
-                                <option value="commerce">Commerce</option>
-                                <option value="arts">Arts</option>
-                            </select>
-                            <select name="al_medium" class="p-2 text-xs portal-input text-[#0f172a] bg-white">
-                                <option>English</option><option>Sinhala</option><option>Tamil</option>
-                            </select>
-                        </div>
-                        <div id="al-results-grid" class="grid grid-cols-3 gap-2"></div>
+                    <div>
+                        <label>Subject 2</label>
+                        <select name="al_sub2" id="al_sub2" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
+                        <select name="al_sub2_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                    </div>
+                    <div>
+                        <label>Subject 3</label>
+                        <select name="al_sub3" id="al_sub3" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
+                        <select name="al_sub3_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                 </div>
-
-                <div class="flex justify-end gap-4 pb-20">
-                    <button type="submit" id="submitBtn" class="w-full md:w-auto px-10 py-4 btn-primary-gradient text-white rounded-2xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                        Save to Cloud
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- VIEW: DIRECTORY -->
-        <div id="view-directory" class="card-animate hidden">
-            <div class="portal-card overflow-hidden">
-                <div class="p-6 md:p-8 border-b border-[#e2e8f0] flex flex-col md:flex-row justify-between gap-4">
-                    <h2 class="text-xl font-bold text-[#0f172a]">Cloud Database</h2>
-                    <input type="text" id="searchBox" oninput="filterTable()" placeholder="Search records..." class="w-full md:w-80 px-4 py-2 portal-input text-sm text-[#0f172a] placeholder-[#94a3b8]">
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left min-w-[800px]">
-                        <thead class="bg-[#f8fafc] text-[10px] uppercase font-black text-[#94a3b8]">
-                            <tr>
-                                <th class="px-6 py-4">Student</th>
-                                <th class="px-6 py-4">Guardian</th>
-                                <th class="px-6 py-4">Academics</th>
-                                <th class="px-6 py-4 text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody" class="divide-y divide-[#f1f5f9]"></tbody>
-                    </table>
-                </div>
-                <div id="loadingState" class="p-12 text-center hidden">
-                    <div class="inline-block w-8 h-8 border-4 border-[#e2e8f0] rounded-full loader mb-4"></div>
-                    <p class="text-[#94a3b8] text-sm">Accessing Google Sheets...</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
+                    <div>
+                        <label>General English</label>
+                        <select name="al_gen_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                    </div>
+                    <div>
+                        <label>Common General Test (Marks)</label>
+                        <input type="number" name="al_cgt" id="al_cgt" min="0" max="101" placeholder="0 - 101" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>Z-Core</label>
+                        <input type="number" name="al_zcore" id="al_zcore" step="0.0001" placeholder="1.0456" class="portal-input placeholder-[#94a3b8]">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- VIEW: STATS -->
-        <div id="view-stats" class="card-animate hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="portal-card p-8 text-center">
-                    <p class="text-[#94a3b8] text-xs font-bold uppercase mb-2 tracking-wider">Total Students</p>
-                    <h3 id="stat-total" class="text-5xl font-black text-[#2563eb]">0</h3>
+            <!-- COURSE -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Course Enrollment</h2>
                 </div>
-                <div class="p-8 rounded-[32px] text-white text-center" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);">
-                    <p class="text-emerald-100 text-xs font-bold uppercase mb-2 tracking-wider">Sync Status</p>
-                    <h3 class="text-3xl font-black">Live</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label>Course</label>
+                        <select name="course" required class="portal-input bg-white">
+                            <option value="">Select Course</option>
+                            <option>Information Technology</option>
+                            <option>Business Finance</option>
+                            <option>Management</option>
+                            <option>Tourism & Hospitality Management</option>
+                            <option>English</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Attendance Type</label>
+                        <select name="course_type" required class="portal-input bg-white">
+                            <option value="">Select Type</option>
+                            <option>Full Time</option>
+                            <option>Part Time</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Submit -->
+            <div class="flex justify-end">
+                <button type="submit" id="submitBtn" class="px-12 py-4 btn-primary-gradient text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <span>Complete Registration</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                </button>
+            </div>
+        </form>
     </main>
 
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-[#0f172a] text-white px-8 py-4 rounded-2xl text-sm font-bold shadow-2xl opacity-0 translate-y-10 transition-all pointer-events-none z-[100]"></div>
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
+        <div class="bg-white rounded-[32px] shadow-2xl max-w-md w-full p-8 transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+            <div class="text-center">
+                <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-[#0f172a] mb-2">Registration Successful!</h3>
+                <p class="text-[#475569] text-sm mb-6">Your details have been saved. An email with your index number has been sent.</p>
+                
+                <div class="index-display rounded-2xl p-6 mb-6">
+                    <p class="text-[10px] font-bold text-[#2563eb] uppercase tracking-widest mb-2">Your Index Number</p>
+                    <div id="generatedIndex" class="text-3xl font-black text-[#2563eb]"></div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button onclick="copyIndex()" class="flex-1 py-3 px-4 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] rounded-xl font-bold text-sm transition-colors">
+                        Copy Number
+                    </button>
+                    <button onclick="closeModal()" class="flex-1 py-3 px-4 btn-primary-gradient text-white rounded-xl font-bold text-sm">
+                        Done
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0f172a] text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-2xl opacity-0 translate-y-4 transition-all pointer-events-none z-50 flex items-center gap-2">
+        <span id="toastIcon"></span>
+        <span id="toastMsg"></span>
+    </div>
 
     <script>
-        const GRADES = ["A", "B", "C", "S", "W"];
-        const OL_SUBS = ["Maths", "Science", "English", "History", "Religion", "Sinhala"];
-        const AL_SUBS = {
-            maths: ["Comb. Maths", "Physics", "Chemistry"],
-            bio: ["Biology", "Chemistry", "Physics"],
-            commerce: ["Accountancy", "Economics", "B.Studies"],
-            arts: ["Art 01", "Art 02", "Art 03"]
+        const AL_SUBJECTS = {
+            maths: {
+                sub1: ["Combined Mathematics"],
+                sub2: ["Physics"],
+                sub3: ["Chemistry"]
+            },
+            biology: {
+                sub1: ["Biology"],
+                sub2: ["Chemistry"],
+                sub3: ["Physics"]
+            },
+            commerce: {
+                sub1: ["Accounting"],
+                sub2: ["Business Studies"],
+                sub3: ["Economics"]
+            },
+            arts: {
+                sub1: ["Economics", "Geography", "Home Economics", "Political Science", "Logic", "English", "Japanese", "French"],
+                sub2: ["Communication & Media Studies", "History", "Buddhism", "Hinduism", "Islam", "Christianity", "ICT"],
+                sub3: ["Art", "Music", "Dancing", "Drama & Theatre", "Sinhala", "Tamil", "Appreciation of Sinhala Literary Texts"]
+            },
+            technology: {
+                sub1: ["Science for Technology"],
+                sub2: ["Engineering Technology", "Bio Systems Technology"],
+                sub3: ["Information & Communication Technology", "Agricultural Science", "Mathematics"]
+            }
         };
 
-        let students = [];
-
-        window.onload = () => {
-            generateOLInputs();
-            generateALInputs();
-            checkConnection();
-        };
-
-        function checkConnection() {
-            const dot = document.getElementById('status-dot');
-            const txt = document.getElementById('status-text');
-            if (typeof google !== 'undefined') {
-                dot.className = 'w-2 h-2 rounded-full bg-[#059669]';
-                txt.innerText = 'Connected';
-                txt.className = 'text-[#059669] font-bold';
-                syncData();
-            } else {
-                dot.className = 'w-2 h-2 rounded-full bg-[#d97706]';
-                txt.innerText = 'Offline Mode (Local Only)';
+        function updateALSubjects() {
+            const stream = document.getElementById('al_stream').value;
+            const s1 = document.getElementById('al_sub1');
+            const s2 = document.getElementById('al_sub2');
+            const s3 = document.getElementById('al_sub3');
+            
+            if (!stream || !AL_SUBJECTS[stream]) {
+                [s1, s2, s3].forEach(s => s.innerHTML = '<option value="">Select Stream First</option>');
+                return;
             }
+            
+            const populate = (select, options) => {
+                select.innerHTML = '<option value="">Select Subject</option>' + 
+                    options.map(o => `<option value="${o}">${o}</option>`).join('');
+            };
+            
+            populate(s1, AL_SUBJECTS[stream].sub1);
+            populate(s2, AL_SUBJECTS[stream].sub2);
+            populate(s3, AL_SUBJECTS[stream].sub3);
         }
 
-        function generateOLInputs() {
-            document.getElementById('ol-results-grid').innerHTML = OL_SUBS.map(s => `
-                <div class="flex flex-col">
-                    <label class="text-[9px] font-bold text-[#94a3b8] uppercase tracking-wider mb-1">${s}</label>
-                    <select name="ol_res_${s.toLowerCase()}" class="p-1 text-xs portal-input bg-white text-[#0f172a]">
-                        <option value="">-</option>${GRADES.map(g => `<option>${g}</option>`).join('')}
-                    </select>
-                </div>
-            `).join('');
-        }
-
-        function generateALInputs() {
-            const stream = document.getElementById('al-stream-selector').value;
-            document.getElementById('al-results-grid').innerHTML = AL_SUBS[stream].map(s => `
-                <div class="flex flex-col">
-                    <label class="text-[9px] font-bold text-[#94a3b8] uppercase tracking-wider mb-1">${s}</label>
-                    <select name="al_res_${s.toLowerCase().replace(/ /g,'_')}" class="p-1 text-xs portal-input bg-white text-[#0f172a]">
-                        <option value="">-</option>${GRADES.map(g => `<option>${g}</option>`).join('')}
-                    </select>
-                </div>
-            `).join('');
-        }
-
-        function switchTab(view) {
-            document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
-            document.getElementById(`view-${view}`).classList.remove('hidden');
-            document.querySelectorAll('nav button').forEach(b => {
-                b.classList.remove('tab-active');
-                b.classList.add('text-[#94a3b8]', 'hover:text-[#0f172a]', 'hover:bg-[#e2e8f0]');
-            });
-            const activeBtn = document.getElementById(`btn-${view}`);
-            activeBtn.classList.add('tab-active');
-            activeBtn.classList.remove('text-[#94a3b8]', 'hover:text-[#0f172a]', 'hover:bg-[#e2e8f0]');
-            if(view !== 'register') syncData();
-        }
-
-        document.getElementById('mainForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span> Connecting to Sheets...';
-
-            const data = Object.fromEntries(new FormData(this).entries());
-
-            if (typeof google !== 'undefined') {
-                google.script.run
-                    .withSuccessHandler((res) => {
-                        btn.disabled = false;
-                        btn.innerHTML = 'Save to Cloud';
-                        if(res.success) {
-                            showToast("Student Record Saved to Sheet!");
-                            e.target.reset();
-                            syncData();
-                        }
-                    })
-                    .saveStudentData(data);
-            } else {
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = 'Save to Cloud';
-                    showToast("Simulated: Data sent to script.");
-                    console.log(data);
-                }, 1000);
-            }
-        });
-
-        function syncData() {
-            if (typeof google === 'undefined') return;
-            document.getElementById('loadingState').classList.remove('hidden');
-            google.script.run
-                .withSuccessHandler((data) => {
-                    students = data;
-                    renderTable();
-                    document.getElementById('stat-total').innerText = students.length;
-                    document.getElementById('loadingState').classList.add('hidden');
-                })
-                .getStudents();
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('studentTableBody');
-            tbody.innerHTML = students.map(s => `
-                <tr class="table-row-hover transition-all duration-300">
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-[#0f172a]">${s.full_name}</div>
-                        <div class="text-[10px] text-[#2563eb] font-bold tracking-wider">${s.index_no} • ${s.nic}</div>
-                        <div class="text-xs text-[#94a3b8]">${s.email}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm font-bold text-[#0f172a]">${s.guardian_name}</div>
-                        <div class="text-[10px] text-[#6366f1] font-bold uppercase tracking-wider">${s.guardian_type}</div>
-                        <div class="text-xs text-[#475569]">${s.guardian_phone}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-[9px] font-bold text-[#059669]">OL: ${s.ol_index || '-'}</div>
-                        <div class="text-[9px] font-bold text-[#6366f1]">AL: ${s.al_index || '-'} (${s.al_stream})</div>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button onclick="deleteRow('${s.index_no}')" class="p-2 text-[#dc2626] hover:bg-red-50 rounded-xl transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function deleteRow(id) {
-            if(confirm("Delete this record from Google Sheet?")) {
-                if (typeof google !== 'undefined') {
-                    google.script.run.withSuccessHandler(() => {
-                        showToast("Record Deleted.");
-                        syncData();
-                    }).deleteStudentRecord(id);
-                }
-            }
-        }
-
-        function filterTable() {
-            const term = document.getElementById('searchBox').value.toLowerCase();
-            document.querySelectorAll('#studentTableBody tr').forEach(tr => {
-                tr.style.display = tr.innerText.toLowerCase().includes(term) ? '' : 'none';
-            });
-        }
-
-        function showToast(msg) {
+        function showToast(msg, type = 'info') {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
+            const icon = type === 'error' ? '⚠️' : '✅';
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMsg').textContent = msg;
             toast.style.opacity = '1';
             toast.style.transform = 'translate(-50%, 0)';
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, 40px)';
-            }, 3000);
+                toast.style.transform = 'translate(-50%, 16px)';
+            }, 4000);
+        }
+
+        function validateForm() {
+            let valid = true;
+            
+            // NIC
+            const nic = document.getElementById('nic').value.trim();
+            if (!/^(\d{12}|\d{9}[VXvx])$/.test(nic)) {
+                document.getElementById('nic').classList.add('error-shake');
+                showToast('Invalid NIC format', 'error');
+                valid = false;
+            } else {
+                document.getElementById('nic').classList.remove('error-shake');
+            }
+            
+            // Email
+            const email = document.getElementById('email').value.trim();
+            if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
+                document.getElementById('email').classList.add('error-shake');
+                showToast('Email must be @gmail.com', 'error');
+                valid = false;
+            } else {
+                document.getElementById('email').classList.remove('error-shake');
+            }
+            
+            // Phones
+            ['contact', 'whatsapp', 'guardian_phone'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!/^0\d{9}$/.test(el.value.trim())) {
+                    el.classList.add('error-shake');
+                    showToast('Phone numbers must be 10 digits starting with 0', 'error');
+                    valid = false;
+                } else {
+                    el.classList.remove('error-shake');
+                }
+            });
+            
+            // CGT
+            const cgt = parseFloat(document.getElementById('al_cgt').value);
+            if (isNaN(cgt) || cgt < 0 || cgt > 101) {
+                document.getElementById('al_cgt').classList.add('error-shake');
+                showToast('Common General Test must be 0-101', 'error');
+                valid = false;
+            } else {
+                document.getElementById('al_cgt').classList.remove('error-shake');
+            }
+            
+            // Z-Core
+            const zcore = document.getElementById('al_zcore').value;
+            if (zcore === '' || isNaN(parseFloat(zcore))) {
+                document.getElementById('al_zcore').classList.add('error-shake');
+                showToast('Enter a valid Z-Core value', 'error');
+                valid = false;
+            } else {
+                document.getElementById('al_zcore').classList.remove('error-shake');
+            }
+            
+            // Remove shake after animation
+            setTimeout(() => {
+                document.querySelectorAll('.error-shake').forEach(el => el.classList.remove('error-shake'));
+            }, 1000);
+            
+            return valid;
+        }
+
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!validateForm()) return;
+            
+            const btn = document.getElementById('submitBtn');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<div class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full loader mr-2"></div> Processing...';
+            
+            const data = Object.fromEntries(new FormData(this).entries());
+            
+            if (typeof google !== 'undefined') {
+                google.script.run
+                    .withSuccessHandler((res) => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                        if (res.success) {
+                            showToast('Registration saved successfully!');
+                            document.getElementById('generatedIndex').textContent = res.indexNumber;
+                            openModal();
+                            this.reset();
+                            updateALSubjects();
+                        } else {
+                            showToast(res.message, 'error');
+                        }
+                    })
+                    .withFailureHandler((err) => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                        showToast('Error: ' + err.message, 'error');
+                    })
+                    .saveRegistrationData(data);
+            } else {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    showToast('Simulated: Registration complete');
+                    console.log(data);
+                }, 1500);
+            }
+        });
+
+        function openModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.style.transform = 'scale(1)';
+                content.style.opacity = '1';
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('modalContent');
+            content.style.transform = 'scale(0.95)';
+            content.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function copyIndex() {
+            const idx = document.getElementById('generatedIndex').textContent;
+            navigator.clipboard.writeText(idx).then(() => {
+                showToast('Index number copied!');
+            });
         }
     </script>
 </body>
