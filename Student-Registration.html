@@ -519,7 +519,7 @@
             return valid;
         }
 
-        document.getElementById('regForm').addEventListener('submit', function(e) {
+                document.getElementById('regForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if (!validateForm()) return;
             
@@ -530,8 +530,15 @@
             
             const data = Object.fromEntries(new FormData(this).entries());
             
+            // ═══════════════════════════════════════════════════════
+            // UPDATED FETCH WITH text/plain TO FIX CORS
+            // ═══════════════════════════════════════════════════════
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
                 body: JSON.stringify({ action: 'saveRegistration', ...data })
             })
             .then(r => r.json())
@@ -552,6 +559,7 @@
                 btn.disabled = false;
                 btn.innerHTML = originalHTML;
                 showToast('Network error: ' + err.message, 'error');
+                console.error(err);
             });
         });
 
