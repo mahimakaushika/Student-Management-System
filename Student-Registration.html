@@ -80,7 +80,7 @@
     </style>
 </head>
 <body>
-
+    <iframe name="gasFrame" id="gasFrame" style="display:none;visibility:hidden;border:none;"></iframe>
     <!-- Header -->
     <header class="glass-header sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4">
@@ -398,7 +398,7 @@
         // ═══════════════════════════════════════════════════════════════
         // PASTE YOUR APPS SCRIPT WEB APP URL HERE
         // ═══════════════════════════════════════════════════════════════
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsy3owk7Rl-OvMUhMjcWi2FMssJ2is2sEqRuXRaPZLLFpQNQrWfoM_E9vnPEzBg3lv/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn6mEekd_NpYl2iyihe5d_KRWJ_3ESRTfl5xRdOtEdKvQpCx-Vo5Klu0c_ubwZ3xrr/exec';
         
         const AL_SUBJECTS = {
             maths: {
@@ -519,7 +519,30 @@
             return valid;
         }
 
-                document.getElementById('regForm').addEventListener('submit', function(e) {
+                        // Listen for result coming back from the hidden iframe
+        window.addEventListener('message', function(event) {
+            // Only accept messages from Google
+            if (!event.origin.includes('google.com') && !event.origin.includes('googleusercontent.com')) return;
+            if (!event.data || event.data.success === undefined) return;
+            
+            const btn = document.getElementById('submitBtn');
+            const originalHTML = '<span>Complete Registration</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>';
+            
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            
+            if (event.data.success) {
+                showToast('Registration saved successfully!');
+                document.getElementById('generatedIndex').textContent = event.data.indexNumber;
+                openModal();
+                document.getElementById('regForm').reset();
+                updateALSubjects();
+            } else {
+                showToast(event.data.message, 'error');
+            }
+        });
+
+        document.getElementById('regForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if (!validateForm()) return;
             
@@ -528,7 +551,38 @@
             btn.disabled = true;
             btn.innerHTML = '<div class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full loader mr-2"></div> Processing...';
             
-            const data = Object.fromEntries(new FormData(this).entries());
+            // Build a hidden form and submit it to the iframe (no CORS!)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = APPS_SCRIPT_URL;   // your GAS web app URL ending in /exec
+            form.target = 'gasFrame';
+            form.style.display = 'none';
+            
+            const data = Object.fromEntries(new FormData(this));
+            data.action = 'saveRegistration';
+            
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key] || '';
+                    form.appendChild(input);
+                }
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Safety timeout: if server doesn't respond in 20 seconds
+            setTimeout(() => {
+                if (btn.disabled) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    showToast('Server timeout. Please check connection and try again.', 'error');
+                }
+            }, 20000);
+        });
             
             // ═══════════════════════════════════════════════════════
             // UPDATED FETCH WITH text/plain TO FIX CORS
