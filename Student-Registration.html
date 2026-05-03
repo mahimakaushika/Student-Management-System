@@ -57,8 +57,18 @@
             background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
             color: white;
         }
-        .loader { border-top-color: #2563eb; animation: spinner 1s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader { 
+            border: 3px solid rgba(255,255,255,0.3); 
+            border-top-color: #ffffff; 
+            border-radius: 50%; 
+            width: 20px; 
+            height: 20px; 
+            animation: spin 1s linear infinite; 
+            display: inline-block; 
+            vertical-align: middle; 
+            margin-right: 8px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .modal-backdrop {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
@@ -80,7 +90,10 @@
     </style>
 </head>
 <body>
-    <iframe name="gasFrame" id="gasFrame" style="display:none;visibility:hidden;border:none;"></iframe>
+
+    <!-- Hidden iframe for form submission -->
+    <iframe name="gasFrame" id="gasFrame" style="display:none;visibility:hidden;border:none;width:0;height:0;"></iframe>
+
     <!-- Header -->
     <header class="glass-header sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4">
@@ -94,14 +107,14 @@
                 </div>
                 <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
                     <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
-                    <span>Administrator</span>
+                    <span>Open</span>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 md:p-8 pb-24">
-        <form id="regForm" class="space-y-6">
+        <form id="regForm" class="space-y-6" onsubmit="return false;">
 
             <!-- PERSONAL INFO -->
             <div class="portal-card p-6 md:p-8">
@@ -277,7 +290,7 @@
                     </div>
                     <div>
                         <label>Stream</label>
-                        <select name="al_stream" id="al_stream" onchange="updateALSubjects()" class="portal-input bg-white">
+                        <select name="al_stream" id="al_stream" class="portal-input bg-white">
                             <option value="">Select Stream</option>
                             <option value="maths">Combined Maths</option>
                             <option value="biology">Biology</option>
@@ -353,7 +366,7 @@
 
             <!-- Submit -->
             <div class="flex justify-end">
-                <button type="submit" id="submitBtn" class="px-12 py-4 btn-primary-gradient text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                <button type="button" id="submitBtn" class="px-12 py-4 btn-primary-gradient text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                     <span>Complete Registration</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                 </button>
@@ -396,10 +409,13 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════════
-        // PASTE YOUR APPS SCRIPT WEB APP URL HERE
+        // PASTE YOUR APPS SCRIPT WEB APP URL HERE (must end with /exec)
         // ═══════════════════════════════════════════════════════════════
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn6mEekd_NpYl2iyihe5d_KRWJ_3ESRTfl5xRdOtEdKvQpCx-Vo5Klu0c_ubwZ3xrr/exec';
         
+        // ═══════════════════════════════════════════════════════════════
+        // A/L SUBJECT DATA
+        // ═══════════════════════════════════════════════════════════════
         const AL_SUBJECTS = {
             maths: {
                 sub1: ["Combined Mathematics"],
@@ -428,44 +444,63 @@
             }
         };
 
-        function updateALSubjects() {
-            const stream = document.getElementById('al_stream').value;
+        // ═══════════════════════════════════════════════════════════════
+        // A/L DROPDOWN LOGIC
+        // ═══════════════════════════════════════════════════════════════
+        document.getElementById('al_stream').addEventListener('change', function() {
+            const stream = this.value;
+            console.log('Stream selected:', stream);
+            
             const s1 = document.getElementById('al_sub1');
             const s2 = document.getElementById('al_sub2');
             const s3 = document.getElementById('al_sub3');
             
             if (!stream || !AL_SUBJECTS[stream]) {
-                [s1, s2, s3].forEach(s => s.innerHTML = '<option value="">Select Stream First</option>');
+                s1.innerHTML = '<option value="">Select Stream First</option>';
+                s2.innerHTML = '<option value="">Select Stream First</option>';
+                s3.innerHTML = '<option value="">Select Stream First</option>';
                 return;
             }
             
-            const populate = (select, options) => {
-                select.innerHTML = '<option value="">Select Subject</option>' + 
-                    options.map(o => `<option value="${o}">${o}</option>`).join('');
+            const populate = function(select, options) {
+                let html = '<option value="">Select Subject</option>';
+                for (let i = 0; i < options.length; i++) {
+                    html += '<option value="' + options[i] + '">' + options[i] + '</option>';
+                }
+                select.innerHTML = html;
             };
             
             populate(s1, AL_SUBJECTS[stream].sub1);
             populate(s2, AL_SUBJECTS[stream].sub2);
             populate(s3, AL_SUBJECTS[stream].sub3);
-        }
+            
+            console.log('Subjects populated for', stream);
+        });
 
-        function showToast(msg, type = 'info') {
-            const toast = document.getElementById('toast');
-            const icon = type === 'error' ? '⚠️' : '✅';
+        // ═══════════════════════════════════════════════════════════════
+        // TOAST NOTIFICATION
+        // ═══════════════════════════════════════════════════════════════
+        function showToast(msg, type) {
+            type = type || 'info';
+            var toast = document.getElementById('toast');
+            var icon = type === 'error' ? '⚠️' : '✅';
             document.getElementById('toastIcon').textContent = icon;
             document.getElementById('toastMsg').textContent = msg;
             toast.style.opacity = '1';
             toast.style.transform = 'translate(-50%, 0)';
-            setTimeout(() => {
+            setTimeout(function() {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translate(-50%, 16px)';
             }, 4000);
         }
 
+        // ═══════════════════════════════════════════════════════════════
+        // FORM VALIDATION
+        // ═══════════════════════════════════════════════════════════════
         function validateForm() {
-            let valid = true;
+            var valid = true;
             
-            const nic = document.getElementById('nic').value.trim();
+            var nic = document.getElementById('nic').value.trim();
             if (!/^(\d{12}|\d{9}[VXvx])$/.test(nic)) {
                 document.getElementById('nic').classList.add('error-shake');
                 showToast('Invalid NIC format', 'error');
@@ -474,7 +509,7 @@
                 document.getElementById('nic').classList.remove('error-shake');
             }
             
-            const email = document.getElementById('email').value.trim();
+            var email = document.getElementById('email').value.trim();
             if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
                 document.getElementById('email').classList.add('error-shake');
                 showToast('Email must be @gmail.com', 'error');
@@ -483,8 +518,9 @@
                 document.getElementById('email').classList.remove('error-shake');
             }
             
-            ['contact', 'whatsapp', 'guardian_phone'].forEach(id => {
-                const el = document.getElementById(id);
+            var phoneIds = ['contact', 'whatsapp', 'guardian_phone'];
+            for (var i = 0; i < phoneIds.length; i++) {
+                var el = document.getElementById(phoneIds[i]);
                 if (!/^0\d{9}$/.test(el.value.trim())) {
                     el.classList.add('error-shake');
                     showToast('Phone numbers must be 10 digits starting with 0', 'error');
@@ -492,9 +528,9 @@
                 } else {
                     el.classList.remove('error-shake');
                 }
-            });
+            }
             
-            const cgt = parseFloat(document.getElementById('al_cgt').value);
+            var cgt = parseFloat(document.getElementById('al_cgt').value);
             if (isNaN(cgt) || cgt < 0 || cgt > 101) {
                 document.getElementById('al_cgt').classList.add('error-shake');
                 showToast('Common General Test must be 0-101', 'error');
@@ -503,7 +539,7 @@
                 document.getElementById('al_cgt').classList.remove('error-shake');
             }
             
-            const zcore = document.getElementById('al_zcore').value;
+            var zcore = document.getElementById('al_zcore').value;
             if (zcore === '' || isNaN(parseFloat(zcore))) {
                 document.getElementById('al_zcore').classList.add('error-shake');
                 showToast('Enter a valid Z-Core value', 'error');
@@ -512,21 +548,31 @@
                 document.getElementById('al_zcore').classList.remove('error-shake');
             }
             
-            setTimeout(() => {
-                document.querySelectorAll('.error-shake').forEach(el => el.classList.remove('error-shake'));
+            setTimeout(function() {
+                var errs = document.querySelectorAll('.error-shake');
+                for (var j = 0; j < errs.length; j++) {
+                    errs[j].classList.remove('error-shake');
+                }
             }, 1000);
             
             return valid;
         }
 
-                        // Listen for result coming back from the hidden iframe
+        // ═══════════════════════════════════════════════════════════════
+        // LISTEN FOR RESPONSE FROM HIDDEN IFRAME
+        // ═══════════════════════════════════════════════════════════════
         window.addEventListener('message', function(event) {
-            // Only accept messages from Google
-            if (!event.origin.includes('google.com') && !event.origin.includes('googleusercontent.com')) return;
-            if (!event.data || event.data.success === undefined) return;
+            console.log('Message received from:', event.origin);
+            console.log('Message data:', event.data);
             
-            const btn = document.getElementById('submitBtn');
-            const originalHTML = '<span>Complete Registration</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>';
+            // Only accept from Google domains
+            var fromGoogle = event.origin.indexOf('google.com') !== -1 || event.origin.indexOf('googleusercontent.com') !== -1;
+            if (!fromGoogle) return;
+            
+            if (!event.data || typeof event.data.success === 'undefined') return;
+            
+            var btn = document.getElementById('submitBtn');
+            var originalHTML = '<span>Complete Registration</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>';
             
             btn.disabled = false;
             btn.innerHTML = originalHTML;
@@ -536,34 +582,52 @@
                 document.getElementById('generatedIndex').textContent = event.data.indexNumber;
                 openModal();
                 document.getElementById('regForm').reset();
-                updateALSubjects();
+                // Reset A/L dropdowns
+                document.getElementById('al_sub1').innerHTML = '<option value="">Select Stream First</option>';
+                document.getElementById('al_sub2').innerHTML = '<option value="">Select Stream First</option>';
+                document.getElementById('al_sub3').innerHTML = '<option value="">Select Stream First</option>';
             } else {
                 showToast(event.data.message, 'error');
             }
         });
 
-        document.getElementById('regForm').addEventListener('submit', function(e) {
+        // ═══════════════════════════════════════════════════════════════
+        // SUBMIT HANDLER (Hidden iframe form post - bypasses CORS)
+        // ═══════════════════════════════════════════════════════════════
+        document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!validateForm()) return;
+            console.log('Submit button clicked');
             
-            const btn = document.getElementById('submitBtn');
-            const originalHTML = btn.innerHTML;
+            if (!validateForm()) {
+                console.log('Validation failed');
+                return;
+            }
+            
+            var btn = document.getElementById('submitBtn');
+            var originalHTML = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<div class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full loader mr-2"></div> Processing...';
+            btn.innerHTML = '<span class="loader"></span> Processing...';
             
-            // Build a hidden form and submit it to the iframe (no CORS!)
-            const form = document.createElement('form');
+            // Build hidden form
+            var form = document.createElement('form');
             form.method = 'POST';
-            form.action = APPS_SCRIPT_URL;   // your GAS web app URL ending in /exec
+            form.action = APPS_SCRIPT_URL;
             form.target = 'gasFrame';
             form.style.display = 'none';
             
-            const data = Object.fromEntries(new FormData(this));
+            var regForm = document.getElementById('regForm');
+            var formData = new FormData(regForm);
+            var data = {};
+            formData.forEach(function(value, key) {
+                data[key] = value;
+            });
             data.action = 'saveRegistration';
             
-            for (const key in data) {
+            console.log('Sending data:', data);
+            
+            for (var key in data) {
                 if (data.hasOwnProperty(key)) {
-                    const input = document.createElement('input');
+                    var input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = key;
                     input.value = data[key] || '';
@@ -572,76 +636,54 @@
             }
             
             document.body.appendChild(form);
+            console.log('Submitting to iframe...');
             form.submit();
             
-            // Safety timeout: if server doesn't respond in 20 seconds
-            setTimeout(() => {
+            // Remove hidden form after submit
+            setTimeout(function() {
+                if (form.parentNode) {
+                    document.body.removeChild(form);
+                }
+            }, 2000);
+            
+            // Safety timeout: if no response in 25 seconds
+            setTimeout(function() {
                 if (btn.disabled) {
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
                     showToast('Server timeout. Please check connection and try again.', 'error');
                 }
-            }, 20000);
-        });
-            
-            // ═══════════════════════════════════════════════════════
-            // UPDATED FETCH WITH text/plain TO FIX CORS
-            // ═══════════════════════════════════════════════════════
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                redirect: 'follow',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify({ action: 'saveRegistration', ...data })
-            })
-            .then(r => r.json())
-            .then(res => {
-                btn.disabled = false;
-                btn.innerHTML = originalHTML;
-                if(res.success) {
-                    showToast('Registration saved successfully!');
-                    document.getElementById('generatedIndex').textContent = res.indexNumber;
-                    openModal();
-                    this.reset();
-                    updateALSubjects();
-                } else {
-                    showToast(res.message, 'error');
-                }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerHTML = originalHTML;
-                showToast('Network error: ' + err.message, 'error');
-                console.error(err);
-            });
+            }, 25000);
         });
 
+        // ═══════════════════════════════════════════════════════════════
+        // MODAL FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
         function openModal() {
-            const modal = document.getElementById('successModal');
-            const content = document.getElementById('modalContent');
+            var modal = document.getElementById('successModal');
+            var content = document.getElementById('modalContent');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            setTimeout(() => {
+            setTimeout(function() {
                 content.style.transform = 'scale(1)';
                 content.style.opacity = '1';
             }, 10);
         }
 
         function closeModal() {
-            const modal = document.getElementById('successModal');
-            const content = document.getElementById('modalContent');
+            var modal = document.getElementById('successModal');
+            var content = document.getElementById('modalContent');
             content.style.transform = 'scale(0.95)';
             content.style.opacity = '0';
-            setTimeout(() => {
+            setTimeout(function() {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }, 300);
         }
 
         function copyIndex() {
-            const idx = document.getElementById('generatedIndex').textContent;
-            navigator.clipboard.writeText(idx).then(() => {
+            var idx = document.getElementById('generatedIndex').textContent;
+            navigator.clipboard.writeText(idx).then(function() {
                 showToast('Index number copied!');
             });
         }
