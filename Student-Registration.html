@@ -59,8 +59,6 @@
         }
         .loader { border-top-color: #2563eb; animation: spinner 1s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Modal */
         .modal-backdrop {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
@@ -96,7 +94,7 @@
                 </div>
                 <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
                     <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
-                    <span>Administrator</span>
+                    <span>Open</span>
                 </div>
             </div>
         </div>
@@ -116,25 +114,25 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     <div class="lg:col-span-2">
                         <label>Full Name</label>
-                        <input type="text" name="full_name" required placeholder="Muhandiramlage Mahima Kaushika Sarathchandra" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="full_name" required placeholder="Doe John Smith" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>Name with Initials</label>
-                        <input type="text" name="name_with_initials" required placeholder="M.M.K. Sarathchandra" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="name_with_initials" required placeholder="Smith D.J." class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>NIC Number</label>
-                        <input type="text" name="nic" id="nic" required placeholder="200233803659 or 901234567V" maxlength="12" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="nic" id="nic" required placeholder="200012345678 or 901234567V" maxlength="12" class="portal-input placeholder-[#94a3b8]">
                         <p class="text-[10px] text-[#94a3b8] mt-1">12 digits OR 9 digits + V/X</p>
                     </div>
                     <div>
                         <label>Email Address</label>
-                        <input type="email" name="email" id="email" required placeholder="mahima14763@gmail.com" class="portal-input placeholder-[#94a3b8]">
-                        <p class="text-[10px] text-[#94a3b8] mt-1">Must be a Gmail</p>
+                        <input type="email" name="email" id="email" required placeholder="johndoe@gmail.com" class="portal-input placeholder-[#94a3b8]">
+                        <p class="text-[10px] text-[#94a3b8] mt-1">Must be @gmail.com</p>
                     </div>
                     <div>
                         <label>Contact Number</label>
-                        <input type="tel" name="contact" id="contact" required placeholder="075XXXXXXX" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="contact" id="contact" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>Gender</label>
@@ -150,11 +148,11 @@
                     </div>
                     <div class="lg:col-span-2">
                         <label>School</label>
-                        <input type="text" name="school" required placeholder="Ginigathhena Central College" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="school" required placeholder="Central College" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>WhatsApp Number</label>
-                        <input type="tel" name="whatsapp" id="whatsapp" required placeholder="075XXXXXXX" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="whatsapp" id="whatsapp" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div class="lg:col-span-3">
                         <label>Address</label>
@@ -187,7 +185,7 @@
                     </div>
                     <div>
                         <label>Guardian's Phone</label>
-                        <input type="tel" name="guardian_phone" id="guardian_phone" required placeholder="075XXXXXXX" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="guardian_phone" id="guardian_phone" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
                     </div>
                 </div>
             </div>
@@ -205,11 +203,11 @@
                     <input type="text" name="ol_index" placeholder="12345678" class="portal-input placeholder-[#94a3b8] md:w-1/2">
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>Science</label><select name="ol_science" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>Maths</label><select name="ol_maths" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>History</label><select name="ol_history" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>English</label><select name="ol_english" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Science</label><select name="ol_science" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Maths</label><select name="ol_maths" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>History</label><select name="ol_history" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>English</label><select name="ol_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
                     <div>
                         <label>Religion</label>
                         <select name="ol_religion" class="portal-input bg-white mb-2">
@@ -226,7 +224,7 @@
                     <div>
                         <label>Option 1</label>
                         <select name="ol_opt1" class="portal-input bg-white mb-2">
-                            <option value="">Subject</option>
+                            <option value="">Select Subject</option>
                             <option>Geography</option>
                             <option>Civic Education</option>
                             <option>Business & Accounting Studies</option>
@@ -238,7 +236,7 @@
                     <div>
                         <label>Option 2</label>
                         <select name="ol_opt2" class="portal-input bg-white mb-2">
-                            <option value="">Subject</option>
+                            <option value="">Select Subject</option>
                             <option>Information & Communication Technology (ICT)</option>
                             <option>Agriculture & Food Technology</option>
                             <option>Health & Physical Education</option>
@@ -249,7 +247,7 @@
                     <div>
                         <label>Option 3</label>
                         <select name="ol_opt3" class="portal-input bg-white mb-2">
-                            <option value="">Subject</option>
+                            <option value="">Select Subject</option>
                             <option>Art</option>
                             <option>Music</option>
                             <option>Dancing</option>
@@ -280,7 +278,7 @@
                     <div>
                         <label>Stream</label>
                         <select name="al_stream" id="al_stream" onchange="updateALSubjects()" class="portal-input bg-white">
-                            <option value="">Stream</option>
+                            <option value="">Select Stream</option>
                             <option value="maths">Combined Maths</option>
                             <option value="biology">Biology</option>
                             <option value="commerce">Commerce</option>
@@ -309,11 +307,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
                     <div>
                         <label>General English</label>
-                        <select name="al_gen_english" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                        <select name="al_gen_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                     <div>
                         <label>Common General Test (Marks)</label>
-                        <input type="number" name="al_cgt" id="al_cgt" min="0" max="101" placeholder="0 - 100" class="portal-input placeholder-[#94a3b8]">
+                        <input type="number" name="al_cgt" id="al_cgt" min="0" max="101" placeholder="0 - 101" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>Z-Core</label>
@@ -334,7 +332,7 @@
                     <div>
                         <label>Course</label>
                         <select name="course" required class="portal-input bg-white">
-                            <option value="">Course</option>
+                            <option value="">Select Course</option>
                             <option>Information Technology</option>
                             <option>Business Finance</option>
                             <option>Management</option>
@@ -345,7 +343,7 @@
                     <div>
                         <label>Attendance Type</label>
                         <select name="course_type" required class="portal-input bg-white">
-                            <option value="">Type</option>
+                            <option value="">Select Type</option>
                             <option>Full Time</option>
                             <option>Part Time</option>
                         </select>
@@ -397,6 +395,11 @@
     </div>
 
     <script>
+        // ═══════════════════════════════════════════════════════════════
+        // PASTE YOUR APPS SCRIPT WEB APP URL HERE
+        // ═══════════════════════════════════════════════════════════════
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsy3owk7Rl-OvMUhMjcWi2FMssJ2is2sEqRuXRaPZLLFpQNQrWfoM_E9vnPEzBg3lv/exec';
+        
         const AL_SUBJECTS = {
             maths: {
                 sub1: ["Combined Mathematics"],
@@ -462,7 +465,6 @@
         function validateForm() {
             let valid = true;
             
-            // NIC
             const nic = document.getElementById('nic').value.trim();
             if (!/^(\d{12}|\d{9}[VXvx])$/.test(nic)) {
                 document.getElementById('nic').classList.add('error-shake');
@@ -472,7 +474,6 @@
                 document.getElementById('nic').classList.remove('error-shake');
             }
             
-            // Email
             const email = document.getElementById('email').value.trim();
             if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
                 document.getElementById('email').classList.add('error-shake');
@@ -482,7 +483,6 @@
                 document.getElementById('email').classList.remove('error-shake');
             }
             
-            // Phones
             ['contact', 'whatsapp', 'guardian_phone'].forEach(id => {
                 const el = document.getElementById(id);
                 if (!/^0\d{9}$/.test(el.value.trim())) {
@@ -494,7 +494,6 @@
                 }
             });
             
-            // CGT
             const cgt = parseFloat(document.getElementById('al_cgt').value);
             if (isNaN(cgt) || cgt < 0 || cgt > 101) {
                 document.getElementById('al_cgt').classList.add('error-shake');
@@ -504,7 +503,6 @@
                 document.getElementById('al_cgt').classList.remove('error-shake');
             }
             
-            // Z-Core
             const zcore = document.getElementById('al_zcore').value;
             if (zcore === '' || isNaN(parseFloat(zcore))) {
                 document.getElementById('al_zcore').classList.add('error-shake');
@@ -514,7 +512,6 @@
                 document.getElementById('al_zcore').classList.remove('error-shake');
             }
             
-            // Remove shake after animation
             setTimeout(() => {
                 document.querySelectorAll('.error-shake').forEach(el => el.classList.remove('error-shake'));
             }, 1000);
@@ -533,35 +530,29 @@
             
             const data = Object.fromEntries(new FormData(this).entries());
             
-            if (typeof google !== 'undefined') {
-                google.script.run
-                    .withSuccessHandler((res) => {
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                        if (res.success) {
-                            showToast('Registration saved successfully!');
-                            document.getElementById('generatedIndex').textContent = res.indexNumber;
-                            openModal();
-                            this.reset();
-                            updateALSubjects();
-                        } else {
-                            showToast(res.message, 'error');
-                        }
-                    })
-                    .withFailureHandler((err) => {
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                        showToast('Error: ' + err.message, 'error');
-                    })
-                    .saveRegistrationData(data);
-            } else {
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                    showToast('Simulated: Registration complete');
-                    console.log(data);
-                }, 1500);
-            }
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'saveRegistration', ...data })
+            })
+            .then(r => r.json())
+            .then(res => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                if(res.success) {
+                    showToast('Registration saved successfully!');
+                    document.getElementById('generatedIndex').textContent = res.indexNumber;
+                    openModal();
+                    this.reset();
+                    updateALSubjects();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                showToast('Network error: ' + err.message, 'error');
+            });
         });
 
         function openModal() {
