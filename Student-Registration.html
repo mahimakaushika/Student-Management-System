@@ -90,13 +90,6 @@
             75% { transform: translateX(6px); }
         }
         label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
-        select.portal-input { appearance: auto; padding-right: 2rem; }
-        
-        /* Loading Overlay */
-        #loadingOverlay {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
         
         /* Input number spinner hide */
         input[type=number]::-webkit-inner-spin-button, 
@@ -106,6 +99,139 @@
         }
         input[type=number] {
             -moz-appearance: textfield;
+        }
+
+        /* Email suffix styling */
+        .email-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .email-input-wrapper input {
+            padding-right: 110px;
+        }
+        .email-suffix {
+            position: absolute;
+            right: 1rem;
+            color: #94a3b8;
+            font-weight: 500;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Custom Select Dropdown Styles */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .custom-select-trigger {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 0.75rem 1rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #0f172a;
+            font-size: 0.875rem;
+            min-height: 48px;
+        }
+        .custom-select-trigger:hover {
+            border-color: #94a3b8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        .custom-select-trigger.active {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), 0 10px 30px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+        .custom-select-trigger .arrow {
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #64748b;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+        .custom-select-trigger.active .arrow {
+            transform: rotate(180deg);
+        }
+        .custom-select-trigger .placeholder-text {
+            color: #94a3b8;
+        }
+        .custom-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 8px;
+        }
+        .custom-options.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .custom-option {
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .custom-option:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        .custom-option.selected {
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .custom-option.selected::after {
+            content: '✓';
+            margin-left: auto;
+            font-weight: 700;
+        }
+        .custom-option.hidden {
+            display: none;
+        }
+        /* Scrollbar styling for dropdown */
+        .custom-options::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-options::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-options::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        /* Loading Overlay */
+        #loadingOverlay {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
@@ -157,7 +283,10 @@
                     </div>
                     <div>
                         <label>Email Address</label>
-                        <input type="email" name="email" id="email" required placeholder="mahimaKaushika@gmail.com" class="portal-input placeholder-[#94a3b8]">
+                        <div class="email-input-wrapper">
+                            <input type="text" name="email" id="email" required placeholder="mahimaKaushika" class="portal-input placeholder-[#94a3b8]">
+                            <span class="email-suffix">@gmail.com</span>
+                        </div>
                         <p class="text-[10px] text-[#94a3b8] mt-1">Must be a Gmail</p>
                     </div>
                     <div>
@@ -166,7 +295,7 @@
                     </div>
                     <div>
                         <label>Gender</label>
-                        <select name="gender" required class="portal-input bg-white">
+                        <select name="gender" required class="portal-input bg-white hidden-select" data-custom-select>
                             <option value="">Select</option>
                             <option>Male</option>
                             <option>Female</option>
@@ -206,7 +335,7 @@
                     </div>
                     <div>
                         <label>Guardian Type</label>
-                        <select name="guardian_type" required class="portal-input bg-white">
+                        <select name="guardian_type" required class="portal-input bg-white hidden-select" data-custom-select>
                             <option value="">Select</option>
                             <option>Mother</option>
                             <option>Father</option>
@@ -234,27 +363,27 @@
                     <p class="text-[10px] text-[#94a3b8] mt-1">Exactly 8 digits</p>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>Science</label><select name="ol_science" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>Maths</label><select name="ol_maths" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>History</label><select name="ol_history" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
-                    <div><label>English</label><select name="ol_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Science</label><select name="ol_science" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>Maths</label><select name="ol_maths" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>History</label><select name="ol_history" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
+                    <div><label>English</label><select name="ol_english" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
                     <div>
                         <label>Religion</label>
-                        <select name="ol_religion" class="portal-input bg-white mb-2">
+                        <select name="ol_religion" class="portal-input bg-white hidden-select mb-2" data-custom-select>
                             <option value="">Select</option>
                             <option>Buddhism</option>
                             <option>Hinduism</option>
                             <option>Islam</option>
                             <option>Christianity</option>
                         </select>
-                        <select name="ol_religion_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                        <select name="ol_religion_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-[#e2e8f0]">
                     <div>
                         <label>Option 1</label>
-                        <select name="ol_opt1" class="portal-input bg-white mb-2">
+                        <select name="ol_opt1" class="portal-input bg-white hidden-select mb-2" data-custom-select>
                             <option value="">Select Subject</option>
                             <option>Geography</option>
                             <option>Civic Education</option>
@@ -262,22 +391,22 @@
                             <option>Entrepreneurship Studies</option>
                             <option>Second Language</option>
                         </select>
-                        <select name="ol_opt1_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                        <select name="ol_opt1_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
                     </div>
                     <div>
                         <label>Option 2</label>
-                        <select name="ol_opt2" class="portal-input bg-white mb-2">
+                        <select name="ol_opt2" class="portal-input bg-white hidden-select mb-2" data-custom-select>
                             <option value="">Select Subject</option>
                             <option>Information & Communication Technology (ICT)</option>
                             <option>Agriculture & Food Technology</option>
                             <option>Health & Physical Education</option>
                             <option>Home Economics</option>
                         </select>
-                        <select name="ol_opt2_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                        <select name="ol_opt2_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
                     </div>
                     <div>
                         <label>Option 3</label>
-                        <select name="ol_opt3" class="portal-input bg-white mb-2">
+                        <select name="ol_opt3" class="portal-input bg-white hidden-select mb-2" data-custom-select>
                             <option value="">Select Subject</option>
                             <option>Art</option>
                             <option>Music</option>
@@ -288,7 +417,7 @@
                             <option>Design & Electrical Technology</option>
                             <option>Appreciation of Sinhala Literary Texts (Rasaswadaya)</option>
                         </select>
-                        <select name="ol_opt3_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
+                        <select name="ol_opt3_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select>
                     </div>
                 </div>
             </div>
@@ -309,7 +438,7 @@
                     </div>
                     <div>
                         <label>Stream</label>
-                        <select name="al_stream" id="al_stream" class="portal-input bg-white">
+                        <select name="al_stream" id="al_stream" class="portal-input bg-white hidden-select" data-custom-select>
                             <option value="">Select Stream</option>
                             <option value="maths">Combined Maths</option>
                             <option value="biology">Biology</option>
@@ -322,24 +451,24 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
                         <label>Subject 1</label>
-                        <select name="al_sub1" id="al_sub1" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
-                        <select name="al_sub1_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                        <select name="al_sub1" id="al_sub1" class="portal-input bg-white hidden-select mb-2" data-custom-select><option value="">Select Stream First</option></select>
+                        <select name="al_sub1_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                     <div>
                         <label>Subject 2</label>
-                        <select name="al_sub2" id="al_sub2" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
-                        <select name="al_sub2_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                        <select name="al_sub2" id="al_sub2" class="portal-input bg-white hidden-select mb-2" data-custom-select><option value="">Select Stream First</option></select>
+                        <select name="al_sub2_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                     <div>
                         <label>Subject 3</label>
-                        <select name="al_sub3" id="al_sub3" class="portal-input bg-white mb-2"><option value="">Select Stream First</option></select>
-                        <select name="al_sub3_res" class="portal-input bg-white"><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                        <select name="al_sub3" id="al_sub3" class="portal-input bg-white hidden-select mb-2" data-custom-select><option value="">Select Stream First</option></select>
+                        <select name="al_sub3_res" class="portal-input bg-white hidden-select" data-custom-select><option value="">Result</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
                     <div>
                         <label>General English</label>
-                        <select name="al_gen_english" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
+                        <select name="al_gen_english" class="portal-input bg-white hidden-select" data-custom-select><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option></select>
                     </div>
                     <div>
                         <label>Common General Test (Marks)</label>
@@ -363,7 +492,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label>Course</label>
-                        <select name="course" required class="portal-input bg-white">
+                        <select name="course" required class="portal-input bg-white hidden-select" data-custom-select>
                             <option value="">Select Course</option>
                             <option>Higher National Diploma of Information Technology</option>
                             <option>Higher National Diploma of Business Finance</option>
@@ -374,7 +503,7 @@
                     </div>
                     <div>
                         <label>Attendance Type</label>
-                        <select name="course_type" required class="portal-input bg-white">
+                        <select name="course_type" required class="portal-input bg-white hidden-select" data-custom-select>
                             <option value="">Select Type</option>
                             <option>Full Time</option>
                             <option>Part Time</option>
@@ -469,6 +598,148 @@
         });
 
         // ═══════════════════════════════════════════════════════════════
+        // CUSTOM SELECT DROPDOWN INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
+        function initCustomSelects() {
+            document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
+                // Skip if already initialized
+                if (select.dataset.initialized === 'true') return;
+                select.dataset.initialized = 'true';
+                
+                var wrapper = document.createElement('div');
+                wrapper.className = 'custom-select-wrapper';
+                
+                var trigger = document.createElement('div');
+                trigger.className = 'custom-select-trigger';
+                
+                var textSpan = document.createElement('span');
+                textSpan.className = 'placeholder-text';
+                textSpan.textContent = select.options[0].text;
+                
+                var arrow = document.createElement('span');
+                arrow.className = 'arrow';
+                
+                trigger.appendChild(textSpan);
+                trigger.appendChild(arrow);
+                
+                var optionsContainer = document.createElement('div');
+                optionsContainer.className = 'custom-options';
+                
+                // Store original options for reference
+                var originalOptions = [];
+                for (var i = 0; i < select.options.length; i++) {
+                    originalOptions.push({
+                        value: select.options[i].value,
+                        text: select.options[i].text
+                    });
+                }
+                select.dataset.originalOptions = JSON.stringify(originalOptions);
+                
+                function buildOptions() {
+                    optionsContainer.innerHTML = '';
+                    var currentValue = select.value;
+                    
+                    for (var i = 0; i < select.options.length; i++) {
+                        var opt = select.options[i];
+                        // Skip placeholder if something is selected
+                        if (currentValue !== '' && opt.value === '') continue;
+                        // Skip currently selected option
+                        if (opt.value === currentValue && currentValue !== '') continue;
+                        
+                        var optionEl = document.createElement('div');
+                        optionEl.className = 'custom-option';
+                        optionEl.dataset.value = opt.value;
+                        optionEl.textContent = opt.text;
+                        
+                        if (opt.value === currentValue) {
+                            optionEl.classList.add('selected');
+                        }
+                        
+                        optionEl.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            var val = this.dataset.value;
+                            select.value = val;
+                            
+                            // Update trigger text
+                            if (val === '') {
+                                textSpan.textContent = select.options[0].text;
+                                textSpan.className = 'placeholder-text';
+                            } else {
+                                textSpan.textContent = this.textContent;
+                                textSpan.className = '';
+                            }
+                            
+                            // Trigger change event
+                            var event = new Event('change', { bubbles: true });
+                            select.dispatchEvent(event);
+                            
+                            // Rebuild options to hide selected
+                            buildOptions();
+                            
+                            trigger.classList.remove('active');
+                            optionsContainer.classList.remove('open');
+                        });
+                        
+                        optionsContainer.appendChild(optionEl);
+                    }
+                }
+                
+                buildOptions();
+                
+                trigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    // Close all other dropdowns
+                    document.querySelectorAll('.custom-select-trigger.active').forEach(function(t) {
+                        if (t !== trigger) {
+                            t.classList.remove('active');
+                            t.nextElementSibling.classList.remove('open');
+                        }
+                    });
+                    trigger.classList.toggle('active');
+                    optionsContainer.classList.toggle('open');
+                });
+                
+                select.parentNode.insertBefore(wrapper, select);
+                wrapper.appendChild(select);
+                wrapper.appendChild(trigger);
+                wrapper.appendChild(optionsContainer);
+                
+                // Hide original select but keep it functional
+                select.style.position = 'absolute';
+                select.style.opacity = '0';
+                select.style.pointerEvents = 'none';
+                select.style.height = '0';
+                select.style.width = '0';
+                
+                // Sync if select value changes programmatically
+                select.addEventListener('change', function() {
+                    var val = this.value;
+                    if (val === '') {
+                        textSpan.textContent = select.options[0].text;
+                        textSpan.className = 'placeholder-text';
+                    } else {
+                        for (var j = 0; j < select.options.length; j++) {
+                            if (select.options[j].value === val) {
+                                textSpan.textContent = select.options[j].text;
+                                textSpan.className = '';
+                                break;
+                            }
+                        }
+                    }
+                    buildOptions();
+                });
+            });
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.custom-select-trigger.active').forEach(function(trigger) {
+                trigger.classList.remove('active');
+                trigger.nextElementSibling.classList.remove('open');
+            });
+        });
+
+        // ═══════════════════════════════════════════════════════════════
         // A/L DROPDOWN LOGIC
         // ═══════════════════════════════════════════════════════════════
         document.getElementById('al_stream').addEventListener('change', function() {
@@ -481,6 +752,10 @@
                 s1.innerHTML = '<option value="">Select Stream First</option>';
                 s2.innerHTML = '<option value="">Select Stream First</option>';
                 s3.innerHTML = '<option value="">Select Stream First</option>';
+                // Rebuild custom selects
+                rebuildCustomSelect(s1);
+                rebuildCustomSelect(s2);
+                rebuildCustomSelect(s3);
                 return;
             }
             
@@ -490,11 +765,138 @@
                     html += '<option value="' + options[i] + '">' + options[i] + '</option>';
                 }
                 select.innerHTML = html;
+                rebuildCustomSelect(select);
             };
             
             populate(s1, AL_SUBJECTS[stream].sub1);
             populate(s2, AL_SUBJECTS[stream].sub2);
             populate(s3, AL_SUBJECTS[stream].sub3);
+        });
+
+        function rebuildCustomSelect(select) {
+            // Remove existing wrapper if any
+            var wrapper = select.closest('.custom-select-wrapper');
+            if (wrapper) {
+                var parent = wrapper.parentNode;
+                parent.insertBefore(select, wrapper);
+                wrapper.remove();
+            }
+            select.dataset.initialized = 'false';
+            initCustomSelects();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NIC INPUT HANDLER (12 digits OR 9 digits + V/X)
+        // ═══════════════════════════════════════════════════════════════
+        var nicInput = document.getElementById('nic');
+        nicInput.addEventListener('keypress', function(e) {
+            var char = String.fromCharCode(e.which);
+            var val = this.value;
+            var len = val.length;
+            
+            // Allow backspace, delete, tab, escape, enter
+            if ([8, 46, 9, 27, 13].indexOf(e.which) !== -1) return;
+            if (e.ctrlKey || e.metaKey) return;
+            
+            // First 9 characters must be digits
+            if (len < 9) {
+                if (!/[0-9]/.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            // 10th character can be digit (making it 12 digits total) or V/X
+            else if (len === 9) {
+                if (!/[0-9VXvx]/.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            // 10th and 11th must be digits (if we didn't type V/X at 10th)
+            else if (len >= 10 && len < 12) {
+                // Check if 10th char is V or X
+                var tenthChar = val.charAt(9).toUpperCase();
+                if (tenthChar === 'V' || tenthChar === 'X') {
+                    // If 10th is V/X, max length is 10, block further input
+                    e.preventDefault();
+                    return false;
+                }
+                if (!/[0-9]/.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            // Max length is 12
+            else if (len >= 12) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        nicInput.addEventListener('input', function(e) {
+            var val = this.value;
+            var len = val.length;
+            
+            // If length > 9 and 10th char is V/X, truncate to 10
+            if (len > 9) {
+                var tenthChar = val.charAt(9).toUpperCase();
+                if (tenthChar === 'V' || tenthChar === 'X') {
+                    this.value = val.substring(0, 10).toUpperCase();
+                    return;
+                }
+            }
+            
+            // Strip any non-digit characters except V/X at position 10
+            var cleaned = '';
+            for (var i = 0; i < val.length && i < 12; i++) {
+                var c = val.charAt(i).toUpperCase();
+                if (i < 9) {
+                    if (/[0-9]/.test(c)) cleaned += c;
+                } else if (i === 9) {
+                    if (/[0-9VX]/.test(c)) cleaned += c;
+                } else {
+                    if (/[0-9]/.test(c)) cleaned += c;
+                }
+            }
+            this.value = cleaned;
+        });
+        
+        nicInput.addEventListener('blur', function() {
+            var val = this.value.toUpperCase();
+            var len = val.length;
+            
+            // Validate format
+            if (len === 10) {
+                var lastChar = val.charAt(9);
+                if (lastChar !== 'V' && lastChar !== 'X') {
+                    this.value = val.substring(0, 9);
+                }
+            } else if (len !== 12 && len !== 10) {
+                // Invalid length, but don't auto-correct to let validation handle it
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // EMAIL INPUT HANDLER (@gmail.com suffix)
+        // ═══════════════════════════════════════════════════════════════
+        var emailInput = document.getElementById('email');
+        emailInput.addEventListener('input', function() {
+            // Remove any @ symbol typed by user
+            var val = this.value;
+            if (val.indexOf('@') !== -1) {
+                this.value = val.split('@')[0];
+            }
+        });
+        emailInput.addEventListener('blur', function() {
+            var val = this.value.trim();
+            if (val && val.indexOf('@') === -1) {
+                // Store full email in a data attribute for form submission
+                this.dataset.fullEmail = val + '@gmail.com';
+            }
+        });
+        emailInput.addEventListener('focus', function() {
+            // Clear any stored full email when editing
+            delete this.dataset.fullEmail;
         });
 
         // ═══════════════════════════════════════════════════════════════
@@ -504,7 +906,6 @@
             var el = document.getElementById(inputId);
             if (!el) return;
             
-            // Block non-numeric keys on mobile/desktop
             el.addEventListener('keypress', function(e) {
                 var char = String.fromCharCode(e.which);
                 if (!/[0-9]/.test(char)) {
@@ -513,7 +914,6 @@
                 }
             });
             
-            // Strip non-digits on input (handles paste, autocomplete, etc.)
             el.addEventListener('input', function(e) {
                 var val = this.value.replace(/\D/g, '');
                 if (val.length > maxLength) {
@@ -522,7 +922,6 @@
                 this.value = val;
             });
             
-            // Final cleanup on blur
             el.addEventListener('blur', function() {
                 var val = this.value.replace(/\D/g, '');
                 if (val.length > maxLength) {
@@ -532,7 +931,6 @@
             });
         }
 
-        // Apply restrictions
         restrictToNumbers('contact', 10);
         restrictToNumbers('whatsapp', 10);
         restrictToNumbers('guardian_phone', 10);
@@ -561,22 +959,28 @@
         function validateForm() {
             var valid = true;
             
-            var nic = document.getElementById('nic').value.trim();
-            if (!/^(\d{12}|\d{9}[VXvx])$/.test(nic)) {
+            var nic = document.getElementById('nic').value.trim().toUpperCase();
+            if (!/^(\d{12}|\d{9}[VX])$/.test(nic)) {
                 document.getElementById('nic').classList.add('error-shake');
-                showToast('Invalid NIC format', 'error');
+                showToast('Invalid NIC format. Use 12 digits OR 9 digits + V/X', 'error');
                 valid = false;
             } else {
                 document.getElementById('nic').classList.remove('error-shake');
             }
             
-            var email = document.getElementById('email').value.trim();
-            if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
-                document.getElementById('email').classList.add('error-shake');
-                showToast('Email must be @gmail.com', 'error');
+            var emailInput = document.getElementById('email');
+            var emailVal = emailInput.value.trim();
+            // Append @gmail.com if not present
+            var fullEmail = emailVal;
+            if (emailVal && emailVal.indexOf('@') === -1) {
+                fullEmail = emailVal + '@gmail.com';
+            }
+            if (!/^[^\s@]+@gmail\.com$/i.test(fullEmail)) {
+                emailInput.classList.add('error-shake');
+                showToast('Email must be a valid Gmail address', 'error');
                 valid = false;
             } else {
-                document.getElementById('email').classList.remove('error-shake');
+                emailInput.classList.remove('error-shake');
             }
             
             var phoneIds = ['contact', 'whatsapp', 'guardian_phone'];
@@ -639,13 +1043,20 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // SUBMIT HANDLER (Direct form POST to GAS, then redirect back)
+        // SUBMIT HANDLER
         // ═══════════════════════════════════════════════════════════════
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
             
             if (!validateForm()) {
                 return;
+            }
+            
+            // Append @gmail.com to email before submission
+            var emailInput = document.getElementById('email');
+            var emailVal = emailInput.value.trim();
+            if (emailVal && emailVal.indexOf('@') === -1) {
+                emailInput.value = emailVal + '@gmail.com';
             }
             
             document.getElementById('loadingOverlay').classList.remove('hidden');
@@ -695,6 +1106,11 @@
                 showToast('Index number copied!');
             });
         }
+
+        // Initialize custom selects on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            initCustomSelects();
+        });
     </script>
 </body>
 </html>
