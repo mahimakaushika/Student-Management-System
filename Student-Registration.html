@@ -575,10 +575,13 @@
                 option.textContent = year;
                 batchSelect.appendChild(option);
             }
+            // Rebuild custom select so new options appear in dropdown
+            rebuildCustomSelect(batchSelect);
         }
 
         window.addEventListener('load', function() {
             populateBatchDropdown();
+            
             var params = new URLSearchParams(window.location.search);
             var registered = params.get('registered');
             if (registered === 'true') {
