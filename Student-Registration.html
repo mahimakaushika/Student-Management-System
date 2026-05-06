@@ -77,7 +77,10 @@
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             border: 2px solid #2563eb;
             font-family: 'Courier New', monospace;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
         .error-shake { animation: shake 0.4s ease-in-out; border-color: #dc2626 !important; }
         @keyframes shake {
@@ -92,6 +95,16 @@
         #loadingOverlay {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+        }
+        
+        /* Input number spinner hide */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
@@ -110,7 +123,7 @@
                 </div>
                 <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
                     <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
-                    <span>Open</span>
+                    <span>Office Use</span>
                 </div>
             </div>
         </div>
@@ -148,7 +161,7 @@
                     </div>
                     <div>
                         <label>Contact Number</label>
-                        <input type="tel" name="contact" id="contact" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="contact" id="contact" required placeholder="0712345678" maxlength="10" inputmode="numeric" pattern="[0-9]*" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>Gender</label>
@@ -168,7 +181,7 @@
                     </div>
                     <div>
                         <label>WhatsApp Number</label>
-                        <input type="tel" name="whatsapp" id="whatsapp" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="whatsapp" id="whatsapp" required placeholder="0712345678" maxlength="10" inputmode="numeric" pattern="[0-9]*" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div class="lg:col-span-3">
                         <label>Address</label>
@@ -201,7 +214,7 @@
                     </div>
                     <div>
                         <label>Guardian's Phone</label>
-                        <input type="tel" name="guardian_phone" id="guardian_phone" required placeholder="0712345678" maxlength="10" class="portal-input placeholder-[#94a3b8]">
+                        <input type="tel" name="guardian_phone" id="guardian_phone" required placeholder="0712345678" maxlength="10" inputmode="numeric" pattern="[0-9]*" class="portal-input placeholder-[#94a3b8]">
                     </div>
                 </div>
             </div>
@@ -216,7 +229,8 @@
                 </div>
                 <div class="mb-4">
                     <label>O/L Index Number</label>
-                    <input type="text" name="ol_index" placeholder="12345678" class="portal-input placeholder-[#94a3b8] md:w-1/2">
+                    <input type="text" name="ol_index" id="ol_index" placeholder="12345678" maxlength="8" inputmode="numeric" pattern="[0-9]*" class="portal-input placeholder-[#94a3b8] md:w-1/2">
+                    <p class="text-[10px] text-[#94a3b8] mt-1">Exactly 8 digits</p>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     <div><label>Sinhala</label><select name="ol_sinhala" class="portal-input bg-white"><option value="">-</option><option>A</option><option>B</option><option>C</option><option>S</option><option>W</option></select></div>
@@ -289,7 +303,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                     <div>
                         <label>A/L Index Number</label>
-                        <input type="text" name="al_index" placeholder="12345678" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="al_index" id="al_index" placeholder="1234567" maxlength="7" inputmode="numeric" pattern="[0-9]*" class="portal-input placeholder-[#94a3b8]">
+                        <p class="text-[10px] text-[#94a3b8] mt-1">Exactly 7 digits</p>
                     </div>
                     <div>
                         <label>Stream</label>
@@ -398,7 +413,7 @@
                 
                 <div class="index-display rounded-2xl p-6 mb-6">
                     <p class="text-[10px] font-bold text-[#2563eb] uppercase tracking-widest mb-2">Your Index Number</p>
-                    <div id="generatedIndex" class="text-3xl font-black text-[#2563eb]"></div>
+                    <div id="generatedIndex" class="text-2xl sm:text-3xl font-black text-[#2563eb] text-center leading-tight"></div>
                 </div>
                 
                 <div class="flex gap-3">
@@ -423,11 +438,8 @@
         // ═══════════════════════════════════════════════════════════════
         // PASTE YOUR APPS SCRIPT WEB APP URL HERE (must end with /exec)
         // ═══════════════════════════════════════════════════════════════
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwId4kXsbEHy97tDFqOUubudXfWg3pV9U4qvy0XvWeOxAlHaq3UkJTKKUZU8Oa4rpy0/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsy3owk7Rl-OvMUhMjcWi2FMssJ2is2sEqRuXRaPZLLFpQNQrWfoM_E9vnPEzBg3lv/exec';
         
-        // ═══════════════════════════════════════════════════════════════
-        // A/L SUBJECT DATA
-        // ═══════════════════════════════════════════════════════════════
         const AL_SUBJECTS = {
             maths: { sub1: ["Combined Mathematics"], sub2: ["Physics"], sub3: ["Chemistry"] },
             biology: { sub1: ["Biology"], sub2: ["Chemistry"], sub3: ["Physics"] },
@@ -447,7 +459,6 @@
                 var index = decodeURIComponent(params.get('index') || '');
                 document.getElementById('generatedIndex').textContent = index;
                 openModal();
-                // Clean URL so refresh doesn't show modal again
                 window.history.replaceState({}, document.title, window.location.pathname);
             } else if (registered === 'false') {
                 var msg = decodeURIComponent(params.get('message') || 'Registration failed');
@@ -484,6 +495,48 @@
             populate(s2, AL_SUBJECTS[stream].sub2);
             populate(s3, AL_SUBJECTS[stream].sub3);
         });
+
+        // ═══════════════════════════════════════════════════════════════
+        // NUMBER INPUT RESTRICTIONS (Phone, WhatsApp, Guardian, O/L, A/L)
+        // ═══════════════════════════════════════════════════════════════
+        function restrictToNumbers(inputId, maxLength) {
+            var el = document.getElementById(inputId);
+            if (!el) return;
+            
+            // Block non-numeric keys on mobile/desktop
+            el.addEventListener('keypress', function(e) {
+                var char = String.fromCharCode(e.which);
+                if (!/[0-9]/.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Strip non-digits on input (handles paste, autocomplete, etc.)
+            el.addEventListener('input', function(e) {
+                var val = this.value.replace(/\D/g, '');
+                if (val.length > maxLength) {
+                    val = val.substring(0, maxLength);
+                }
+                this.value = val;
+            });
+            
+            // Final cleanup on blur
+            el.addEventListener('blur', function() {
+                var val = this.value.replace(/\D/g, '');
+                if (val.length > maxLength) {
+                    val = val.substring(0, maxLength);
+                }
+                this.value = val;
+            });
+        }
+
+        // Apply restrictions
+        restrictToNumbers('contact', 10);
+        restrictToNumbers('whatsapp', 10);
+        restrictToNumbers('guardian_phone', 10);
+        restrictToNumbers('ol_index', 8);
+        restrictToNumbers('al_index', 7);
 
         // ═══════════════════════════════════════════════════════════════
         // TOAST NOTIFICATION
@@ -528,13 +581,32 @@
             var phoneIds = ['contact', 'whatsapp', 'guardian_phone'];
             for (var i = 0; i < phoneIds.length; i++) {
                 var el = document.getElementById(phoneIds[i]);
-                if (!/^0\d{9}$/.test(el.value.trim())) {
+                var val = el.value.trim();
+                if (!/^\d{10}$/.test(val)) {
                     el.classList.add('error-shake');
-                    showToast('Phone numbers must be 10 digits starting with 0', 'error');
+                    showToast('Phone numbers must be exactly 10 digits', 'error');
                     valid = false;
                 } else {
                     el.classList.remove('error-shake');
                 }
+            }
+            
+            var olIndex = document.getElementById('ol_index').value.trim();
+            if (olIndex && !/^\d{8}$/.test(olIndex)) {
+                document.getElementById('ol_index').classList.add('error-shake');
+                showToast('O/L Index must be exactly 8 digits', 'error');
+                valid = false;
+            } else {
+                document.getElementById('ol_index').classList.remove('error-shake');
+            }
+            
+            var alIndex = document.getElementById('al_index').value.trim();
+            if (alIndex && !/^\d{7}$/.test(alIndex)) {
+                document.getElementById('al_index').classList.add('error-shake');
+                showToast('A/L Index must be exactly 7 digits', 'error');
+                valid = false;
+            } else {
+                document.getElementById('al_index').classList.remove('error-shake');
             }
             
             var cgt = parseFloat(document.getElementById('al_cgt').value);
@@ -575,23 +647,19 @@
                 return;
             }
             
-            // Show loading overlay
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
             
-            // Set form to submit directly to GAS
             var form = document.getElementById('regForm');
             form.action = APPS_SCRIPT_URL;
             form.method = 'POST';
             
-            // Add hidden action field
             var actionInput = document.createElement('input');
             actionInput.type = 'hidden';
             actionInput.name = 'action';
             actionInput.value = 'saveRegistration';
             form.appendChild(actionInput);
             
-            // Submit - browser will navigate to GAS, then GAS redirects back
             form.submit();
         });
 
