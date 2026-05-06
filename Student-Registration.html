@@ -91,7 +91,6 @@
         }
         label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
         
-        /* Input number spinner hide */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
@@ -101,7 +100,6 @@
             -moz-appearance: textfield;
         }
 
-        /* Email suffix styling */
         .email-input-wrapper {
             position: relative;
             display: flex;
@@ -119,7 +117,6 @@
             user-select: none;
         }
 
-        /* Custom Select Dropdown Styles */
         .custom-select-wrapper {
             position: relative;
             width: 100%;
@@ -216,7 +213,6 @@
         .custom-option.hidden {
             display: none;
         }
-        /* Scrollbar styling for dropdown */
         .custom-options::-webkit-scrollbar {
             width: 6px;
         }
@@ -228,7 +224,6 @@
             border-radius: 3px;
         }
         
-        /* Loading Overlay */
         #loadingOverlay {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -237,7 +232,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header class="glass-header sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
@@ -259,7 +253,42 @@
     <main class="max-w-6xl mx-auto p-4 md:p-8 pb-24">
         <form id="regForm" class="space-y-6">
 
-            <!-- PERSONAL INFO -->
+            <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Course Enrollment</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label>Batch Year</label>
+                        <select name="batch" id="batch" required class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Batch</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Course</label>
+                        <select name="course" id="course" required class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Course</option>
+                            <option value="HNDIT">Higher National Diploma in Information Technology</option>
+                            <option value="HNDENG">Higher National Diploma in English</option>
+                            <option value="HNDMG">Higher National Diploma in Management</option>
+                            <option value="HNDTHM">Higher National Diploma in Tourism & Hospitality Management</option>
+                            <option value="HNDBF">Higher National Diploma in Business Finance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Attendance Type</label>
+                        <select name="course_type" required class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Type</option>
+                            <option>Full Time</option>
+                            <option>Part Time</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
@@ -320,7 +349,6 @@
                 </div>
             </div>
 
-            <!-- GUARDIAN -->
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
@@ -349,7 +377,6 @@
                 </div>
             </div>
 
-            <!-- O/L RESULTS -->
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
@@ -422,7 +449,6 @@
                 </div>
             </div>
 
-            <!-- A/L RESULTS -->
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
@@ -472,47 +498,15 @@
                     </div>
                     <div>
                         <label>Common General Test (Marks)</label>
-                        <input type="number" name="al_cgt" id="al_cgt" min="0" max="101" placeholder="0 - 101" class="portal-input placeholder-[#94a3b8]">
+                        <input type="number" name="al_cgt" id="al_cgt" min="0" max="100" placeholder="0 - 100" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>Z-Core</label>
-                        <input type="number" name="al_zcore" id="al_zcore" step="0.0001" placeholder="1.0456" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="al_zcore" id="al_zcore" placeholder="1.0456" maxlength="7" class="portal-input placeholder-[#94a3b8]">
                     </div>
                 </div>
             </div>
 
-            <!-- COURSE -->
-            <div class="portal-card p-6 md:p-8">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="section-icon p-2 rounded-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    </span>
-                    <h2 class="text-xl font-bold text-[#0f172a]">Course Enrollment</h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label>Course</label>
-                        <select name="course" required class="portal-input bg-white hidden-select" data-custom-select>
-                            <option value="">Select Course</option>
-                            <option>Higher National Diploma of Information Technology</option>
-                            <option>Higher National Diploma of Business Finance</option>
-                            <option>Higher National Diploma of Management</option>
-                            <option>Higher National Diploma of Tourism & Hospitality Management</option>
-                            <option>Higher National Diploma of English</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Attendance Type</label>
-                        <select name="course_type" required class="portal-input bg-white hidden-select" data-custom-select>
-                            <option value="">Select Type</option>
-                            <option>Full Time</option>
-                            <option>Part Time</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit -->
             <div class="flex justify-end">
                 <button type="button" id="submitBtn" class="px-12 py-4 btn-primary-gradient text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                     <span>Complete Registration</span>
@@ -522,7 +516,6 @@
         </form>
     </main>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 z-50 hidden flex-col items-center justify-center">
         <div class="bg-white rounded-[32px] p-12 shadow-2xl text-center border border-[#e2e8f0]">
             <div class="w-12 h-12 border-4 border-[#e2e8f0] border-t-[#2563eb] rounded-full animate-spin mx-auto mb-6"></div>
@@ -531,7 +524,6 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div id="successModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
         <div class="bg-white rounded-[32px] shadow-2xl max-w-md w-full p-8 transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
             <div class="text-center">
@@ -558,16 +550,12 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0f172a] text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-2xl opacity-0 translate-y-4 transition-all pointer-events-none z-50 flex items-center gap-2">
         <span id="toastIcon"></span>
         <span id="toastMsg"></span>
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════════
-        // PASTE YOUR APPS SCRIPT WEB APP URL HERE (must end with /exec)
-        // ═══════════════════════════════════════════════════════════════
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwId4kXsbEHy97tDFqOUubudXfWg3pV9U4qvy0XvWeOxAlHaq3UkJTKKUZU8Oa4rpy0/exec';
         
         const AL_SUBJECTS = {
@@ -578,13 +566,21 @@
             technology: { sub1: ["Science for Technology"], sub2: ["Engineering Technology", "Bio Systems Technology"], sub3: ["Information & Communication Technology", "Agricultural Science", "Mathematics"] }
         };
 
-        // ═══════════════════════════════════════════════════════════════
-        // CHECK RETURNED RESULT FROM GAS (on page load)
-        // ═══════════════════════════════════════════════════════════════
+        function populateBatchDropdown() {
+            var batchSelect = document.getElementById('batch');
+            var currentYear = new Date().getFullYear();
+            for (var year = 2015; year <= currentYear; year++) {
+                var option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                batchSelect.appendChild(option);
+            }
+        }
+
         window.addEventListener('load', function() {
+            populateBatchDropdown();
             var params = new URLSearchParams(window.location.search);
             var registered = params.get('registered');
-            
             if (registered === 'true') {
                 var index = decodeURIComponent(params.get('index') || '');
                 document.getElementById('generatedIndex').textContent = index;
@@ -597,70 +593,39 @@
             }
         });
 
-        // ═══════════════════════════════════════════════════════════════
-        // CUSTOM SELECT DROPDOWN INITIALIZATION
-        // ═══════════════════════════════════════════════════════════════
         function initCustomSelects() {
             document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
-                // Skip if already initialized
                 if (select.dataset.initialized === 'true') return;
                 select.dataset.initialized = 'true';
-                
                 var wrapper = document.createElement('div');
                 wrapper.className = 'custom-select-wrapper';
-                
                 var trigger = document.createElement('div');
                 trigger.className = 'custom-select-trigger';
-                
                 var textSpan = document.createElement('span');
                 textSpan.className = 'placeholder-text';
                 textSpan.textContent = select.options[0].text;
-                
                 var arrow = document.createElement('span');
                 arrow.className = 'arrow';
-                
                 trigger.appendChild(textSpan);
                 trigger.appendChild(arrow);
-                
                 var optionsContainer = document.createElement('div');
                 optionsContainer.className = 'custom-options';
-                
-                // Store original options for reference
-                var originalOptions = [];
-                for (var i = 0; i < select.options.length; i++) {
-                    originalOptions.push({
-                        value: select.options[i].value,
-                        text: select.options[i].text
-                    });
-                }
-                select.dataset.originalOptions = JSON.stringify(originalOptions);
-                
                 function buildOptions() {
                     optionsContainer.innerHTML = '';
                     var currentValue = select.value;
-                    
                     for (var i = 0; i < select.options.length; i++) {
                         var opt = select.options[i];
-                        // Skip placeholder if something is selected
                         if (currentValue !== '' && opt.value === '') continue;
-                        // Skip currently selected option
                         if (opt.value === currentValue && currentValue !== '') continue;
-                        
                         var optionEl = document.createElement('div');
                         optionEl.className = 'custom-option';
                         optionEl.dataset.value = opt.value;
                         optionEl.textContent = opt.text;
-                        
-                        if (opt.value === currentValue) {
-                            optionEl.classList.add('selected');
-                        }
-                        
+                        if (opt.value === currentValue) optionEl.classList.add('selected');
                         optionEl.addEventListener('click', function(e) {
                             e.stopPropagation();
                             var val = this.dataset.value;
                             select.value = val;
-                            
-                            // Update trigger text
                             if (val === '') {
                                 textSpan.textContent = select.options[0].text;
                                 textSpan.className = 'placeholder-text';
@@ -668,27 +633,18 @@
                                 textSpan.textContent = this.textContent;
                                 textSpan.className = '';
                             }
-                            
-                            // Trigger change event
                             var event = new Event('change', { bubbles: true });
                             select.dispatchEvent(event);
-                            
-                            // Rebuild options to hide selected
                             buildOptions();
-                            
                             trigger.classList.remove('active');
                             optionsContainer.classList.remove('open');
                         });
-                        
                         optionsContainer.appendChild(optionEl);
                     }
                 }
-                
                 buildOptions();
-                
                 trigger.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    // Close all other dropdowns
                     document.querySelectorAll('.custom-select-trigger.active').forEach(function(t) {
                         if (t !== trigger) {
                             t.classList.remove('active');
@@ -698,20 +654,15 @@
                     trigger.classList.toggle('active');
                     optionsContainer.classList.toggle('open');
                 });
-                
                 select.parentNode.insertBefore(wrapper, select);
                 wrapper.appendChild(select);
                 wrapper.appendChild(trigger);
                 wrapper.appendChild(optionsContainer);
-                
-                // Hide original select but keep it functional
                 select.style.position = 'absolute';
                 select.style.opacity = '0';
                 select.style.pointerEvents = 'none';
                 select.style.height = '0';
                 select.style.width = '0';
-                
-                // Sync if select value changes programmatically
                 select.addEventListener('change', function() {
                     var val = this.value;
                     if (val === '') {
@@ -731,7 +682,6 @@
             });
         }
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', function() {
             document.querySelectorAll('.custom-select-trigger.active').forEach(function(trigger) {
                 trigger.classList.remove('active');
@@ -739,26 +689,20 @@
             });
         });
 
-        // ═══════════════════════════════════════════════════════════════
-        // A/L DROPDOWN LOGIC
-        // ═══════════════════════════════════════════════════════════════
         document.getElementById('al_stream').addEventListener('change', function() {
             var stream = this.value;
             var s1 = document.getElementById('al_sub1');
             var s2 = document.getElementById('al_sub2');
             var s3 = document.getElementById('al_sub3');
-            
             if (!stream || !AL_SUBJECTS[stream]) {
                 s1.innerHTML = '<option value="">Select Stream First</option>';
                 s2.innerHTML = '<option value="">Select Stream First</option>';
                 s3.innerHTML = '<option value="">Select Stream First</option>';
-                // Rebuild custom selects
                 rebuildCustomSelect(s1);
                 rebuildCustomSelect(s2);
                 rebuildCustomSelect(s3);
                 return;
             }
-            
             var populate = function(select, options) {
                 var html = '<option value="">Select Subject</option>';
                 for (var i = 0; i < options.length; i++) {
@@ -767,14 +711,12 @@
                 select.innerHTML = html;
                 rebuildCustomSelect(select);
             };
-            
             populate(s1, AL_SUBJECTS[stream].sub1);
             populate(s2, AL_SUBJECTS[stream].sub2);
             populate(s3, AL_SUBJECTS[stream].sub3);
         });
 
         function rebuildCustomSelect(select) {
-            // Remove existing wrapper if any
             var wrapper = select.closest('.custom-select-wrapper');
             if (wrapper) {
                 var parent = wrapper.parentNode;
@@ -785,59 +727,26 @@
             initCustomSelects();
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // NIC INPUT HANDLER (12 digits OR 9 digits + V/X)
-        // ═══════════════════════════════════════════════════════════════
         var nicInput = document.getElementById('nic');
         nicInput.addEventListener('keypress', function(e) {
             var char = String.fromCharCode(e.which);
             var val = this.value;
             var len = val.length;
-            
-            // Allow backspace, delete, tab, escape, enter
             if ([8, 46, 9, 27, 13].indexOf(e.which) !== -1) return;
             if (e.ctrlKey || e.metaKey) return;
-            
-            // First 9 characters must be digits
             if (len < 9) {
-                if (!/[0-9]/.test(char)) {
-                    e.preventDefault();
-                    return false;
-                }
-            }
-            // 10th character can be digit (making it 12 digits total) or V/X
-            else if (len === 9) {
-                if (!/[0-9VXvx]/.test(char)) {
-                    e.preventDefault();
-                    return false;
-                }
-            }
-            // 10th and 11th must be digits (if we didn't type V/X at 10th)
-            else if (len >= 10 && len < 12) {
-                // Check if 10th char is V or X
+                if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
+            } else if (len === 9) {
+                if (!/[0-9VXvx]/.test(char)) { e.preventDefault(); return false; }
+            } else if (len >= 10 && len < 12) {
                 var tenthChar = val.charAt(9).toUpperCase();
-                if (tenthChar === 'V' || tenthChar === 'X') {
-                    // If 10th is V/X, max length is 10, block further input
-                    e.preventDefault();
-                    return false;
-                }
-                if (!/[0-9]/.test(char)) {
-                    e.preventDefault();
-                    return false;
-                }
-            }
-            // Max length is 12
-            else if (len >= 12) {
-                e.preventDefault();
-                return false;
-            }
+                if (tenthChar === 'V' || tenthChar === 'X') { e.preventDefault(); return false; }
+                if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
+            } else if (len >= 12) { e.preventDefault(); return false; }
         });
-        
         nicInput.addEventListener('input', function(e) {
             var val = this.value;
             var len = val.length;
-            
-            // If length > 9 and 10th char is V/X, truncate to 10
             if (len > 9) {
                 var tenthChar = val.charAt(9).toUpperCase();
                 if (tenthChar === 'V' || tenthChar === 'X') {
@@ -845,92 +754,53 @@
                     return;
                 }
             }
-            
-            // Strip any non-digit characters except V/X at position 10
             var cleaned = '';
             for (var i = 0; i < val.length && i < 12; i++) {
                 var c = val.charAt(i).toUpperCase();
-                if (i < 9) {
-                    if (/[0-9]/.test(c)) cleaned += c;
-                } else if (i === 9) {
-                    if (/[0-9VX]/.test(c)) cleaned += c;
-                } else {
-                    if (/[0-9]/.test(c)) cleaned += c;
-                }
+                if (i < 9) { if (/[0-9]/.test(c)) cleaned += c; }
+                else if (i === 9) { if (/[0-9VX]/.test(c)) cleaned += c; }
+                else { if (/[0-9]/.test(c)) cleaned += c; }
             }
             this.value = cleaned;
         });
-        
         nicInput.addEventListener('blur', function() {
             var val = this.value.toUpperCase();
             var len = val.length;
-            
-            // Validate format
             if (len === 10) {
                 var lastChar = val.charAt(9);
-                if (lastChar !== 'V' && lastChar !== 'X') {
-                    this.value = val.substring(0, 9);
-                }
-            } else if (len !== 12 && len !== 10) {
-                // Invalid length, but don't auto-correct to let validation handle it
+                if (lastChar !== 'V' && lastChar !== 'X') this.value = val.substring(0, 9);
             }
         });
 
-        // ═══════════════════════════════════════════════════════════════
-        // EMAIL INPUT HANDLER (@gmail.com suffix)
-        // ═══════════════════════════════════════════════════════════════
         var emailInput = document.getElementById('email');
         emailInput.addEventListener('input', function() {
-            // Remove any @ symbol typed by user
             var val = this.value;
-            if (val.indexOf('@') !== -1) {
-                this.value = val.split('@')[0];
-            }
+            if (val.indexOf('@') !== -1) this.value = val.split('@')[0];
         });
         emailInput.addEventListener('blur', function() {
             var val = this.value.trim();
-            if (val && val.indexOf('@') === -1) {
-                // Store full email in a data attribute for form submission
-                this.dataset.fullEmail = val + '@gmail.com';
-            }
+            if (val && val.indexOf('@') === -1) this.dataset.fullEmail = val + '@gmail.com';
         });
-        emailInput.addEventListener('focus', function() {
-            // Clear any stored full email when editing
-            delete this.dataset.fullEmail;
-        });
+        emailInput.addEventListener('focus', function() { delete this.dataset.fullEmail; });
 
-        // ═══════════════════════════════════════════════════════════════
-        // NUMBER INPUT RESTRICTIONS (Phone, WhatsApp, Guardian, O/L, A/L)
-        // ═══════════════════════════════════════════════════════════════
         function restrictToNumbers(inputId, maxLength) {
             var el = document.getElementById(inputId);
             if (!el) return;
-            
             el.addEventListener('keypress', function(e) {
                 var char = String.fromCharCode(e.which);
-                if (!/[0-9]/.test(char)) {
-                    e.preventDefault();
-                    return false;
-                }
+                if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
             });
-            
             el.addEventListener('input', function(e) {
                 var val = this.value.replace(/\D/g, '');
-                if (val.length > maxLength) {
-                    val = val.substring(0, maxLength);
-                }
+                if (val.length > maxLength) val = val.substring(0, maxLength);
                 this.value = val;
             });
-            
             el.addEventListener('blur', function() {
                 var val = this.value.replace(/\D/g, '');
-                if (val.length > maxLength) {
-                    val = val.substring(0, maxLength);
-                }
+                if (val.length > maxLength) val = val.substring(0, maxLength);
                 this.value = val;
             });
         }
-
         restrictToNumbers('contact', 10);
         restrictToNumbers('whatsapp', 10);
         restrictToNumbers('guardian_phone', 10);
@@ -938,8 +808,142 @@
         restrictToNumbers('al_index', 7);
 
         // ═══════════════════════════════════════════════════════════════
-        // TOAST NOTIFICATION
+        // COMMON GENERAL TEST (0-100 only)
         // ═══════════════════════════════════════════════════════════════
+        var cgtInput = document.getElementById('al_cgt');
+        cgtInput.addEventListener('keypress', function(e) {
+            var char = String.fromCharCode(e.which);
+            if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
+        });
+        cgtInput.addEventListener('input', function() {
+            var val = this.value.replace(/\D/g, '');
+            if (val.length > 3) val = val.substring(0, 3);
+            var num = parseInt(val, 10);
+            if (num > 100) val = '100';
+            this.value = val;
+        });
+        cgtInput.addEventListener('blur', function() {
+            var val = this.value.replace(/\D/g, '');
+            var num = parseInt(val, 10);
+            if (num > 100) val = '100';
+            this.value = val;
+        });
+
+                // ═══════════════════════════════════════════════════════════════
+        // Z-CORE AUTO-FORMAT (X.XXXX or -X.XXXX)
+        // ═══════════════════════════════════════════════════════════════
+        var zcoreInput = document.getElementById('al_zcore');
+        
+        zcoreInput.addEventListener('keydown', function(e) {
+            var val = this.value;
+            var cursorPos = this.selectionStart;
+            var cursorEnd = this.selectionEnd;
+            var hasSelection = cursorPos !== cursorEnd;
+            
+            // Backspace key (8) or Delete key (46)
+            if (e.which === 8 || e.which === 46) {
+                // If has selection, let default behavior happen, input handler will manage
+                if (hasSelection) return;
+                
+                // Backspace: cursor is right after the first digit, and next char is dot
+                // Example: "1.0456" with cursor at position 1 (between 1 and .)
+                if (e.which === 8 && cursorPos > 0) {
+                    var charBefore = val.charAt(cursorPos - 1);
+                    var charAfter = val.charAt(cursorPos);
+                    // If deleting the digit before the dot, clear entire field
+                    if (/[0-9]/.test(charBefore) && charAfter === '.') {
+                        e.preventDefault();
+                        this.value = '';
+                        return;
+                    }
+                    // If deleting the minus sign, clear entire field
+                    if (charBefore === '-') {
+                        e.preventDefault();
+                        this.value = '';
+                        return;
+                    }
+                }
+                
+                // Delete key: cursor is at dot position, char before is digit
+                // Example: "1.0456" with cursor at position 1 (at the dot)
+                if (e.which === 46 && cursorPos < val.length) {
+                    var charAt = val.charAt(cursorPos);
+                    var charBefore = val.charAt(cursorPos - 1);
+                    if (charAt === '.' && /[0-9]/.test(charBefore)) {
+                        e.preventDefault();
+                        this.value = '';
+                        return;
+                    }
+                }
+            }
+        });
+        
+        zcoreInput.addEventListener('keypress', function(e) {
+            var char = String.fromCharCode(e.which);
+            var val = this.value;
+            // Allow control keys
+            if ([8, 46, 9, 27, 13].indexOf(e.which) !== -1) return;
+            if (e.ctrlKey || e.metaKey) return;
+            // Allow minus only at position 0 and only if not already present
+            if (char === '-') {
+                if (val.indexOf('-') !== -1 || this.selectionStart > 0) {
+                    e.preventDefault();
+                    return false;
+                }
+                return;
+            }
+            // Only digits allowed
+            if (!/[0-9]/.test(char)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        zcoreInput.addEventListener('input', function() {
+            var val = this.value;
+            // If empty or just minus, keep as-is
+            if (val === '' || val === '-') {
+                return;
+            }
+            var negative = val.indexOf('-') === 0;
+            var digits = val.replace(/[^0-9]/g, '');
+            // If no digits left, clear
+            if (digits.length === 0) {
+                this.value = negative ? '-' : '';
+                return;
+            }
+            // If only 1 digit, keep just that digit (no dot yet)
+            if (digits.length === 1) {
+                this.value = (negative ? '-' : '') + digits.charAt(0);
+                return;
+            }
+            var beforeDecimal = digits.charAt(0);
+            var afterDecimal = digits.substring(1, 5); // max 4 digits after
+            this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
+        });
+        
+        zcoreInput.addEventListener('blur', function() {
+            var val = this.value.trim();
+            if (!val || val === '-') {
+                this.value = '';
+                return;
+            }
+            var negative = val.indexOf('-') === 0;
+            var digits = val.replace(/[^0-9]/g, '');
+            if (digits.length === 0) {
+                this.value = '';
+                return;
+            }
+            var beforeDecimal = digits.charAt(0);
+            var afterDecimal = digits.substring(1);
+            while (afterDecimal.length < 4) {
+                afterDecimal += '0';
+            }
+            if (afterDecimal.length > 4) {
+                afterDecimal = afterDecimal.substring(0, 4);
+            }
+            this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
+        });
         function showToast(msg, type) {
             type = type || 'info';
             var toast = document.getElementById('toast');
@@ -953,36 +957,27 @@
             }, 4000);
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // FORM VALIDATION
-        // ═══════════════════════════════════════════════════════════════
         function validateForm() {
             var valid = true;
-            
+            var batch = document.getElementById('batch').value;
+            if (!batch) { showToast('Please select a batch year', 'error'); valid = false; }
+            var course = document.getElementById('course').value;
+            if (!course) { showToast('Please select a course', 'error'); valid = false; }
             var nic = document.getElementById('nic').value.trim().toUpperCase();
             if (!/^(\d{12}|\d{9}[VX])$/.test(nic)) {
                 document.getElementById('nic').classList.add('error-shake');
                 showToast('Invalid NIC format. Use 12 digits OR 9 digits + V/X', 'error');
                 valid = false;
-            } else {
-                document.getElementById('nic').classList.remove('error-shake');
-            }
-            
+            } else { document.getElementById('nic').classList.remove('error-shake'); }
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
-            // Append @gmail.com if not present
             var fullEmail = emailVal;
-            if (emailVal && emailVal.indexOf('@') === -1) {
-                fullEmail = emailVal + '@gmail.com';
-            }
+            if (emailVal && emailVal.indexOf('@') === -1) fullEmail = emailVal + '@gmail.com';
             if (!/^[^\s@]+@gmail\.com$/i.test(fullEmail)) {
                 emailInput.classList.add('error-shake');
                 showToast('Email must be a valid Gmail address', 'error');
                 valid = false;
-            } else {
-                emailInput.classList.remove('error-shake');
-            }
-            
+            } else { emailInput.classList.remove('error-shake'); }
             var phoneIds = ['contact', 'whatsapp', 'guardian_phone'];
             for (var i = 0; i < phoneIds.length; i++) {
                 var el = document.getElementById(phoneIds[i]);
@@ -991,93 +986,58 @@
                     el.classList.add('error-shake');
                     showToast('Phone numbers must be exactly 10 digits', 'error');
                     valid = false;
-                } else {
-                    el.classList.remove('error-shake');
-                }
+                } else { el.classList.remove('error-shake'); }
             }
-            
             var olIndex = document.getElementById('ol_index').value.trim();
             if (olIndex && !/^\d{8}$/.test(olIndex)) {
                 document.getElementById('ol_index').classList.add('error-shake');
                 showToast('O/L Index must be exactly 8 digits', 'error');
                 valid = false;
-            } else {
-                document.getElementById('ol_index').classList.remove('error-shake');
-            }
-            
+            } else { document.getElementById('ol_index').classList.remove('error-shake'); }
             var alIndex = document.getElementById('al_index').value.trim();
             if (alIndex && !/^\d{7}$/.test(alIndex)) {
                 document.getElementById('al_index').classList.add('error-shake');
                 showToast('A/L Index must be exactly 7 digits', 'error');
                 valid = false;
-            } else {
-                document.getElementById('al_index').classList.remove('error-shake');
-            }
-            
+            } else { document.getElementById('al_index').classList.remove('error-shake'); }
             var cgt = parseFloat(document.getElementById('al_cgt').value);
-            if (isNaN(cgt) || cgt < 0 || cgt > 101) {
+            if (isNaN(cgt) || cgt < 0 || cgt > 100) {
                 document.getElementById('al_cgt').classList.add('error-shake');
-                showToast('Common General Test must be 0-101', 'error');
+                showToast('Common General Test must be 0-100', 'error');
                 valid = false;
-            } else {
-                document.getElementById('al_cgt').classList.remove('error-shake');
-            }
-            
-            var zcore = document.getElementById('al_zcore').value;
-            if (zcore === '' || isNaN(parseFloat(zcore))) {
+            } else { document.getElementById('al_cgt').classList.remove('error-shake'); }
+            var zcoreVal = document.getElementById('al_zcore').value.trim();
+            if (zcoreVal === '' || !/^-?\d\.\d{1,4}$/.test(zcoreVal)) {
                 document.getElementById('al_zcore').classList.add('error-shake');
-                showToast('Enter a valid Z-Core value', 'error');
+                showToast('Enter a valid Z-Core (e.g. 1.0456 or -1.4543)', 'error');
                 valid = false;
-            } else {
-                document.getElementById('al_zcore').classList.remove('error-shake');
-            }
-            
+            } else { document.getElementById('al_zcore').classList.remove('error-shake'); }
             setTimeout(function() {
                 var errs = document.querySelectorAll('.error-shake');
-                for (var j = 0; j < errs.length; j++) {
-                    errs[j].classList.remove('error-shake');
-                }
+                for (var j = 0; j < errs.length; j++) errs[j].classList.remove('error-shake');
             }, 1000);
-            
             return valid;
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // SUBMIT HANDLER
-        // ═══════════════════════════════════════════════════════════════
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            
-            if (!validateForm()) {
-                return;
-            }
-            
-            // Append @gmail.com to email before submission
+            if (!validateForm()) return;
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
-            if (emailVal && emailVal.indexOf('@') === -1) {
-                emailInput.value = emailVal + '@gmail.com';
-            }
-            
+            if (emailVal && emailVal.indexOf('@') === -1) emailInput.value = emailVal + '@gmail.com';
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
-            
             var form = document.getElementById('regForm');
             form.action = APPS_SCRIPT_URL;
             form.method = 'POST';
-            
             var actionInput = document.createElement('input');
             actionInput.type = 'hidden';
             actionInput.name = 'action';
             actionInput.value = 'saveRegistration';
             form.appendChild(actionInput);
-            
             form.submit();
         });
 
-        // ═══════════════════════════════════════════════════════════════
-        // MODAL FUNCTIONS
-        // ═══════════════════════════════════════════════════════════════
         function openModal() {
             var modal = document.getElementById('successModal');
             var content = document.getElementById('modalContent');
@@ -1088,7 +1048,6 @@
                 content.style.opacity = '1';
             }, 10);
         }
-
         function closeModal() {
             var modal = document.getElementById('successModal');
             var content = document.getElementById('modalContent');
@@ -1099,18 +1058,11 @@
                 modal.classList.remove('flex');
             }, 300);
         }
-
         function copyIndex() {
             var idx = document.getElementById('generatedIndex').textContent;
-            navigator.clipboard.writeText(idx).then(function() {
-                showToast('Index number copied!');
-            });
+            navigator.clipboard.writeText(idx).then(function() { showToast('Index number copied!'); });
         }
-
-        // Initialize custom selects on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            initCustomSelects();
-        });
+        window.addEventListener('DOMContentLoaded', function() { initCustomSelects(); });
     </script>
 </body>
 </html>
