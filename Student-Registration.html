@@ -1038,17 +1038,9 @@
             return valid;
         }
 
-                // ═══════════════════════════════════════════════════════════════
-                // ═══════════════════════════════════════════════════════════════
-        // SUBMIT HANDLER (Hidden iframe - no redirect, no CORS issues)
         // ═══════════════════════════════════════════════════════════════
-        
-        // Create hidden iframe for form submission
-        var submitFrame = document.createElement('iframe');
-        submitFrame.name = 'submitFrame';
-        submitFrame.style.display = 'none';
-        document.body.appendChild(submitFrame);
-        
+        // SUBMIT HANDLER (JSONP - bypasses CORS completely)
+        // ═══════════════════════════════════════════════════════════════
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -1067,75 +1059,66 @@
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
             
+            // Build query string from form data
             var form = document.getElementById('regForm');
-            form.action = APPS_SCRIPT_URL;
-            form.method = 'POST';
-            form.target = 'submitFrame';
+            var formData = new FormData(form);
+            var params = new URLSearchParams();
+            params.append('action', 'saveRegistrationGet');
             
-            // Add action parameter
-            var actionInput = form.querySelector('input[name="action"]');
-            if (!actionInput) {
-                actionInput = document.createElement('input');
-                actionInput.type = 'hidden';
-                actionInput.name = 'action';
-                form.appendChild(actionInput);
-            }
-            actionInput.value = 'saveRegistration';
+            // Generate unique callback name
+            var callbackName = 'jsonpCallback_' + Date.now();
             
-            // Listen for iframe load (response received)
-            var frameLoaded = false;
-            submitFrame.onload = function() {
-                if (frameLoaded) return; // Prevent double fire
-                frameLoaded = true;
+            formData.forEach(function(value, key) {
+                params.append(key, value);
+            });
+            params.append('callback', callbackName);
+            
+            // Create global callback function
+            window[callbackName] = function(result) {
+                // Cleanup
+                delete window[callbackName];
+                var script = document.getElementById('jsonpScript');
+                if (script) script.remove();
                 
-                try {
-                    var frameDoc = submitFrame.contentDocument || submitFrame.contentWindow.document;
-                    var responseText = frameDoc.body.innerText || frameDoc.body.textContent;
-                    
-                    // Try to parse JSON from iframe response
-                    var result;
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (parseErr) {
-                        // If not JSON, check if it's the old HTML redirect page
-                        // In that case, the registration likely succeeded
-                        result = { success: true, message: 'Registration completed' };
-                    }
-                    
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                    document.getElementById('loadingOverlay').classList.remove('flex');
-                    
-                    if (result.success) {
-                        document.getElementById('generatedIndex').textContent = result.indexNumber || 'NAW/XX/0000/F/0000';
-                        openModal();
-                        form.reset();
-                        document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
-                            select.value = '';
-                            select.dispatchEvent(new Event('change'));
-                        });
-                    } else {
-                        showToast(result.message || 'Registration failed', 'error');
-                    }
-                } catch (err) {
-                    // Cross-origin read blocked - fallback to assuming success
-                    // This happens with some Apps Script responses
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                    document.getElementById('loadingOverlay').classList.remove('flex');
-                    showToast('Registration submitted. Please verify your email.', 'info');
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+                
+                if (result.success) {
+                    document.getElementById('generatedIndex').textContent = result.indexNumber || '';
+                    openModal();
+                    form.reset();
+                    document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
+                        select.value = '';
+                        select.dispatchEvent(new Event('change'));
+                    });
+                } else {
+                    showToast(result.message || 'Registration failed', 'error');
                 }
             };
             
-            // Timeout fallback in case iframe doesn't load properly
-            setTimeout(function() {
-                if (!frameLoaded) {
-                    frameLoaded = true;
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                    document.getElementById('loadingOverlay').classList.remove('flex');
-                    showToast('Registration submitted. Please check your email for the index number.', 'info');
-                }
-            }, 8000);
+            // Timeout fallback
+            var timeoutId = setTimeout(function() {
+                delete window[callbackName];
+                var script = document.getElementById('jsonpScript');
+                if (script) script.remove();
+                
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+                showToast('Request timed out. Please try again.', 'error');
+            }, 15000);
             
-            form.submit();
+            // Override callback to clear timeout
+            var originalCallback = window[callbackName];
+            window[callbackName] = function(result) {
+                clearTimeout(timeoutId);
+                originalCallback(result);
+            };
+            
+            // Create script tag for JSONP
+            var script = document.createElement('script');
+            script.id = 'jsonpScript';
+            script.src = APPS_SCRIPT_URL + '?' + params.toString();
+            document.head.appendChild(script);
         });
         function openModal() {
             var modal = document.getElementById('successModal');
