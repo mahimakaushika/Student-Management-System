@@ -1038,88 +1038,25 @@
             return valid;
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // SUBMIT HANDLER (JSONP - bypasses CORS completely)
-        // ═══════════════════════════════════════════════════════════════
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            
-            if (!validateForm()) {
-                return;
-            }
-            
-            // Append @gmail.com to email before submission
+            if (!validateForm()) return;
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
-            if (emailVal && emailVal.indexOf('@') === -1) {
-                emailInput.value = emailVal + '@gmail.com';
-            }
-            
-            // Show loading
+            if (emailVal && emailVal.indexOf('@') === -1) emailInput.value = emailVal + '@gmail.com';
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
-            
-            // Build query string from form data
             var form = document.getElementById('regForm');
-            var formData = new FormData(form);
-            var params = new URLSearchParams();
-            params.append('action', 'saveRegistrationGet');
-            
-            // Generate unique callback name
-            var callbackName = 'jsonpCallback_' + Date.now();
-            
-            formData.forEach(function(value, key) {
-                params.append(key, value);
-            });
-            params.append('callback', callbackName);
-            
-            // Create global callback function
-            window[callbackName] = function(result) {
-                // Cleanup
-                delete window[callbackName];
-                var script = document.getElementById('jsonpScript');
-                if (script) script.remove();
-                
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                document.getElementById('loadingOverlay').classList.remove('flex');
-                
-                if (result.success) {
-                    document.getElementById('generatedIndex').textContent = result.indexNumber || '';
-                    openModal();
-                    form.reset();
-                    document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
-                        select.value = '';
-                        select.dispatchEvent(new Event('change'));
-                    });
-                } else {
-                    showToast(result.message || 'Registration failed', 'error');
-                }
-            };
-            
-            // Timeout fallback
-            var timeoutId = setTimeout(function() {
-                delete window[callbackName];
-                var script = document.getElementById('jsonpScript');
-                if (script) script.remove();
-                
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                document.getElementById('loadingOverlay').classList.remove('flex');
-                showToast('Request timed out. Please try again.', 'error');
-            }, 15000);
-            
-            // Override callback to clear timeout
-            var originalCallback = window[callbackName];
-            window[callbackName] = function(result) {
-                clearTimeout(timeoutId);
-                originalCallback(result);
-            };
-            
-            // Create script tag for JSONP
-            var script = document.createElement('script');
-            script.id = 'jsonpScript';
-            script.src = APPS_SCRIPT_URL + '?' + params.toString();
-            document.head.appendChild(script);
+            form.action = APPS_SCRIPT_URL;
+            form.method = 'POST';
+            var actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'saveRegistration';
+            form.appendChild(actionInput);
+            form.submit();
         });
+
         function openModal() {
             var modal = document.getElementById('successModal');
             var content = document.getElementById('modalContent');
