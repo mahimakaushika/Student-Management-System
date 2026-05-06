@@ -1038,23 +1038,71 @@
             return valid;
         }
 
+                // ═══════════════════════════════════════════════════════════════
+        // SUBMIT HANDLER (Background fetch - no redirect)
+        // ═══════════════════════════════════════════════════════════════
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!validateForm()) return;
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Append @gmail.com to email before submission
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
-            if (emailVal && emailVal.indexOf('@') === -1) emailInput.value = emailVal + '@gmail.com';
+            if (emailVal && emailVal.indexOf('@') === -1) {
+                emailInput.value = emailVal + '@gmail.com';
+            }
+            
+            // Show loading
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
+            
+            // Collect form data
             var form = document.getElementById('regForm');
-            form.action = APPS_SCRIPT_URL;
-            form.method = 'POST';
-            var actionInput = document.createElement('input');
-            actionInput.type = 'hidden';
-            actionInput.name = 'action';
-            actionInput.value = 'saveRegistration';
-            form.appendChild(actionInput);
-            form.submit();
+            var formData = new FormData(form);
+            formData.append('action', 'saveRegistration');
+            
+            // Submit via fetch (no redirect)
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                redirect: 'follow'
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(text) {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+                
+                try {
+                    var result = JSON.parse(text);
+                    
+                    if (result.success) {
+                        document.getElementById('generatedIndex').textContent = result.indexNumber || '';
+                        openModal();
+                        // Reset form after success
+                        form.reset();
+                        // Reset custom selects visually
+                        document.querySelectorAll('select[data-custom-select]').forEach(function(select) {
+                            select.value = '';
+                            select.dispatchEvent(new Event('change'));
+                        });
+                    } else {
+                        showToast(result.message || 'Registration failed', 'error');
+                    }
+                } catch (err) {
+                    // If response is not JSON (e.g., HTML error page), show generic error
+                    showToast('Server error. Please try again.', 'error');
+                }
+            })
+            .catch(function(error) {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+                showToast('Network error. Please check connection.', 'error');
+            });
         });
 
         function openModal() {
