@@ -566,6 +566,22 @@
             technology: { sub1: ["Science for Technology"], sub2: ["Engineering Technology", "Bio Systems Technology"], sub3: ["Information & Communication Technology", "Agricultural Science", "Mathematics"] }
         };
 
+        function rebuildCustomSelect(select) {
+            // If not yet initialized as custom select, just initialize it
+            if (!select.closest('.custom-select-wrapper')) {
+                select.dataset.initialized = 'false';
+                initCustomSelects();
+                return;
+            }
+            var wrapper = select.closest('.custom-select-wrapper');
+            if (wrapper) {
+                var parent = wrapper.parentNode;
+                parent.insertBefore(select, wrapper);
+                wrapper.remove();
+            }
+            select.dataset.initialized = 'false';
+            initCustomSelects();
+        }
         function populateBatchDropdown() {
             var batchSelect = document.getElementById('batch');
             var currentYear = new Date().getFullYear();
