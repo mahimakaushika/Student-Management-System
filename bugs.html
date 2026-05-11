@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s;
+      font-family: inherit;
+      background: #fafbfc;
+    }
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+    .file-input-label {
+      display: block;
+      padding: 40px 20px;
+      border: 2px dashed #c5c9d0;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .file-input-label:hover {
+      border-color: #667eea;
+      background: #f5f7ff;
+    }
+    .file-input-label.has-file {
+      border-color: #4caf50;
+      background: #f1f8f4;
+      color: #2e7d32;
+    }
+    .preview {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 12px;
+      border-radius: 10px;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 8px;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.35);
+    }
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .message {
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+      display: none;
+    }
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .required {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bug Report</h1>
+    <p class="subtitle">Help me to improve the system by reporting issues you found on Student Management System</p>
+    
+    <div id="message" class="message"></div>
+    
+    <!-- IMPORTANT: Replace YOUR_APPS_SCRIPT_URL with your actual Web App URL -->
+    <form id="bugForm" action="YOUR_APPS_SCRIPT_URL" method="POST" target="hidden_iframe">
+      <input type="hidden" name="screenshot" id="screenshotInput">
+      
+      <div class="form-group">
+        <label for="description">What is the bug? <span class="required">*</span></label>
+        <textarea name="description" id="description" placeholder="Describe the bug in detail. What did you expect vs what happened?" required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Where is the bug? <span class="required">*</span></label>
+        <select name="category" id="category" required>
+          <option value="">-- Select Category --</option>
+          <option value="Registration" selected>Registration</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <select name="subcategory" id="subcategory" required>
+          <option value="">-- Select Registration Type --</option>
+        </select>
+      </div>
+      
+      <div class="form-group hidden" id="detailGroup">
+        <select name="detail" id="detail">
+          <option value="">-- Select Detail --</option>
+        </select>
+      </div>
+      
+      <div class="form-group hidden" id="otherGroup">
+        <input type="text" name="otherText" id="otherText" placeholder="Please describe where the bug is located...">
+      </div>
+      
+      <div class="form-group">
+        <label>Screenshot <small style="color:#888;font-weight:400;">(optional, max 5MB)</small></label>
+        <div class="file-input-wrapper">
+          <input type="file" id="screenshotFile" accept="image/*">
+          <label for="screenshotFile" class="file-input-label" id="fileLabel">
+            📷 Click to upload screenshot<br>
+            <small>or drag and drop an image here</small>
+          </label>
+        </div>
+        <img id="preview" class="preview" alt="Screenshot preview">
+      </div>
+      
+      <button type="submit" id="submitBtn">
+        <span>Submit Bug Report</span>
+      </button>
+    </form>
+    
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
+  </div>
+
+  <script>
+    // Hierarchy configuration
+    const hierarchy = {
+      "Registration": {
+        "Select Registration Type": [],
+        "Student": ["Course Enrollment", "Personal Information", "Guardian Details", "G.C.E O/L", "G.C.E A/L"],
+        "Lecture": ["Personal Information", "Lecture Details"],
+        "Admin": ["Personal Information", "Administration Details"],
+        "Other": []
+      }
+    };
+    
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+    const detailSelect = document.getElementById('detail');
+    const detailGroup = document.getElementById('detailGroup');
+    const otherGroup = document.getElementById('otherGroup');
+    const otherText = document.getElementById('otherText');
+    const screenshotFile = document.getElementById('screenshotFile');
+    const screenshotInput = document.getElementById('screenshotInput');
+    const fileLabel = document.getElementById('fileLabel');
+    const preview = document.getElementById('preview');
+    const form = document.getElementById('bugForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const message = document.getElementById('message');
+    
+    // Initialize subcategories on load
+    function updateSubcategories() {
+      const cat = categorySelect.value;
+      subcategorySelect.innerHTML = '<option value="">-- Select Registration Type --</option>';
+      detailSelect.innerHTML = '<option value="">-- Select Detail --</option>';
+      detailGroup.classList.add('hidden');
+      otherGroup.classList.add('hidden');
+      otherText.required = false;
+      detailSelect.required = false;
+      
+      if (cat && hierarchy[cat]) {
+        Object.keys(hierarchy[cat]).forEach(sub => {
+          const opt = document.createElement('option');
+          opt.value = sub;
+          opt.textContent = sub;
+          subcategorySelect.appendChild(opt);
+        });
+      }
+    }
+    
+    function updateDetails() {
+      const cat = categorySelect.value;
+      const sub = subcategorySelect.value;
+      detailSelect.innerHTML = '<option value="">-- Select Detail --</option>';
+      
+      if (sub === 'Other') {
+        detailGroup.classList.add('hidden');
+        otherGroup.classList.remove('hidden');
+        otherText.required = true;
+        detailSelect.required = false;
+        return;
+      }
+      
+      otherGroup.classList.add('hidden');
+      otherText.required = false;
+      
+      if (cat && sub && hierarchy[cat][sub] && hierarchy[cat][sub].length > 0) {
+        detailGroup.classList.remove('hidden');
+        detailSelect.required = true;
+        hierarchy[cat][sub].forEach(det => {
+          const opt = document.createElement('option');
+          opt.value = det;
+          opt.textContent = det;
+          detailSelect.appendChild(opt);
+        });
+      } else {
+        detailGroup.classList.add('hidden');
+        detailSelect.required = false;
+      }
+    }
+    
+    // Event listeners
+    categorySelect.addEventListener('change', updateSubcategories);
+    subcategorySelect.addEventListener('change', updateDetails);
+    
+    // Initialize
+    updateSubcategories();
+    
+    // File handling - convert to base64
+    screenshotFile.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        screenshotFile.value = '';
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const base64 = event.target.result.split(',')[1];
+        screenshotInput.value = base64;
+        fileLabel.classList.add('has-file');
+        fileLabel.innerHTML = '✅ ' + file.name + '<br><small>Click to change image</small>';
+        preview.src = event.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    // Form submission handling
+    form.addEventListener('submit', function(e) {
+      // Validate "Other" text if selected
+      if (subcategorySelect.value === 'Other' && !otherText.value.trim()) {
+        e.preventDefault();
+        showMessage('Please describe the bug location for "Other"', 'error');
+        otherText.focus();
+        return;
+      }
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+      hideMessage();
+    });
+    
+    // Listen for messages from iframe (Apps Script response)
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.status) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Submit Bug Report</span>';
+        
+        if (e.data.status === 'success') {
+          showMessage('✅ Bug report submitted successfully!', 'success');
+          resetForm();
+        } else {
+          showMessage('❌ Error: ' + (e.data.message || 'Failed to submit. Please try again.'), 'error');
+        }
+      }
+    });
+    
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'message ' + type;
+    }
+    
+    function hideMessage() {
+      message.className = 'message';
+      message.style.display = 'none';
+    }
+    
+    function resetForm() {
+      form.reset();
+      fileLabel.classList.remove('has-file');
+      fileLabel.innerHTML = '📷 Click to upload screenshot<br><small>or drag and drop an image here</small>';
+      preview.style.display = 'none';
+      screenshotInput.value = '';
+      subcategorySelect.innerHTML = '<option value="">-- Select Registration Type --</option>';
+      detailGroup.classList.add('hidden');
+      otherGroup.classList.add('hidden');
+      detailSelect.required = false;
+      otherText.required = false;
+      updateSubcategories();
+    }
+  </script>
+</body>
+</html>
