@@ -128,14 +128,9 @@
       transition: all 0.3s;
       margin-top: 8px;
     }
-    button:hover:not(:disabled) {
+    button:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 24px rgba(102, 126, 234, 0.35);
-    }
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none !important;
     }
     .hidden {
       display: none !important;
@@ -161,34 +156,51 @@
       border: 1px solid #f5c6cb;
       display: block;
     }
+    .required {
+      color: #e74c3c;
+    }
+    .submitting-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.9);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .submitting-overlay.active {
+      display: flex;
+    }
     .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: white;
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e1e5e9;
+      border-top-color: #667eea;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin-right: 10px;
-      vertical-align: middle;
+      margin-bottom: 16px;
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    .required {
-      color: #e74c3c;
-    }
   </style>
 </head>
 <body>
+  <div class="submitting-overlay" id="overlay">
+    <div class="spinner"></div>
+    <p style="color: #333; font-size: 16px; font-weight: 500;">Submitting your report...</p>
+  </div>
+
   <div class="container">
-    <h1>Bug Report</h1>
-    <p class="subtitle">Help me to improve the system by reporting issues you found on Student Management System</p>
+    <h1>🐛 Bug Report</h1>
+    <p class="subtitle">Help us improve by reporting issues you found</p>
     
     <div id="message" class="message"></div>
     
-    <!-- IMPORTANT: Replace YOUR_APPS_SCRIPT_URL with your actual Web App URL -->
-    <form id="bugForm" action="https://script.google.com/macros/s/AKfycbxNSxaxC82klIjHXrJB5h_eoBVsKvwN9dg1MlpM_BnkZqEI-mMct4mJZPBURl6523vbJw/exec" method="POST" target="hidden_iframe">
+    <!-- REPLACE WITH YOUR APPS SCRIPT WEB APP URL -->
+    <form id="bugForm" action="https://script.google.com/macros/s/AKfycbyELh5yvGzdeQc2aqNYsYz8x9tc5EP93dkCJDeSFnl_ITgoRtOf-M_0NVXdFy0pLEddcQ/exec" method="POST">
+      <input type="hidden" name="returnUrl" id="returnUrl">
       <input type="hidden" name="screenshot" id="screenshotInput">
       
       <div class="form-group">
@@ -232,16 +244,11 @@
         <img id="preview" class="preview" alt="Screenshot preview">
       </div>
       
-      <button type="submit" id="submitBtn">
-        <span>Submit Bug Report</span>
-      </button>
+      <button type="submit">Submit Bug Report</button>
     </form>
-    
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
   </div>
 
   <script>
-    // Hierarchy configuration
     const hierarchy = {
       "Registration": {
         "Select Registration Type": [],
@@ -263,10 +270,13 @@
     const fileLabel = document.getElementById('fileLabel');
     const preview = document.getElementById('preview');
     const form = document.getElementById('bugForm');
-    const submitBtn = document.getElementById('submitBtn');
     const message = document.getElementById('message');
+    const overlay = document.getElementById('overlay');
+    const returnUrlInput = document.getElementById('returnUrl');
     
-    // Initialize subcategories on load
+    // Set return URL dynamically
+    returnUrlInput.value = window.location.href.split('?')[0];
+    
     function updateSubcategories() {
       const cat = categorySelect.value;
       subcategorySelect.innerHTML = '<option value="">-- Select Registration Type --</option>';
@@ -317,14 +327,10 @@
       }
     }
     
-    // Event listeners
     categorySelect.addEventListener('change', updateSubcategories);
     subcategorySelect.addEventListener('change', updateDetails);
-    
-    // Initialize
     updateSubcategories();
     
-    // File handling - convert to base64
     screenshotFile.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -347,44 +353,19 @@
       reader.readAsDataURL(file);
     });
     
-    // Form submission handling
     form.addEventListener('submit', function(e) {
-      // Validate "Other" text if selected
       if (subcategorySelect.value === 'Other' && !otherText.value.trim()) {
         e.preventDefault();
         showMessage('Please describe the bug location for "Other"', 'error');
         otherText.focus();
         return;
       }
-      
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
-      hideMessage();
-    });
-    
-    // Listen for messages from iframe (Apps Script response)
-    window.addEventListener('message', function(e) {
-      if (e.data && e.data.status) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Submit Bug Report</span>';
-        
-        if (e.data.status === 'success') {
-          showMessage('✅ Bug report submitted successfully!', 'success');
-          resetForm();
-        } else {
-          showMessage('❌ Error: ' + (e.data.message || 'Failed to submit. Please try again.'), 'error');
-        }
-      }
+      overlay.classList.add('active');
     });
     
     function showMessage(text, type) {
       message.textContent = text;
       message.className = 'message ' + type;
-    }
-    
-    function hideMessage() {
-      message.className = 'message';
-      message.style.display = 'none';
     }
     
     function resetForm() {
@@ -400,6 +381,22 @@
       otherText.required = false;
       updateSubcategories();
     }
+    
+    // Check for redirect status on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get('status');
+      const msg = params.get('message');
+      
+      if (status === 'success') {
+        showMessage('✅ Bug report submitted successfully!', 'success');
+        resetForm();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (status === 'error') {
+        showMessage('❌ Error: ' + (msg || 'Failed to submit. Please try again.'), 'error');
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
   </script>
 </body>
 </html>
