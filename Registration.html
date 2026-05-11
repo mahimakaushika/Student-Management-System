@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration - ATI Nawalapitiya</title>
+    <title>Registration - ATI Nawalapitiya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="ati-rbg-logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -228,6 +228,15 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
         }
+        
+        .qual-row { display: flex; gap: 8px; align-items: center; }
+        .qual-remove {
+            color: #dc2626; font-weight: 800; font-size: 1.1rem;
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+        }
+        .qual-remove:hover { background: #fef2f2; }
     </style>
 </head>
 <body>
@@ -238,7 +247,7 @@
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12"><img src="ati-rbg-logo.png" class="w-12 h-11"></div>
                     <div>
-                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Student Registration</h1>
+                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Registration Portal</h1>
                         <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">ATI Nawalapitiya</p>
                     </div>
                 </div>
@@ -253,7 +262,33 @@
     <main class="max-w-6xl mx-auto p-4 md:p-8 pb-24">
         <form id="regForm" class="space-y-6">
 
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- ROLE SELECTION -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
             <div class="portal-card p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Select Registration Type</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="md:col-span-1">
+                        <label>Role</label>
+                        <select name="role" id="role" required class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Role</option>
+                            <option value="Student">Student</option>
+                            <option value="Lecturer">Lecturer</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- COURSE ENROLLMENT (STUDENT ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="studentCourseSection" class="portal-card p-6 md:p-8 hidden">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
@@ -289,6 +324,9 @@
                 </div>
             </div>
 
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- PERSONAL INFORMATION (ALL ROLES) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
@@ -335,7 +373,7 @@
                         <input type="date" name="dob" required class="portal-input">
                     </div>
                     <div class="lg:col-span-2">
-                        <label>School</label>
+                        <label>School / Last Institution</label>
                         <input type="text" name="school" required placeholder="Ginigathhena Central College" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
@@ -349,7 +387,10 @@
                 </div>
             </div>
 
-            <div class="portal-card p-6 md:p-8">
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- GUARDIAN DETAILS (STUDENT ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="guardianSection" class="portal-card p-6 md:p-8 hidden">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -377,7 +418,10 @@
                 </div>
             </div>
 
-            <div class="portal-card p-6 md:p-8">
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- O/L EXAMINATION (STUDENT ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="olSection" class="portal-card p-6 md:p-8 hidden">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -449,7 +493,10 @@
                 </div>
             </div>
 
-            <div class="portal-card p-6 md:p-8">
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- A/L EXAMINATION (STUDENT ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="alSection" class="portal-card p-6 md:p-8 hidden">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="section-icon p-2 rounded-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
@@ -507,6 +554,95 @@
                 </div>
             </div>
 
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- LECTURER DETAILS (LECTURER ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="lecturerSection" class="portal-card p-6 md:p-8 hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Lecture Details</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label>Subject</label>
+                        <select name="subject" id="subject" class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Subject</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Database Management">Database Management</option>
+                            <option value="Networking">Networking</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="System Analysis">System Analysis</option>
+                            <option value="Object Oriented Programming">Object Oriented Programming</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Software Engineering">Software Engineering</option>
+                            <option value="Multimedia">Multimedia</option>
+                            <option value="E-Commerce">E-Commerce</option>
+                            <option value="Computer Architecture">Computer Architecture</option>
+                            <option value="Information Security">Information Security</option>
+                            <option value="Mobile Development">Mobile Development</option>
+                            <option value="Cloud Computing">Cloud Computing</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="English">English</option>
+                            <option value="Management">Management</option>
+                            <option value="Tourism">Tourism</option>
+                            <option value="Hospitality">Hospitality</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Subject Code</label>
+                        <input type="text" id="subject_code" readonly class="portal-input bg-[#f8fafc] text-[#64748b]" placeholder="Auto-generated">
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label>Qualifications</label>
+                    <div id="qualificationsContainer" class="space-y-2">
+                        <div class="qual-row">
+                            <input type="text" data-qualification placeholder="e.g. BSc in Computer Science" class="portal-input placeholder-[#94a3b8] flex-1">
+                        </div>
+                    </div>
+                    <button type="button" id="addQualificationBtn" class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#2563eb] hover:text-[#1d4ed8] transition-colors bg-[#eff6ff] hover:bg-[#dbeafe] px-4 py-2 rounded-xl">
+                        <span class="text-lg leading-none">+</span>
+                        Add Qualification
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label>Lecture Type</label>
+                        <select name="lecture_type" id="lecture_type" class="portal-input bg-white hidden-select" data-custom-select>
+                            <option value="">Select Type</option>
+                            <option>Permanent Lecture</option>
+                            <option>Visiting Lecture</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- ADMIN DETAILS (ADMIN ONLY) -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <div id="adminSection" class="portal-card p-6 md:p-8 hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="section-icon p-2 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    </span>
+                    <h2 class="text-xl font-bold text-[#0f172a]">Administration Details</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label>Job Position in ATI</label>
+                        <input type="text" name="job_position" placeholder="e.g. Director, Registrar" class="portal-input placeholder-[#94a3b8]">
+                    </div>
+                    <div>
+                        <label>Administrator Code</label>
+                        <input type="password" name="admin_code" id="admin_code" placeholder="Enter admin code" class="portal-input placeholder-[#94a3b8]">
+                        <p class="text-[10px] text-[#94a3b8] mt-1">Required for admin verification</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="flex justify-end">
                 <button type="button" id="submitBtn" class="px-12 py-4 btn-primary-gradient text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                     <span>Complete Registration</span>
@@ -556,8 +692,31 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqcGNJOKuFHVr8_S0hL9LvpS45UvY0oulNv9FiZgu9fzrFWcBnS5buHxKsZwknY5DY/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyhxqsEaLFQQo2astcgJyg8BFdwCDw7HA1qaLnm6Y3dLFsV2H6UGfutKK3tx1biRs7/exec';
         
+        const SUBJECT_CODES = {
+            "Programming": "PROG101",
+            "Database Management": "DBMS101",
+            "Networking": "NETW101",
+            "Web Development": "WEBD101",
+            "System Analysis": "SYSA101",
+            "Object Oriented Programming": "OOP101",
+            "Data Structures": "DS101",
+            "Software Engineering": "SE101",
+            "Multimedia": "MM101",
+            "E-Commerce": "ECOM101",
+            "Computer Architecture": "CA101",
+            "Information Security": "ISEC101",
+            "Mobile Development": "MOBD101",
+            "Cloud Computing": "CLDC101",
+            "Data Science": "DSCI101",
+            "English": "ENG101",
+            "Management": "MGT101",
+            "Tourism": "TOUR101",
+            "Hospitality": "HOSP101",
+            "Finance": "FIN101"
+        };
+
         const AL_SUBJECTS = {
             maths: { sub1: ["Combined Mathematics"], sub2: ["Physics"], sub3: ["Chemistry"] },
             biology: { sub1: ["Biology"], sub2: ["Chemistry"], sub3: ["Physics"] },
@@ -567,7 +726,6 @@
         };
 
         function rebuildCustomSelect(select) {
-            // If not yet initialized as custom select, just initialize it
             if (!select.closest('.custom-select-wrapper')) {
                 select.dataset.initialized = 'false';
                 initCustomSelects();
@@ -582,6 +740,7 @@
             select.dataset.initialized = 'false';
             initCustomSelects();
         }
+
         function populateBatchDropdown() {
             var batchSelect = document.getElementById('batch');
             var currentYear = new Date().getFullYear();
@@ -591,8 +750,32 @@
                 option.textContent = year;
                 batchSelect.appendChild(option);
             }
-            // Rebuild custom select so new options appear in dropdown
             rebuildCustomSelect(batchSelect);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // ROLE SWITCHING
+        // ═══════════════════════════════════════════════════════════════
+        function toggleRoleSections() {
+            var role = document.getElementById('role').value;
+            
+            document.getElementById('studentCourseSection').classList.add('hidden');
+            document.getElementById('guardianSection').classList.add('hidden');
+            document.getElementById('olSection').classList.add('hidden');
+            document.getElementById('alSection').classList.add('hidden');
+            document.getElementById('lecturerSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            
+            if (role === 'Student') {
+                document.getElementById('studentCourseSection').classList.remove('hidden');
+                document.getElementById('guardianSection').classList.remove('hidden');
+                document.getElementById('olSection').classList.remove('hidden');
+                document.getElementById('alSection').classList.remove('hidden');
+            } else if (role === 'Lecturer') {
+                document.getElementById('lecturerSection').classList.remove('hidden');
+            } else if (role === 'Admin') {
+                document.getElementById('adminSection').classList.remove('hidden');
+            }
         }
 
         window.addEventListener('load', function() {
@@ -735,16 +918,35 @@
             populate(s3, AL_SUBJECTS[stream].sub3);
         });
 
-        function rebuildCustomSelect(select) {
-            var wrapper = select.closest('.custom-select-wrapper');
-            if (wrapper) {
-                var parent = wrapper.parentNode;
-                parent.insertBefore(select, wrapper);
-                wrapper.remove();
+        // Role change listener
+        document.getElementById('role').addEventListener('change', toggleRoleSections);
+
+        // Subject code auto-fill
+        document.getElementById('subject').addEventListener('change', function() {
+            var code = SUBJECT_CODES[this.value] || '';
+            document.getElementById('subject_code').value = code;
+        });
+
+        // Qualifications dynamic add
+        document.getElementById('addQualificationBtn').addEventListener('click', function() {
+            var container = document.getElementById('qualificationsContainer');
+            var inputs = container.querySelectorAll('[data-qualification]');
+            var lastInput = inputs[inputs.length - 1];
+            if (lastInput.value.trim() === '') {
+                showToast('Please fill the previous qualification first', 'error');
+                lastInput.classList.add('error-shake');
+                setTimeout(function() { lastInput.classList.remove('error-shake'); }, 1000);
+                return;
             }
-            select.dataset.initialized = 'false';
-            initCustomSelects();
-        }
+            var row = document.createElement('div');
+            row.className = 'qual-row';
+            row.innerHTML = '<input type="text" data-qualification placeholder="Enter qualification" class="portal-input placeholder-[#94a3b8] flex-1">' +
+                '<button type="button" class="qual-remove" title="Remove">×</button>';
+            container.appendChild(row);
+            row.querySelector('.qual-remove').addEventListener('click', function() {
+                row.remove();
+            });
+        });
 
         var nicInput = document.getElementById('nic');
         nicInput.addEventListener('keypress', function(e) {
@@ -826,143 +1028,115 @@
         restrictToNumbers('ol_index', 8);
         restrictToNumbers('al_index', 7);
 
-        // ═══════════════════════════════════════════════════════════════
-        // COMMON GENERAL TEST (0-100 only)
-        // ═══════════════════════════════════════════════════════════════
         var cgtInput = document.getElementById('al_cgt');
-        cgtInput.addEventListener('keypress', function(e) {
-            var char = String.fromCharCode(e.which);
-            if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
-        });
-        cgtInput.addEventListener('input', function() {
-            var val = this.value.replace(/\D/g, '');
-            if (val.length > 3) val = val.substring(0, 3);
-            var num = parseInt(val, 10);
-            if (num > 100) val = '100';
-            this.value = val;
-        });
-        cgtInput.addEventListener('blur', function() {
-            var val = this.value.replace(/\D/g, '');
-            var num = parseInt(val, 10);
-            if (num > 100) val = '100';
-            this.value = val;
-        });
+        if (cgtInput) {
+            cgtInput.addEventListener('keypress', function(e) {
+                var char = String.fromCharCode(e.which);
+                if (!/[0-9]/.test(char)) { e.preventDefault(); return false; }
+            });
+            cgtInput.addEventListener('input', function() {
+                var val = this.value.replace(/\D/g, '');
+                if (val.length > 3) val = val.substring(0, 3);
+                var num = parseInt(val, 10);
+                if (num > 100) val = '100';
+                this.value = val;
+            });
+            cgtInput.addEventListener('blur', function() {
+                var val = this.value.replace(/\D/g, '');
+                var num = parseInt(val, 10);
+                if (num > 100) val = '100';
+                this.value = val;
+            });
+        }
 
-                // ═══════════════════════════════════════════════════════════════
-        // Z-CORE AUTO-FORMAT (X.XXXX or -X.XXXX)
-        // ═══════════════════════════════════════════════════════════════
         var zcoreInput = document.getElementById('al_zcore');
-        
-        zcoreInput.addEventListener('keydown', function(e) {
-            var val = this.value;
-            var cursorPos = this.selectionStart;
-            var cursorEnd = this.selectionEnd;
-            var hasSelection = cursorPos !== cursorEnd;
-            
-            // Backspace key (8) or Delete key (46)
-            if (e.which === 8 || e.which === 46) {
-                // If has selection, let default behavior happen, input handler will manage
-                if (hasSelection) return;
-                
-                // Backspace: cursor is right after the first digit, and next char is dot
-                // Example: "1.0456" with cursor at position 1 (between 1 and .)
-                if (e.which === 8 && cursorPos > 0) {
-                    var charBefore = val.charAt(cursorPos - 1);
-                    var charAfter = val.charAt(cursorPos);
-                    // If deleting the digit before the dot, clear entire field
-                    if (/[0-9]/.test(charBefore) && charAfter === '.') {
-                        e.preventDefault();
-                        this.value = '';
-                        return;
+        if (zcoreInput) {
+            zcoreInput.addEventListener('keydown', function(e) {
+                var val = this.value;
+                var cursorPos = this.selectionStart;
+                var cursorEnd = this.selectionEnd;
+                var hasSelection = cursorPos !== cursorEnd;
+                if (e.which === 8 || e.which === 46) {
+                    if (hasSelection) return;
+                    if (e.which === 8 && cursorPos > 0) {
+                        var charBefore = val.charAt(cursorPos - 1);
+                        var charAfter = val.charAt(cursorPos);
+                        if (/[0-9]/.test(charBefore) && charAfter === '.') {
+                            e.preventDefault();
+                            this.value = '';
+                            return;
+                        }
+                        if (charBefore === '-') {
+                            e.preventDefault();
+                            this.value = '';
+                            return;
+                        }
                     }
-                    // If deleting the minus sign, clear entire field
-                    if (charBefore === '-') {
-                        e.preventDefault();
-                        this.value = '';
-                        return;
-                    }
-                }
-                
-                // Delete key: cursor is at dot position, char before is digit
-                // Example: "1.0456" with cursor at position 1 (at the dot)
-                if (e.which === 46 && cursorPos < val.length) {
-                    var charAt = val.charAt(cursorPos);
-                    var charBefore = val.charAt(cursorPos - 1);
-                    if (charAt === '.' && /[0-9]/.test(charBefore)) {
-                        e.preventDefault();
-                        this.value = '';
-                        return;
+                    if (e.which === 46 && cursorPos < val.length) {
+                        var charAt = val.charAt(cursorPos);
+                        var charBefore = val.charAt(cursorPos - 1);
+                        if (charAt === '.' && /[0-9]/.test(charBefore)) {
+                            e.preventDefault();
+                            this.value = '';
+                            return;
+                        }
                     }
                 }
-            }
-        });
-        
-        zcoreInput.addEventListener('keypress', function(e) {
-            var char = String.fromCharCode(e.which);
-            var val = this.value;
-            // Allow control keys
-            if ([8, 46, 9, 27, 13].indexOf(e.which) !== -1) return;
-            if (e.ctrlKey || e.metaKey) return;
-            // Allow minus only at position 0 and only if not already present
-            if (char === '-') {
-                if (val.indexOf('-') !== -1 || this.selectionStart > 0) {
+            });
+            zcoreInput.addEventListener('keypress', function(e) {
+                var char = String.fromCharCode(e.which);
+                var val = this.value;
+                if ([8, 46, 9, 27, 13].indexOf(e.which) !== -1) return;
+                if (e.ctrlKey || e.metaKey) return;
+                if (char === '-') {
+                    if (val.indexOf('-') !== -1 || this.selectionStart > 0) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    return;
+                }
+                if (!/[0-9]/.test(char)) {
                     e.preventDefault();
                     return false;
                 }
-                return;
-            }
-            // Only digits allowed
-            if (!/[0-9]/.test(char)) {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        zcoreInput.addEventListener('input', function() {
-            var val = this.value;
-            // If empty or just minus, keep as-is
-            if (val === '' || val === '-') {
-                return;
-            }
-            var negative = val.indexOf('-') === 0;
-            var digits = val.replace(/[^0-9]/g, '');
-            // If no digits left, clear
-            if (digits.length === 0) {
-                this.value = negative ? '-' : '';
-                return;
-            }
-            // If only 1 digit, keep just that digit (no dot yet)
-            if (digits.length === 1) {
-                this.value = (negative ? '-' : '') + digits.charAt(0);
-                return;
-            }
-            var beforeDecimal = digits.charAt(0);
-            var afterDecimal = digits.substring(1, 5); // max 4 digits after
-            this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
-        });
-        
-        zcoreInput.addEventListener('blur', function() {
-            var val = this.value.trim();
-            if (!val || val === '-') {
-                this.value = '';
-                return;
-            }
-            var negative = val.indexOf('-') === 0;
-            var digits = val.replace(/[^0-9]/g, '');
-            if (digits.length === 0) {
-                this.value = '';
-                return;
-            }
-            var beforeDecimal = digits.charAt(0);
-            var afterDecimal = digits.substring(1);
-            while (afterDecimal.length < 4) {
-                afterDecimal += '0';
-            }
-            if (afterDecimal.length > 4) {
-                afterDecimal = afterDecimal.substring(0, 4);
-            }
-            this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
-        });
+            });
+            zcoreInput.addEventListener('input', function() {
+                var val = this.value;
+                if (val === '' || val === '-') return;
+                var negative = val.indexOf('-') === 0;
+                var digits = val.replace(/[^0-9]/g, '');
+                if (digits.length === 0) {
+                    this.value = negative ? '-' : '';
+                    return;
+                }
+                if (digits.length === 1) {
+                    this.value = (negative ? '-' : '') + digits.charAt(0);
+                    return;
+                }
+                var beforeDecimal = digits.charAt(0);
+                var afterDecimal = digits.substring(1, 5);
+                this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
+            });
+            zcoreInput.addEventListener('blur', function() {
+                var val = this.value.trim();
+                if (!val || val === '-') {
+                    this.value = '';
+                    return;
+                }
+                var negative = val.indexOf('-') === 0;
+                var digits = val.replace(/[^0-9]/g, '');
+                if (digits.length === 0) {
+                    this.value = '';
+                    return;
+                }
+                var beforeDecimal = digits.charAt(0);
+                var afterDecimal = digits.substring(1);
+                while (afterDecimal.length < 4) afterDecimal += '0';
+                if (afterDecimal.length > 4) afterDecimal = afterDecimal.substring(0, 4);
+                this.value = (negative ? '-' : '') + beforeDecimal + '.' + afterDecimal;
+            });
+        }
+
         function showToast(msg, type) {
             type = type || 'info';
             var toast = document.getElementById('toast');
@@ -978,16 +1152,20 @@
 
         function validateForm() {
             var valid = true;
-            var batch = document.getElementById('batch').value;
-            if (!batch) { showToast('Please select a batch year', 'error'); valid = false; }
-            var course = document.getElementById('course').value;
-            if (!course) { showToast('Please select a course', 'error'); valid = false; }
+            var role = document.getElementById('role').value;
+            
+            if (!role) {
+                showToast('Please select a registration type', 'error');
+                valid = false;
+            }
+            
             var nic = document.getElementById('nic').value.trim().toUpperCase();
             if (!/^(\d{12}|\d{9}[VX])$/.test(nic)) {
                 document.getElementById('nic').classList.add('error-shake');
                 showToast('Invalid NIC format. Use 12 digits OR 9 digits + V/X', 'error');
                 valid = false;
             } else { document.getElementById('nic').classList.remove('error-shake'); }
+            
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
             var fullEmail = emailVal;
@@ -997,7 +1175,8 @@
                 showToast('Email must be a valid Gmail address', 'error');
                 valid = false;
             } else { emailInput.classList.remove('error-shake'); }
-            var phoneIds = ['contact', 'whatsapp', 'guardian_phone'];
+            
+            var phoneIds = ['contact', 'whatsapp'];
             for (var i = 0; i < phoneIds.length; i++) {
                 var el = document.getElementById(phoneIds[i]);
                 var val = el.value.trim();
@@ -1007,30 +1186,83 @@
                     valid = false;
                 } else { el.classList.remove('error-shake'); }
             }
-            var olIndex = document.getElementById('ol_index').value.trim();
-            if (olIndex && !/^\d{8}$/.test(olIndex)) {
-                document.getElementById('ol_index').classList.add('error-shake');
-                showToast('O/L Index must be exactly 8 digits', 'error');
-                valid = false;
-            } else { document.getElementById('ol_index').classList.remove('error-shake'); }
-            var alIndex = document.getElementById('al_index').value.trim();
-            if (alIndex && !/^\d{7}$/.test(alIndex)) {
-                document.getElementById('al_index').classList.add('error-shake');
-                showToast('A/L Index must be exactly 7 digits', 'error');
-                valid = false;
-            } else { document.getElementById('al_index').classList.remove('error-shake'); }
-            var cgt = parseFloat(document.getElementById('al_cgt').value);
-            if (isNaN(cgt) || cgt < 0 || cgt > 100) {
-                document.getElementById('al_cgt').classList.add('error-shake');
-                showToast('Common General Test must be 0-100', 'error');
-                valid = false;
-            } else { document.getElementById('al_cgt').classList.remove('error-shake'); }
-            var zcoreVal = document.getElementById('al_zcore').value.trim();
-            if (zcoreVal === '' || !/^-?\d\.\d{1,4}$/.test(zcoreVal)) {
-                document.getElementById('al_zcore').classList.add('error-shake');
-                showToast('Enter a valid Z-Core (e.g. 1.0456 or -1.4543)', 'error');
-                valid = false;
-            } else { document.getElementById('al_zcore').classList.remove('error-shake'); }
+            
+            if (role === 'Student') {
+                var batch = document.getElementById('batch').value;
+                if (!batch) { showToast('Please select a batch year', 'error'); valid = false; }
+                var course = document.getElementById('course').value;
+                if (!course) { showToast('Please select a course', 'error'); valid = false; }
+                
+                var guardianPhone = document.getElementById('guardian_phone').value.trim();
+                if (!/^\d{10}$/.test(guardianPhone)) {
+                    document.getElementById('guardian_phone').classList.add('error-shake');
+                    showToast('Guardian phone must be exactly 10 digits', 'error');
+                    valid = false;
+                } else { document.getElementById('guardian_phone').classList.remove('error-shake'); }
+                
+                var olIndex = document.getElementById('ol_index').value.trim();
+                if (olIndex && !/^\d{8}$/.test(olIndex)) {
+                    document.getElementById('ol_index').classList.add('error-shake');
+                    showToast('O/L Index must be exactly 8 digits', 'error');
+                    valid = false;
+                } else { document.getElementById('ol_index').classList.remove('error-shake'); }
+                
+                var alIndex = document.getElementById('al_index').value.trim();
+                if (alIndex && !/^\d{7}$/.test(alIndex)) {
+                    document.getElementById('al_index').classList.add('error-shake');
+                    showToast('A/L Index must be exactly 7 digits', 'error');
+                    valid = false;
+                } else { document.getElementById('al_index').classList.remove('error-shake'); }
+                
+                var cgt = parseFloat(document.getElementById('al_cgt').value);
+                if (isNaN(cgt) || cgt < 0 || cgt > 100) {
+                    document.getElementById('al_cgt').classList.add('error-shake');
+                    showToast('Common General Test must be 0-100', 'error');
+                    valid = false;
+                } else { document.getElementById('al_cgt').classList.remove('error-shake'); }
+                
+                var zcoreVal = document.getElementById('al_zcore').value.trim();
+                if (zcoreVal === '' || !/^-?\d\.\d{1,4}$/.test(zcoreVal)) {
+                    document.getElementById('al_zcore').classList.add('error-shake');
+                    showToast('Enter a valid Z-Core (e.g. 1.0456 or -1.4543)', 'error');
+                    valid = false;
+                } else { document.getElementById('al_zcore').classList.remove('error-shake'); }
+            }
+            
+            if (role === 'Lecturer') {
+                var subject = document.getElementById('subject').value;
+                if (!subject) {
+                    var subWrapper = document.getElementById('subject').closest('.custom-select-wrapper');
+                    if (subWrapper) subWrapper.querySelector('.custom-select-trigger').classList.add('error-shake');
+                    showToast('Please select a subject', 'error');
+                    valid = false;
+                }
+                var lectureType = document.getElementById('lecture_type').value;
+                if (!lectureType) {
+                    showToast('Please select lecture type', 'error');
+                    valid = false;
+                }
+            }
+            
+            if (role === 'Admin') {
+                var jobPos = document.querySelector('input[name="job_position"]').value.trim();
+                if (!jobPos) {
+                    document.querySelector('input[name="job_position"]').classList.add('error-shake');
+                    showToast('Please enter job position', 'error');
+                    valid = false;
+                } else {
+                    document.querySelector('input[name="job_position"]').classList.remove('error-shake');
+                }
+                var adminCode = document.getElementById('admin_code').value.trim();
+                if (adminCode !== 'NAWATIADMIN') {
+                    document.getElementById('admin_code').classList.add('error-shake');
+                    showToast('Administrator Code is not correct', 'error');
+                    valid = false;
+                } else {
+                    document.getElementById('admin_code').classList.remove('error-shake');
+                }
+            }
+            
             setTimeout(function() {
                 var errs = document.querySelectorAll('.error-shake');
                 for (var j = 0; j < errs.length; j++) errs[j].classList.remove('error-shake');
@@ -1041,19 +1273,46 @@
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
             if (!validateForm()) return;
+            
+            var role = document.getElementById('role').value;
+            
             var emailInput = document.getElementById('email');
             var emailVal = emailInput.value.trim();
             if (emailVal && emailVal.indexOf('@') === -1) emailInput.value = emailVal + '@gmail.com';
+            
+            // Collect qualifications for lecturer
+            if (role === 'Lecturer') {
+                var qualInputs = document.querySelectorAll('#qualificationsContainer [data-qualification]');
+                var quals = [];
+                qualInputs.forEach(function(input) {
+                    if (input.value.trim()) quals.push(input.value.trim());
+                });
+                var hiddenQual = document.getElementById('qualificationsHidden');
+                if (!hiddenQual) {
+                    hiddenQual = document.createElement('input');
+                    hiddenQual.type = 'hidden';
+                    hiddenQual.id = 'qualificationsHidden';
+                    hiddenQual.name = 'qualifications';
+                    document.getElementById('regForm').appendChild(hiddenQual);
+                }
+                hiddenQual.value = quals.join('|');
+            }
+            
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
             var form = document.getElementById('regForm');
             form.action = APPS_SCRIPT_URL;
             form.method = 'POST';
+            
+            var oldAction = form.querySelector('input[name="action"]');
+            if (oldAction) oldAction.remove();
+            
             var actionInput = document.createElement('input');
             actionInput.type = 'hidden';
             actionInput.name = 'action';
             actionInput.value = 'saveRegistration';
             form.appendChild(actionInput);
+            
             form.submit();
         });
 
