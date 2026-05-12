@@ -675,8 +675,8 @@
                 </div>
                 
                 <div class="flex gap-3">
-                    <button onclick="copyIndex()" class="flex-1 py-3 px-4 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] rounded-xl font-bold text-sm transition-colors">
-                        Copy Number
+                    <button onclick="goToHome()" class="flex-1 py-3 px-4 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] rounded-xl font-bold text-sm transition-colors">
+                        Register Another
                     </button>
                     <button onclick="closeModal()" class="flex-1 py-3 px-4 btn-primary-gradient text-white rounded-xl font-bold text-sm">
                         Done
@@ -1422,9 +1422,8 @@
                 modal.classList.remove('flex');
             }, 300);
         }
-        function copyIndex() {
-            var idx = document.getElementById('generatedIndex').textContent;
-            navigator.clipboard.writeText(idx).then(function() { showToast('Index number copied!'); });
+        function goToHome() {
+            window.location.href = 'Registration.html';
         }
         window.addEventListener('DOMContentLoaded', function() { initCustomSelects(); });
     </script>
