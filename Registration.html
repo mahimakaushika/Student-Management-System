@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration - ATI Nawalapitiya</title>
+    <title>Registration - SLIATE Nawalapitiya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="ati-rbg-logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -229,14 +229,28 @@
             backdrop-filter: blur(10px);
         }
         
-        .qual-row { display: flex; gap: 8px; align-items: center; }
-        .qual-remove {
+        .role-tab {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #64748b;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .role-tab.active-role {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .qual-row, .subject-row { display: flex; gap: 8px; align-items: center; }
+        .qual-remove, .subject-remove {
             color: #dc2626; font-weight: 800; font-size: 1.1rem;
             width: 36px; height: 36px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+            border: none; background: transparent;
         }
-        .qual-remove:hover { background: #fef2f2; }
+        .qual-remove:hover, .subject-remove:hover { background: #fef2f2; }
     </style>
 </head>
 <body>
@@ -247,8 +261,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12"><img src="ati-rbg-logo.png" class="w-12 h-11"></div>
                     <div>
-                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Registration Portal</h1>
-                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">ATI Nawalapitiya</p>
+                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Registration</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">SLIATE Nawalapitiya</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
@@ -263,7 +277,7 @@
         <form id="regForm" class="space-y-6">
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- ROLE SELECTION -->
+            <!-- ROLE SELECTION (TABS) -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <div class="portal-card p-6 md:p-8">
                 <div class="flex items-center gap-3 mb-6">
@@ -272,17 +286,12 @@
                     </span>
                     <h2 class="text-xl font-bold text-[#0f172a]">Select Registration Type</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="md:col-span-1">
-                        <label>Role</label>
-                        <select name="role" id="role" required class="portal-input bg-white hidden-select" data-custom-select>
-                            <option value="">Select Role</option>
-                            <option value="Student">Student</option>
-                            <option value="Lecturer">Lecturer</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
+                <div class="flex gap-2 bg-[#f1f5f9] p-1.5 rounded-2xl border border-[#e2e8f0] max-w-md">
+                    <button type="button" data-role="Student" class="role-tab flex-1 py-2.5 px-4 rounded-xl text-sm font-bold">Student</button>
+                    <button type="button" data-role="Lecturer" class="role-tab flex-1 py-2.5 px-4 rounded-xl text-sm font-bold">Lecturer</button>
+                    <button type="button" data-role="Admin" class="role-tab flex-1 py-2.5 px-4 rounded-xl text-sm font-bold">Admin</button>
                 </div>
+                <input type="hidden" name="role" id="role" value="">
             </div>
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -341,7 +350,7 @@
                     </div>
                     <div>
                         <label>Name with Initials</label>
-                        <input type="text" name="name_with_initials" required placeholder="M.M.K.S. Sarathchandra" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="name_with_initials" required placeholder="M.M.K. Sarathchandra" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>NIC Number</label>
@@ -564,38 +573,28 @@
                     </span>
                     <h2 class="text-xl font-bold text-[#0f172a]">Lecture Details</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                    <div>
-                        <label>Subject</label>
-                        <select name="subject" id="subject" class="portal-input bg-white hidden-select" data-custom-select>
-                            <option value="">Select Subject</option>
-                            <option value="Programming">Programming</option>
-                            <option value="Database Management">Database Management</option>
-                            <option value="Networking">Networking</option>
-                            <option value="Web Development">Web Development</option>
-                            <option value="System Analysis">System Analysis</option>
-                            <option value="Object Oriented Programming">Object Oriented Programming</option>
-                            <option value="Data Structures">Data Structures</option>
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Multimedia">Multimedia</option>
-                            <option value="E-Commerce">E-Commerce</option>
-                            <option value="Computer Architecture">Computer Architecture</option>
-                            <option value="Information Security">Information Security</option>
-                            <option value="Mobile Development">Mobile Development</option>
-                            <option value="Cloud Computing">Cloud Computing</option>
-                            <option value="Data Science">Data Science</option>
-                            <option value="English">English</option>
-                            <option value="Management">Management</option>
-                            <option value="Tourism">Tourism</option>
-                            <option value="Hospitality">Hospitality</option>
-                            <option value="Finance">Finance</option>
-                        </select>
+                
+                <!-- Multiple Subjects -->
+                <div class="mb-5">
+                    <label>Subjects</label>
+                    <div id="subjectsContainer" class="space-y-3">
+                        <div class="subject-row grid grid-cols-1 md:grid-cols-2 gap-3 items-end">
+                            <div>
+                                <select data-subject class="portal-input bg-white hidden-select" data-custom-select>
+                                    <option value="">Select Subject</option>
+                                </select>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="text" data-subject-code readonly class="portal-input bg-[#f8fafc] text-[#64748b] flex-1" placeholder="Subject Code">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label>Subject Code</label>
-                        <input type="text" id="subject_code" readonly class="portal-input bg-[#f8fafc] text-[#64748b]" placeholder="Auto-generated">
-                    </div>
+                    <button type="button" id="addSubjectBtn" class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#2563eb] hover:text-[#1d4ed8] transition-colors bg-[#eff6ff] hover:bg-[#dbeafe] px-4 py-2 rounded-xl">
+                        <span class="text-lg leading-none">+</span>
+                        Add Subject
+                    </button>
                 </div>
+                
                 <div class="mb-5">
                     <label>Qualifications</label>
                     <div id="qualificationsContainer" class="space-y-2">
@@ -608,6 +607,7 @@
                         Add Qualification
                     </button>
                 </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label>Lecture Type</label>
@@ -666,10 +666,10 @@
                 <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <h3 class="text-2xl font-bold text-[#0f172a] mb-2">Registration Successful!</h3>
-                <p class="text-[#475569] text-sm mb-6">Your details have been saved. An email with your index number has been sent.</p>
+                <h3 class="text-2xl font-bold text-[#0f172a] mb-2" id="modalTitle">Registration Successful!</h3>
+                <p class="text-[#475569] text-sm mb-6" id="modalSubtitle">Your details have been saved. An email with your index number has been sent.</p>
                 
-                <div class="index-display rounded-2xl p-6 mb-6">
+                <div class="index-display rounded-2xl p-6 mb-6" id="indexBox">
                     <p class="text-[10px] font-bold text-[#2563eb] uppercase tracking-widest mb-2">Your Index Number</p>
                     <div id="generatedIndex" class="text-2xl sm:text-3xl font-black text-[#2563eb] text-center leading-tight"></div>
                 </div>
@@ -692,7 +692,7 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyhxqsEaLFQQo2astcgJyg8BFdwCDw7HA1qaLnm6Y3dLFsV2H6UGfutKK3tx1biRs7/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlqTJFSTUPOJcWvPOtVEIgokCDqBthINoa-0fRW1dLo43T9lMLf3klqRJcer_YVZYk/exec';
         
         const SUBJECT_CODES = {
             "Programming": "PROG101",
@@ -753,9 +753,37 @@
             rebuildCustomSelect(batchSelect);
         }
 
+        function getSubjectOptionsHtml() {
+            var html = '<option value="">Select Subject</option>';
+            for (var key in SUBJECT_CODES) {
+                html += '<option value="' + key + '">' + key + '</option>';
+            }
+            return html;
+        }
+
+        function populateSubjectSelects() {
+            document.querySelectorAll('#subjectsContainer select[data-subject]').forEach(function(sel) {
+                sel.innerHTML = getSubjectOptionsHtml();
+                if (sel.dataset.initialized === 'true') {
+                    rebuildCustomSelect(sel);
+                }
+            });
+        }
+
         // ═══════════════════════════════════════════════════════════════
-        // ROLE SWITCHING
+        // ROLE TABS
         // ═══════════════════════════════════════════════════════════════
+        document.querySelectorAll('.role-tab').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.role-tab').forEach(function(b) {
+                    b.classList.remove('active-role');
+                });
+                this.classList.add('active-role');
+                document.getElementById('role').value = this.dataset.role;
+                toggleRoleSections();
+            });
+        });
+
         function toggleRoleSections() {
             var role = document.getElementById('role').value;
             
@@ -780,12 +808,22 @@
 
         window.addEventListener('load', function() {
             populateBatchDropdown();
+            populateSubjectSelects();
             
             var params = new URLSearchParams(window.location.search);
             var registered = params.get('registered');
+            var role = params.get('role') || '';
+            
             if (registered === 'true') {
                 var index = decodeURIComponent(params.get('index') || '');
-                document.getElementById('generatedIndex').textContent = index;
+                if (role === 'Student' && index) {
+                    document.getElementById('generatedIndex').textContent = index;
+                    document.getElementById('modalSubtitle').textContent = 'Your details have been saved. An email with your index number has been sent.';
+                    document.getElementById('indexBox').classList.remove('hidden');
+                } else {
+                    document.getElementById('modalSubtitle').textContent = 'You have been successfully registered as a ' + (role || 'User') + ' in SLIATE-Nawalapitiya.';
+                    document.getElementById('indexBox').classList.add('hidden');
+                }
                 openModal();
                 window.history.replaceState({}, document.title, window.location.pathname);
             } else if (registered === 'false') {
@@ -918,13 +956,48 @@
             populate(s3, AL_SUBJECTS[stream].sub3);
         });
 
-        // Role change listener
-        document.getElementById('role').addEventListener('change', toggleRoleSections);
+        // Subject code auto-fill (delegation for dynamic rows)
+        document.getElementById('subjectsContainer').addEventListener('change', function(e) {
+            if (e.target.matches('[data-subject]')) {
+                var code = SUBJECT_CODES[e.target.value] || '';
+                var row = e.target.closest('.subject-row');
+                if (row) {
+                    var codeInput = row.querySelector('[data-subject-code]');
+                    if (codeInput) codeInput.value = code;
+                }
+            }
+        });
 
-        // Subject code auto-fill
-        document.getElementById('subject').addEventListener('change', function() {
-            var code = SUBJECT_CODES[this.value] || '';
-            document.getElementById('subject_code').value = code;
+        // Add Subject
+        document.getElementById('addSubjectBtn').addEventListener('click', function() {
+            var container = document.getElementById('subjectsContainer');
+            var rows = container.querySelectorAll('.subject-row');
+            var lastRow = rows[rows.length - 1];
+            var lastSelect = lastRow.querySelector('[data-subject]');
+            if (!lastSelect.value) {
+                showToast('Please select the previous subject first', 'error');
+                var trigger = lastRow.querySelector('.custom-select-trigger');
+                if (trigger) {
+                    trigger.classList.add('error-shake');
+                    setTimeout(function() { trigger.classList.remove('error-shake'); }, 1000);
+                }
+                return;
+            }
+            
+            var newRow = document.createElement('div');
+            newRow.className = 'subject-row grid grid-cols-1 md:grid-cols-2 gap-3 items-end';
+            newRow.innerHTML = '<div><select data-subject class="portal-input bg-white hidden-select" data-custom-select>' + getSubjectOptionsHtml() + '</select></div>' +
+                '<div class="flex gap-2 items-center">' +
+                '<input type="text" data-subject-code readonly class="portal-input bg-[#f8fafc] text-[#64748b] flex-1" placeholder="Subject Code">' +
+                '<button type="button" class="subject-remove" title="Remove">×</button>' +
+                '</div>';
+            
+            container.appendChild(newRow);
+            initCustomSelects();
+            
+            newRow.querySelector('.subject-remove').addEventListener('click', function() {
+                newRow.remove();
+            });
         });
 
         // Qualifications dynamic add
@@ -1230,11 +1303,11 @@
             }
             
             if (role === 'Lecturer') {
-                var subject = document.getElementById('subject').value;
-                if (!subject) {
-                    var subWrapper = document.getElementById('subject').closest('.custom-select-wrapper');
-                    if (subWrapper) subWrapper.querySelector('.custom-select-trigger').classList.add('error-shake');
-                    showToast('Please select a subject', 'error');
+                var subjectSelects = document.querySelectorAll('#subjectsContainer [data-subject]');
+                var hasSubject = false;
+                subjectSelects.forEach(function(s) { if (s.value) hasSubject = true; });
+                if (!hasSubject) {
+                    showToast('Please select at least one subject', 'error');
                     valid = false;
                 }
                 var lectureType = document.getElementById('lecture_type').value;
@@ -1280,8 +1353,21 @@
             var emailVal = emailInput.value.trim();
             if (emailVal && emailVal.indexOf('@') === -1) emailInput.value = emailVal + '@gmail.com';
             
-            // Collect qualifications for lecturer
+            // Collect subjects for lecturer
             if (role === 'Lecturer') {
+                var subjectSelects = document.querySelectorAll('#subjectsContainer [data-subject]');
+                var subjects = [];
+                subjectSelects.forEach(function(s) { if (s.value) subjects.push(s.value); });
+                var hiddenSub = document.getElementById('subjectsHidden');
+                if (!hiddenSub) {
+                    hiddenSub = document.createElement('input');
+                    hiddenSub.type = 'hidden';
+                    hiddenSub.id = 'subjectsHidden';
+                    hiddenSub.name = 'subject';
+                    document.getElementById('regForm').appendChild(hiddenSub);
+                }
+                hiddenSub.value = subjects.join('|');
+                
                 var qualInputs = document.querySelectorAll('#qualificationsContainer [data-qualification]');
                 var quals = [];
                 qualInputs.forEach(function(input) {
