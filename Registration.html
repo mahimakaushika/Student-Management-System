@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration - SLIATE Nawalapitiya</title>
+    <title>Registration - ATI Nawalapitiya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="ati-rbg-logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -261,8 +261,8 @@
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12"><img src="ati-rbg-logo.png" class="w-12 h-11"></div>
                     <div>
-                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Registration</h1>
-                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">SLIATE Nawalapitiya</p>
+                        <h1 class="font-extrabold text-lg leading-tight tracking-tight text-[#0f172a]">Registration Portal</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-[#94a3b8] font-bold">ATI Nawalapitiya</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 bg-[#f1f5f9] text-[#475569] px-3 py-1 rounded-full text-xs font-bold border border-[#e2e8f0]">
@@ -350,7 +350,7 @@
                     </div>
                     <div>
                         <label>Name with Initials</label>
-                        <input type="text" name="name_with_initials" required placeholder="M.M.K. Sarathchandra" class="portal-input placeholder-[#94a3b8]">
+                        <input type="text" name="name_with_initials" required placeholder="M.M.K.S. Sarathchandra" class="portal-input placeholder-[#94a3b8]">
                     </div>
                     <div>
                         <label>NIC Number</label>
@@ -691,8 +691,11 @@
         <span id="toastMsg"></span>
     </div>
 
+    <!-- Hidden iframe for form submission -->
+    <iframe name="hiddenFrame" id="hiddenFrame" style="display:none; width:0; height:0; border:none;"></iframe>
+
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlqTJFSTUPOJcWvPOtVEIgokCDqBthINoa-0fRW1dLo43T9lMLf3klqRJcer_YVZYk/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwl5nXQoiYomNWlFXCEp9ZzCHsRH9khXTJS8C0V-vtcWtR4Bi854qFKGAyMnWKhkyHD/exec';
         
         const SUBJECT_CODES = {
             "Programming": "PROG101",
@@ -809,27 +812,30 @@
         window.addEventListener('load', function() {
             populateBatchDropdown();
             populateSubjectSelects();
-            
-            var params = new URLSearchParams(window.location.search);
-            var registered = params.get('registered');
-            var role = params.get('role') || '';
-            
-            if (registered === 'true') {
-                var index = decodeURIComponent(params.get('index') || '');
-                if (role === 'Student' && index) {
-                    document.getElementById('generatedIndex').textContent = index;
-                    document.getElementById('modalSubtitle').textContent = 'Your details have been saved. An email with your index number has been sent.';
-                    document.getElementById('indexBox').classList.remove('hidden');
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // POST MESSAGE HANDLER (iframe response from Apps Script)
+        // ═══════════════════════════════════════════════════════════════
+        window.addEventListener('message', function(e) {
+            if (e.data && (e.data.registered === 'true' || e.data.registered === 'false')) {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+                
+                if (e.data.registered === 'true') {
+                    var role = e.data.role || '';
+                    if (role === 'Student' && e.data.index) {
+                        document.getElementById('generatedIndex').textContent = e.data.index;
+                        document.getElementById('modalSubtitle').textContent = 'Your details have been saved. An email with your index number has been sent.';
+                        document.getElementById('indexBox').classList.remove('hidden');
+                    } else {
+                        document.getElementById('modalSubtitle').textContent = 'You have been successfully registered as a ' + (role || 'User') + ' in SLIATE-Nawalapitiya.';
+                        document.getElementById('indexBox').classList.add('hidden');
+                    }
+                    openModal();
                 } else {
-                    document.getElementById('modalSubtitle').textContent = 'You have been successfully registered as a ' + (role || 'User') + ' in SLIATE-Nawalapitiya.';
-                    document.getElementById('indexBox').classList.add('hidden');
+                    showToast(e.data.message || 'Registration failed', 'error');
                 }
-                openModal();
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } else if (registered === 'false') {
-                var msg = decodeURIComponent(params.get('message') || 'Registration failed');
-                showToast(msg, 'error');
-                window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
 
@@ -1386,9 +1392,11 @@
             
             document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('loadingOverlay').classList.add('flex');
+            
             var form = document.getElementById('regForm');
             form.action = APPS_SCRIPT_URL;
             form.method = 'POST';
+            form.target = 'hiddenFrame';
             
             var oldAction = form.querySelector('input[name="action"]');
             if (oldAction) oldAction.remove();
@@ -1398,6 +1406,15 @@
             actionInput.name = 'action';
             actionInput.value = 'saveRegistration';
             form.appendChild(actionInput);
+            
+            // Safety timeout: hide loader if no response in 20s
+            setTimeout(function() {
+                if (!document.getElementById('loadingOverlay').classList.contains('hidden')) {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                    document.getElementById('loadingOverlay').classList.remove('flex');
+                    showToast('Request timed out. Please check your connection and try again.', 'error');
+                }
+            }, 20000);
             
             form.submit();
         });
